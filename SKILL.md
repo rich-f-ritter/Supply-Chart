@@ -94,26 +94,34 @@ forward supply the deal must compete with.
 - The **subject property** is dropped from the competitive roster.
 
 ### 2. Pin the delivery quarter (the key cross-comparison)
-CoStar's roster only gives a *year built*. To get the quarter, match each
-delivered property's **unit count to the CoStar Data Analytics quarterly
-deliveries series** within ±1 year of its year built — an exact unit match wins,
-else the closest. (e.g. Timbers 274u → Q2 2023; The Mill 125u → Q2 2024;
-The Betty 46u → Q4 2023.) If no match, fall back to `Q? <year>`. Pipeline deals
-with no real date get `TBD` and are listed but excluded from the dated absorption
-table.
+Neither roster gives a delivery *quarter* (only a year). For **delivered**
+properties only, the quarter is inferred from the CoStar Data Analytics quarterly
+deliveries series: (1) an exact unit-count match within ±1 year pins the quarter
+precisely (e.g. Timbers 274u → Q2 2023); (2) otherwise the same-year quarter with
+the closest delivered count is used and flagged *"Delivery quarter estimated"*
+(keeps the absorption table populated in large markets); (3) if the year has no
+recorded deliveries, only the year is kept (`Q? <year>`). Under-construction and
+proposed deals are **not** pinned — they get `TBD` and are dated by the analyst
+(see "Dating the pipeline").
 
-### 3. Bucket each property
-- **PROPOSED** — RealPage Pre-Planned / proposed (no real delivery date, no rent/occ).
-- **UNDER CONSTRUCTION** — construction begun, not yet delivered (no rent/occ).
-- **LEASING UP** — delivered within the last ~6 quarters **and** occupancy below
-  the stabilized threshold (90%). **These are flagged "Verify rent/occ w/
-  HelloData"** — lease-ups are where accurate rent & occupancy matter most and
-  where a HelloData pull is worth it.
-- **STABILIZED / STABILIZING** — delivered and either ≥90% occupied or open >6
-  quarters.
+### 3. Bucket each property (status-driven)
+Buckets are driven by the lifecycle status from **both** sources, with precedence
+*delivered → under-construction → proposed* (an "it exists" signal from either
+source beats a stale "pre-planned"):
+- **STABILIZED / STABILIZING** — delivered and ≥90% occupied (or an older,
+  within-lookback asset that simply underperforms).
+- **LEASING UP** — delivered within ~2 years and below 90% occupied. **Flagged
+  "Verify rent/occ w/ HelloData"** — lease-ups are where accurate rent/occ matter
+  most.
+- **UNDER CONSTRUCTION** — CoStar `Under Construction` or RealPage `Under
+  Construction[/Lease-Up]` (no rent/occ shown).
+- **PROPOSED** — CoStar `Proposed` or RealPage `Pre-Planned`/`Planned` (no rent/occ).
 
 Only genuine new supply is charted: deliveries within the last
-`NEW_CONSTRUCTION_LOOKBACK_YEARS` (default 4) plus the entire pipeline.
+`NEW_CONSTRUCTION_LOOKBACK_YEARS` (default 4) plus the entire pipeline. Each
+section is colour-coded, carried over from the reference template: **blue**
+(stabilized), **orange** (leasing up), **green** (under construction), **red**
+(proposed), each with a light matching row tint.
 
 ### 4. Absorption summary
 For every quarter spanned by the **dated** deliveries, the workbook computes (via
@@ -133,7 +141,11 @@ pushing rents.
 Top of `scripts/build_supply_chart.py`: `DEFAULT_STABILIZATION_TARGET`,
 `STABILIZED_OCC`, `LEASEUP_WINDOW_QTRS`, `NEW_CONSTRUCTION_LOOKBACK_YEARS`.
 
-## Worked example
+## Worked examples
+`examples/bella_mirage/` is a large, supply-heavy Phoenix market (104 comps,
+26.6k-unit inventory) that exercises all four buckets — ~8.8% of inventory still
+absorbing from current lease-ups alone, before a large proposed pipeline.
+
 `examples/canyon_ridge/` holds the real exports for Canyon Ridge (Boise, ID),
 including the CoStar v2 pull (with rent/occ) and a sample `pipeline_dates.csv`.
 Running the command above reproduces `output/Canyon_Ridge__Supply_Chart.xlsx`:

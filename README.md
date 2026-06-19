@@ -28,7 +28,8 @@ python scripts/build_supply_chart.py \
 SKILL.md                         Methodology + when/how Claude uses this skill
 scripts/build_supply_chart.py    The generator (parsing, reconciliation, writer)
 reference/                       The template this output mirrors
-examples/canyon_ridge/           Real CoStar + RealPage exports (worked example)
+examples/canyon_ridge/           Worked example — small market (Boise, ID)
+examples/bella_mirage/           Worked example — large supply-heavy market (Phoenix)
 output/                          Generated supply charts
 ```
 

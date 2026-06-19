@@ -1,1 +1,1 @@
-property,est_delivery,units,# Fill est_delivery as 'Q2 2028'. Re-run with --pipeline-dates.
+property,est_delivery,units,bucket,costar_year,# Fill est_delivery as 'Q2 2028'. Re-run with --pipeline-dates.

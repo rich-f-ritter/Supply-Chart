@@ -96,6 +96,8 @@ class Prop:
     year_built: Optional[int] = None
     construction_begin: Optional[str] = None
     status_raw: str = ""               # e.g. Existing / Stabilized / Pre-Planned
+    costar_status: str = ""            # Existing / Under Construction / Proposed
+    rp_status: str = ""                # Stabilized / Lease-Up / Under Construction / Pre-Planned / Planned
     # Per-source occupancy / rent so the two can be compared (not just merged).
     costar_occ: Optional[float] = None
     costar_rent: Optional[float] = None     # CoStar asking rent / unit
@@ -211,6 +213,7 @@ def parse_costar_roster(path) -> list[Prop]:
             construction_begin=(str(col(row, "Construction Begin")).strip()
                                 if col(row, "Construction Begin") else None),
             status_raw=str(col(row, "Building Status") or "").strip(),
+            costar_status=str(col(row, "Building Status") or "").strip(),
             costar_occ=occ,
             costar_rent=rent,
             owner=(str(col(row, "Owner Name")).strip()
@@ -242,6 +245,7 @@ def parse_realpage(path) -> list[Prop]:
             units=_int(col(row, "Total Units")),
             year_built=_int(col(row, "Year Built")),
             status_raw=str(col(row, "Property Status") or "").strip(),
+            rp_status=str(col(row, "Property Status") or "").strip(),
             rp_occ=_float(col(row, "Occupancy")),
             rp_rent=_float(col(row, "Effective Rent")),
             owner=(str(col(row, "Property Owner")).strip()
@@ -329,9 +333,9 @@ def reconcile(costar: list[Prop], realpage: list[Prop]) -> list[Prop]:
                       f"{max(base.year_built, other.year_built)}")
         base.year_built = base.year_built or other.year_built
         base.construction_begin = base.construction_begin or other.construction_begin
-        # Prefer a forward-looking status (Pre-Planned/Under Construction)
-        if _is_pipeline(other.status_raw) and not _is_pipeline(base.status_raw):
-            base.status_raw = other.status_raw
+        # Carry both sources' lifecycle status (used by classify()).
+        base.costar_status = base.costar_status or other.costar_status
+        base.rp_status = base.rp_status or other.rp_status
         return base
 
     for p in costar:
@@ -345,17 +349,22 @@ OCC_DIVERGENCE = 0.02   # >=2 pts occupancy gap between sources -> flag
 RENT_DIVERGENCE = 0.05  # >=5% rent gap between sources -> flag
 
 
-def resolve_occ_rent(p: Prop, occ_source: str, rent_source: str):
+def resolve_occ_rent(p: Prop, occ_source: str, rent_source: str,
+                     flag_divergence: bool = True):
     """Choose the displayed occupancy/rent by source priority; flag divergence.
 
     CoStar rent is *asking*; RealPage rent is *effective* — divergence on rent is
-    expected and is surfaced rather than silently averaged.
+    expected and is surfaced rather than silently averaged. Divergence notes are
+    only added for delivered assets (a partial-lease-up vs 0% gap on a
+    not-yet-open building is noise, not signal).
     """
     prio = {"costar": (p.costar_occ, p.rp_occ), "realpage": (p.rp_occ, p.costar_occ)}
     p.occupancy = next((v for v in prio[occ_source] if v is not None), None)
     rprio = {"costar": (p.costar_rent, p.rp_rent), "realpage": (p.rp_rent, p.costar_rent)}
     p.eff_rent = next((v for v in rprio[rent_source] if v is not None), None)
 
+    if not flag_divergence:
+        return
     if p.costar_occ is not None and p.rp_occ is not None \
             and abs(p.costar_occ - p.rp_occ) >= OCC_DIVERGENCE:
         p.note(f"Occ: CoStar {p.costar_occ:.0%} vs RealPage {p.rp_occ:.0%}")
@@ -365,38 +374,69 @@ def resolve_occ_rent(p: Prop, occ_source: str, rent_source: str):
                f"RealPage eff ${p.rp_rent:,.0f}")
 
 
-def _is_pipeline(status: str) -> bool:
-    s = (status or "").lower()
-    return any(t in s for t in ("pre-plan", "preplan", "proposed",
-                                "under construction", "planned", "lease-up",
-                                "lease up"))
+def _existing_signal(p: Prop) -> bool:
+    """Either source says the building physically exists / is delivered."""
+    return (p.costar_status.lower() == "existing"
+            or p.rp_status.lower() in ("stabilized", "lease-up", "lease up"))
+
+
+def _uc_signal(p: Prop) -> bool:
+    cs = p.costar_status.lower()
+    rp = p.rp_status.lower()
+    return ("under construction" in cs
+            or rp in ("under construction", "under construction/lease-up"))
+
+
+def _proposed_signal(p: Prop) -> bool:
+    cs = p.costar_status.lower()
+    rp = p.rp_status.lower()
+    return cs == "proposed" or rp in ("pre-planned", "preplanned", "planned",
+                                      "proposed")
+
+
+def _is_pipeline(p: Prop) -> bool:
+    """A forward-supply deal (under construction or proposed), not yet delivered."""
+    return (_uc_signal(p) or _proposed_signal(p)) and not _existing_signal(p)
 
 
 # --------------------------------------------------------------------------- #
 # Delivery-quarter pinning + bucketing
 # --------------------------------------------------------------------------- #
-def pin_delivery(p: Prop, deliveries: dict, as_of: tuple[int, int]):
-    """Assign an est. delivery quarter using the CoStar quarterly deliveries series.
+def pin_delivery(p: Prop, deliveries: dict):
+    """Assign a delivery quarter to a *delivered* property.
 
-    Strategy: among quarters within +/-1 year of the property's year-built, pick
-    the one whose delivered-unit count exactly matches the property's units; if no
-    exact match, pick the closest by unit count; else fall back to "Q? <year>".
+    Match the property's unit count to the CoStar quarterly deliveries series
+    within +/-1 year of its year-built. An exact unit match pins the quarter; with
+    no exact match we keep the year only ("Q? <year>", quarter unknown) rather than
+    guessing — guessed quarters are noise in a large market. Undated delivered
+    deals can be quarter-stamped by the analyst via --pipeline-dates.
     """
     if not p.year_built or not p.units:
+        if p.year_built:
+            p.deliv_year = p.year_built
+            p.est_delivery = f"Q? {p.year_built}"
         return
-    candidates = [(y, q, u) for (y, q), u in deliveries.items()
-                  if abs(y - p.year_built) <= 1]
-    if candidates:
-        exact = [(y, q) for (y, q, u) in candidates if u == p.units]
-        if exact:
-            y, q = sorted(exact)[0]
-        else:
-            y, q, _ = min(candidates, key=lambda t: abs(t[2] - p.units))
+    # 1) Exact unit match within +/-1 year -> precise quarter.
+    exact = [(y, q) for (y, q), u in deliveries.items()
+             if abs(y - p.year_built) <= 1 and u == p.units]
+    if exact:
+        y, q = sorted(exact)[0]
         p.deliv_year, p.deliv_q = y, q
         p.est_delivery = fmt_quarter(y, q)
-    else:
-        p.deliv_year = p.year_built
-        p.est_delivery = f"Q? {p.year_built}"
+        return
+    # 2) No exact match: pick the same-year quarter with the closest delivered
+    #    count (estimated). Keeps the absorption table populated; flagged as est.
+    same_year = [(q, u) for (y, q), u in deliveries.items()
+                 if y == p.year_built and u > 0]
+    if same_year:
+        q, _ = min(same_year, key=lambda t: abs(t[1] - p.units))
+        p.deliv_year, p.deliv_q = p.year_built, q
+        p.est_delivery = fmt_quarter(p.year_built, q)
+        p.note("Delivery quarter estimated")
+        return
+    # 3) Year known but no deliveries recorded that year -> year only.
+    p.deliv_year = p.year_built
+    p.est_delivery = f"Q? {p.year_built}"
 
 
 _QLABEL = re.compile(r"Q([1-4])\s*'?(\d{2,4})|(\d{4})\s*Q([1-4])", re.I)
@@ -454,41 +494,51 @@ def apply_pipeline_dates(props: list[Prop], dates: dict):
 def emit_pipeline_template(props: list[Prop], path):
     """Write a CSV of undated pipeline deals for the analyst to fill in."""
     import csv
+    # Forecast-relevant deals without a precise delivery quarter.
     undated = [p for p in props
-               if p.bucket in ("PROPOSED", "UNDER CONSTRUCTION")
-               and not p.deliv_year]
+               if p.deliv_q is None
+               and p.bucket in ("LEASING UP", "UNDER CONSTRUCTION", "PROPOSED")]
     with open(path, "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
-        w.writerow(["property", "est_delivery", "units",
+        w.writerow(["property", "est_delivery", "units", "bucket", "costar_year",
                     "# Fill est_delivery as 'Q2 2028'. Re-run with --pipeline-dates."])
-        for p in sorted(undated, key=lambda x: -(x.units or 0)):
-            w.writerow([p.name, "", p.units or "", ""])
+        for p in sorted(undated, key=lambda x: (x.bucket, -(x.units or 0))):
+            w.writerow([p.name, "", p.units or "", p.bucket, p.year_built or "", ""])
     return len(undated)
 
 
 def classify(p: Prop, as_of: tuple[int, int], target: float):
-    """Assign one of the four lifecycle buckets."""
-    as_of_idx = quarter_index(*as_of)
-    delivered = (p.deliv_year is not None and p.deliv_q is not None
-                 and quarter_index(p.deliv_year, p.deliv_q) <= as_of_idx)
+    """Assign one of the four lifecycle buckets, driven by source status.
 
-    if _is_pipeline(p.status_raw) and "under construction" in p.status_raw.lower():
-        p.bucket = "UNDER CONSTRUCTION"
-    elif _is_pipeline(p.status_raw):
-        # Pre-Planned / Proposed (no real delivery date)
-        p.bucket = "PROPOSED"
-    elif not delivered and p.year_built and p.year_built >= as_of[0]:
-        # has a construction begin / near-term year but not yet delivered
-        p.bucket = "UNDER CONSTRUCTION"
-    elif delivered:
-        age_q = as_of_idx - quarter_index(p.deliv_year, p.deliv_q)
-        occ = p.occupancy if p.occupancy is not None else 0
-        if occ >= STABILIZED_OCC or age_q >= LEASEUP_WINDOW_QTRS:
+    Precedence: a delivered/existing signal (from either source) wins over
+    under-construction, which wins over proposed. Among delivered deals, occupancy
+    and recency split stabilized vs leasing-up.
+    """
+    recent = bool(p.year_built and p.year_built >= as_of[0] - 2)
+
+    if _existing_signal(p):
+        occ = p.occupancy
+        if occ is None:
+            p.bucket = "LEASING UP" if recent else "STABILIZED / STABILIZING"
+        elif occ >= STABILIZED_OCC:
             p.bucket = "STABILIZED / STABILIZING"
-        else:
+        elif recent:
             p.bucket = "LEASING UP"
-    else:
+        else:
+            p.bucket = "STABILIZED / STABILIZING"   # older underperformer
+    elif _uc_signal(p):
+        p.bucket = "UNDER CONSTRUCTION"
+    elif _proposed_signal(p):
         p.bucket = "PROPOSED"
+    elif p.deliv_q is not None:                      # exact delivery, no status
+        p.bucket = "LEASING UP" if recent and (p.occupancy or 0) < STABILIZED_OCC \
+            else "STABILIZED / STABILIZING"
+    elif p.year_built and p.year_built > as_of[0]:
+        p.bucket = "UNDER CONSTRUCTION"
+    elif recent:
+        p.bucket = "LEASING UP"
+    else:
+        p.bucket = "STABILIZED / STABILIZING"
 
     # Lease-ups are where rent/occ accuracy matters most -> flag for HelloData
     if p.bucket == "LEASING UP":
@@ -535,6 +585,15 @@ BUCKET_ORDER = [
     ("UNDER CONSTRUCTION", "Under construction, not yet delivered"),
     ("PROPOSED", "Proposed / pre-planned pipeline"),
 ]
+
+# Per-bucket section colours, carried over from the reference template:
+# header band colour + a light matching row tint to distinguish each section.
+BUCKET_STYLES = {
+    "STABILIZED / STABILIZING": {"header": "FF2E75B6", "row": "FFDDEBF7"},  # blue
+    "LEASING UP":               {"header": "FFED7D31", "row": "FFFCE4D6"},  # orange
+    "UNDER CONSTRUCTION":       {"header": "FF375623", "row": "FFE2EFDA"},  # green
+    "PROPOSED":                 {"header": "FFFF0000", "row": "FFFCE4E4"},  # red
+}
 
 COLS = {  # column letter -> (header, width)
     "B": ("#", 3.5),
@@ -599,16 +658,17 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
         members = [p for p in props if p.bucket == bucket]
         if not members:
             continue
-        members.sort(key=lambda p: (-(quarter_index(p.deliv_year, p.deliv_q)
-                                       if p.deliv_year else -1), -(p.units or 0)))
+        members.sort(key=lambda p: (-p_qi(p), -(p.units or 0)))
         tot_u = sum(p.units or 0 for p in members)
+        hdr_color = BUCKET_STYLES[bucket]["header"]
+        row_color = BUCKET_STYLES[bucket]["row"]
         # section header
         ws.merge_cells(f"C{r}:K{r}")
         sc = ws[f"C{r}"]
         sc.value = f"{bucket} ({len(members)} properties, {tot_u:,} units)"
-        sc.fill = fill(BLUE); sc.font = font(bold=True, size=9, color=WHITE)
+        sc.fill = fill(hdr_color); sc.font = font(bold=True, size=9, color=WHITE)
         sc.alignment = LEFT
-        ws[f"B{r}"].fill = fill(BLUE)
+        ws[f"B{r}"].fill = fill(hdr_color)
         r += 1
         for p in members:
             idx += 1
@@ -629,7 +689,7 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
             for col, val in row_vals.items():
                 c = ws[f"{col}{r}"]
                 c.value = val
-                c.fill = fill(GRAY); c.font = font(size=9)
+                c.fill = fill(row_color); c.font = font(size=9)
                 c.border = BORDER
                 c.alignment = LEFT if col in ("C", "H", "K") else CENTER
             ws[f"D{r}"].number_format = "#,##0"
@@ -832,13 +892,16 @@ def main(argv=None):
     # Keep only genuine new-construction supply: recent deliveries + pipeline.
     keep = []
     for p in props:
-        pin_delivery(p, deliveries, as_of)
-        recent = (p.year_built and
-                  p.year_built >= as_of[0] - NEW_CONSTRUCTION_LOOKBACK_YEARS)
-        if recent or _is_pipeline(p.status_raw):
-            resolve_occ_rent(p, args.occ_source, args.rent_source)
-            classify(p, as_of, args.target)
-            p.prop_type = derive_type(p)
+        delivered = _existing_signal(p)
+        if delivered:
+            pin_delivery(p, deliveries)
+        resolve_occ_rent(p, args.occ_source, args.rent_source,
+                         flag_divergence=delivered)
+        classify(p, as_of, args.target)
+        p.prop_type = derive_type(p)
+        within_lookback = (p.year_built and
+                           p.year_built >= as_of[0] - NEW_CONSTRUCTION_LOOKBACK_YEARS)
+        if _is_pipeline(p) or within_lookback:
             keep.append(p)
     props = keep
 
