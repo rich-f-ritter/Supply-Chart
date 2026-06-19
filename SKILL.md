@@ -63,6 +63,8 @@ Optional flags:
 - `--target 0.95` — stabilization occupancy goal
 - `--occ-source costar|realpage`, `--rent-source costar|realpage` — which source drives the chart (default `costar`)
 - `--pipeline-dates path.csv` — analyst-supplied delivery quarters for pipeline deals (see below)
+- `--intake path.xlsx` — RR-T12 underwriting intake; adds **subject rows** (market/effective rent from HelloData mix-weighted, occupancy from the T12 financials) to the Supply & Absorption tab
+- `--costar-subject-rents path.xlsx` — CoStar per-property analytics, used to extend the subject rent history before HelloData coverage begins
 
 The script prints a reconciliation report to the console and writes the workbook.
 Always read the console report and the **Reconciliation Log** sheet, then review
@@ -150,8 +152,16 @@ the CoStar Data Analytics series + the supply pipeline, on **live Excel formulas
   CoStar's current Under-Construction unit count so the pipeline ties out.
 
 Reading the occupancy row shows **when the market re-stabilizes** to target — i.e.
-when occupancy is strong enough to push rents. (Subject rent rows from RR-T12 are
-a planned next layer.)
+when occupancy is strong enough to push rents.
+
+**Subject rows** (with `--intake`): the tab also shows the subject's own
+**market rent, effective rent, and occupancy** in the same relative-year columns.
+Source hierarchy, determined by how closely each tracks HelloData on the subject:
+**HelloData mix-weighted** rents where available (≈2023→); before that, **CoStar
+per-property** rents level-aligned to HelloData via the overlap ratio (CoStar
+tracks the subject closer than RealPage). Subject occupancy comes from the **T12
+financial statements**. Forecast-year subject rents are deferred to the (later)
+market-rent-growth → effective-rent step.
 
 ## Analyst follow-ups the script intentionally leaves open
 - **Proximity (miles)** — left blank; neither export carries distance-from-subject. Fill manually (or paste CoStar's "Distance" column if a future pull includes it).
