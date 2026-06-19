@@ -100,9 +100,10 @@ deliveries series: (1) an exact unit-count match within ±1 year pins the quarte
 precisely (e.g. Timbers 274u → Q2 2023); (2) otherwise the same-year quarter with
 the closest delivered count is used and flagged *"Delivery quarter estimated"*
 (keeps the absorption table populated in large markets); (3) if the year has no
-recorded deliveries, only the year is kept (`Q? <year>`). Under-construction and
-proposed deals are **not** pinned — they get `TBD` and are dated by the analyst
-(see "Dating the pipeline").
+recorded deliveries, only the year is kept (`Q? <year>`). **Under-construction**
+deals are auto-estimated from CoStar's `Construction Begin` + ~24 months
+(reconciled against CoStar's completion year) and pushed into the future so they
+enter the forecast; **proposed** deals with no date get `TBD` for the analyst.
 
 ### 3. Bucket each property (status-driven)
 Buckets are driven by the lifecycle status from **both** sources, with precedence
@@ -123,30 +124,34 @@ section is colour-coded, carried over from the reference template: **blue**
 (stabilized), **orange** (leasing up), **green** (under construction), **red**
 (proposed), each with a light matching row tint.
 
-### 4. Forward supply & absorption forecast (the "Supply & Absorption" tab)
-This is the rent-analysis core: a market-level quarterly projection of **new
-supply, absorption, and overall occupancy**, built from the CoStar Data Analytics
-time series and the supply pipeline. It runs on **live Excel formulas** so the
-analyst can drive it from a few editable (yellow) cells.
+### 4. Supply & absorption forecast (the "Supply & Absorption" tab)
+The rent-analysis core: a market-level view of **new supply, absorption, and
+overall occupancy** in **relative-year (trailing-12-month) columns**, built from
+the CoStar Data Analytics series + the supply pipeline, on **live Excel formulas**.
 
-- **Historical quarters** = CoStar 5-mi actuals (inventory, deliveries = new
-  supply, absorption, occupancy).
-- **Forward quarters**:
-  - `Inventory(t) = Inventory(t-1) + New Supply(t)`, where **New Supply** is the
-    scheduled pipeline (`SUMIFS` over the Pipeline Inputs block by quarter and
-    include flag).
-  - `Absorption(t) = MIN(quarterly demand, MAX(0, target × Inventory − prior
-    Occupied))` — absorb up to demand but not beyond the stabilization target.
-  - `Occupied(t) = Occupied(t-1) + Absorption(t)`; `Overall Occ = Occupied /
-    Inventory`.
-- **Demand** is a Bear/Base/Bull annual-absorption assumption (Base defaults to
-  the trailing CoStar average), selected by a dropdown.
-- **Editable by the analyst** (yellow cells): the demand scenario & the three
-  absorption assumptions; and per pipeline deal — the **delivery quarter** and an
-  **Include? (Y/N)** toggle (under-construction default Y, proposed default N).
+- **Columns** are TTM windows anchored to the as-of quarter: **Y0** = the T12
+  ending at as-of, **-Y1…-Y6** step back a year each (toward 2020); **Y1…Y6** are
+  the hold years anchored to an editable **Close Quarter** (default as-of + 2
+  quarters), so the analysis→close gap is one cell.
+- **Historical years** = CoStar 5-mi actuals (Σ deliveries, Σ absorption,
+  end-of-window occupancy).
+- **Forecast years**: `Inventory += scheduled pipeline` (pipeline deals are
+  assigned a hold-year by their delivery quarter vs. the close quarter);
+  `Occupied += selected annual demand` (capped at target × inventory);
+  `Occupancy = Occupied / Inventory`. Also a **cumulative-unabsorbed** row since -Y3.
+- **Demand** is a Bear/Base/Bull annual-absorption assumption (Base = trailing
+  CoStar average), with an **Implied 5-mi Occupancy** block showing all three
+  paths, plus editable **market-rent-growth / concession** blocks and a derived
+  **effective-rent-growth** block (the bridge to rents).
+- **Editable (yellow) cells**: close quarter, demand scenario & the three
+  absorption levels, each pipeline deal's delivery quarter & Include? (Y/N), and
+  the rent-growth/concession assumptions.
+- A **reconciliation note** compares the scheduled pipeline (Include=Y) against
+  CoStar's current Under-Construction unit count so the pipeline ties out.
 
-Reading the occupancy column shows **when the market re-stabilizes** to the
-target — i.e. when occupancy is strong enough to push rents.
+Reading the occupancy row shows **when the market re-stabilizes** to target — i.e.
+when occupancy is strong enough to push rents. (Subject rent rows from RR-T12 are
+a planned next layer.)
 
 ## Analyst follow-ups the script intentionally leaves open
 - **Proximity (miles)** — left blank; neither export carries distance-from-subject. Fill manually (or paste CoStar's "Distance" column if a future pull includes it).
