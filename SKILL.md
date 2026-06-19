@@ -123,14 +123,30 @@ section is colour-coded, carried over from the reference template: **blue**
 (stabilized), **orange** (leasing up), **green** (under construction), **red**
 (proposed), each with a light matching row tint.
 
-### 4. Absorption summary
-For every quarter spanned by the **dated** deliveries, the workbook computes (via
-live Excel formulas, so they stay correct if the analyst edits a cell):
-`# props`, `total units`, `weighted-avg occupancy`, `currently occupied`,
-`target @ goal`, and `units needed to reach 95% / 92.5% / 90%`; then a TOTAL and
-**% to be absorbed** against the total current inventory. A near-zero or negative
-"% to be absorbed" means little competitive lease-up overhang — supportive of
-pushing rents.
+### 4. Forward supply & absorption forecast (the "Supply & Absorption" tab)
+This is the rent-analysis core: a market-level quarterly projection of **new
+supply, absorption, and overall occupancy**, built from the CoStar Data Analytics
+time series and the supply pipeline. It runs on **live Excel formulas** so the
+analyst can drive it from a few editable (yellow) cells.
+
+- **Historical quarters** = CoStar 5-mi actuals (inventory, deliveries = new
+  supply, absorption, occupancy).
+- **Forward quarters**:
+  - `Inventory(t) = Inventory(t-1) + New Supply(t)`, where **New Supply** is the
+    scheduled pipeline (`SUMIFS` over the Pipeline Inputs block by quarter and
+    include flag).
+  - `Absorption(t) = MIN(quarterly demand, MAX(0, target × Inventory − prior
+    Occupied))` — absorb up to demand but not beyond the stabilization target.
+  - `Occupied(t) = Occupied(t-1) + Absorption(t)`; `Overall Occ = Occupied /
+    Inventory`.
+- **Demand** is a Bear/Base/Bull annual-absorption assumption (Base defaults to
+  the trailing CoStar average), selected by a dropdown.
+- **Editable by the analyst** (yellow cells): the demand scenario & the three
+  absorption assumptions; and per pipeline deal — the **delivery quarter** and an
+  **Include? (Y/N)** toggle (under-construction default Y, proposed default N).
+
+Reading the occupancy column shows **when the market re-stabilizes** to the
+target — i.e. when occupancy is strong enough to push rents.
 
 ## Analyst follow-ups the script intentionally leaves open
 - **Proximity (miles)** — left blank; neither export carries distance-from-subject. Fill manually (or paste CoStar's "Distance" column if a future pull includes it).

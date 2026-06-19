@@ -34,6 +34,7 @@ from typing import Optional
 import openpyxl
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
+from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.worksheet.formula import ArrayFormula
 
 # --------------------------------------------------------------------------- #
@@ -263,14 +264,25 @@ _QRE = re.compile(r"(\d{4})\s*Q([1-4])")
 
 
 def parse_costar_analytics(path):
-    """Return (latest_inventory_units, {(year,q): delivered_units}, latest_label)."""
+    """Parse the CoStar Data Analytics quarterly time series.
+
+    Returns (latest_inventory_units, deliveries{(y,q):units}, latest_label,
+    series{(y,q): {...}}) where each series entry has inventory, deliveries,
+    occupancy_units, absorption, occupancy_pct for that quarter.
+    """
     wb = openpyxl.load_workbook(path, data_only=True)
     ws = wb.active
     h = _hdr_map(ws)
     pcol = h.get("Period")
-    inv_col = h.get("Inventory Units")
-    del_col = h.get("Deliveries Units")
+    cols = {
+        "inventory": h.get("Inventory Units"),
+        "deliveries": h.get("Deliveries Units"),
+        "occ_units": h.get("Occupancy Units"),
+        "absorption": h.get("Absorption Units"),
+        "occ_pct": h.get("Occupancy Percent"),
+    }
     deliveries = {}
+    series = {}
     latest_inv = None
     latest_label = None
     for row in ws.iter_rows(min_row=2, values_only=True):
@@ -281,13 +293,15 @@ def parse_costar_analytics(path):
         if not m:
             continue
         year, q = int(m.group(1)), int(m.group(2))
-        d = _int(row[del_col - 1]) if del_col else None
+        rec = {k: (_float(row[c - 1]) if c else None) for k, c in cols.items()}
+        series[(year, q)] = rec
+        d = _int(rec["deliveries"])
         if d:
             deliveries[(year, q)] = d
         if latest_inv is None:  # rows are newest-first
-            latest_inv = _int(row[inv_col - 1]) if inv_col else None
+            latest_inv = _int(rec["inventory"])
             latest_label = str(period).strip()
-    return latest_inv, deliveries, latest_label
+    return latest_inv, deliveries, latest_label, series
 
 
 # --------------------------------------------------------------------------- #
@@ -609,8 +623,177 @@ COLS = {  # column letter -> (header, width)
 }
 
 
+def hist_annual_absorption(series: dict, as_of: tuple[int, int], n_qtrs=12):
+    """Average annualized net absorption over the trailing n quarters (CoStar)."""
+    as_idx = quarter_index(*as_of)
+    vals = [rec["absorption"] for (y, q), rec in series.items()
+            if 0 <= as_idx - quarter_index(y, q) < n_qtrs
+            and rec.get("absorption") is not None]
+    if not vals:
+        return 0
+    return sum(vals) * 4 / len(vals)
+
+
+def build_forecast_sheet(wb, series, props, as_of, target, hist_qtrs=12,
+                         fwd_qtrs=24):
+    """Market-level supply / absorption / overall-occupancy projection.
+
+    Historical quarters come straight from CoStar; forward quarters grow
+    inventory by scheduled pipeline deliveries and occupied units by absorption
+    (= min(quarterly demand, units to reach target)), yielding overall occupancy.
+    Demand scenario, pipeline delivery dates, and include/exclude are editable.
+    """
+    ws = wb.create_sheet("Supply & Absorption")
+    ws.sheet_view.showGridLines = False
+    for col, w in {"A": 2.5, "B": 11, "C": 13, "D": 13, "E": 12, "F": 12,
+                   "G": 12, "H": 9, "J": 28, "K": 8, "L": 12, "M": 9}.items():
+        ws.column_dimensions[col].width = w
+
+    ws.merge_cells("B2:H2")
+    t = ws["B2"]
+    t.value = "SUPPLY & ABSORPTION FORECAST — 5-MILE MARKET"
+    t.fill = fill(NAVY); t.font = font(bold=True, size=13, color=WHITE)
+    t.alignment = CENTER
+    ws.row_dimensions[2].height = 22
+
+    # ---- Assumptions block ----
+    base = round(hist_annual_absorption(series, as_of) / 25) * 25
+    bear = max(0, round(base * 0.5 / 25) * 25)
+    bull = round(base * 1.5 / 25) * 25
+    A = [
+        ("Stabilization Target", "=Settings!$B$2", "0%"),
+        ("Demand Scenario (Bear/Base/Bull)", "Base", None),
+        ("Hist. Avg Annual Absorption (CoStar)", round(base), "#,##0"),
+        ("Bear — Annual Absorption (units)", bear, "#,##0"),
+        ("Base — Annual Absorption (units)", base, "#,##0"),
+        ("Bull — Annual Absorption (units)", bull, "#,##0"),
+        ("Selected Annual Demand",
+         '=IF($C$4="Bear",$C$6,IF($C$4="Bull",$C$8,$C$7))', "#,##0"),
+        ("Selected Quarterly Demand", "=$C$9/4", "#,##0"),
+    ]
+    for i, (label, val, fmt) in enumerate(A, start=3):
+        ws[f"B{i}"] = label
+        ws[f"B{i}"].font = font(size=9, bold=(i in (4,)))
+        c = ws[f"C{i}"]
+        c.value = val
+        c.font = font(size=9, bold=True)
+        c.alignment = CENTER
+        c.fill = fill("FFFFF2CC")          # editable cells -> light yellow
+        if fmt:
+            c.number_format = fmt
+    # scenario dropdown
+    dv = DataValidation(type="list", formula1='"Bear,Base,Bull"', allow_blank=False)
+    ws.add_data_validation(dv); dv.add(ws["C4"])
+
+    # ---- Pipeline inputs block (forward new supply) ----
+    pipeline = [p for p in props if p.bucket in ("UNDER CONSTRUCTION", "PROPOSED")]
+    pj = 3
+    ws.merge_cells(f"J{pj}:M{pj}")
+    ws[f"J{pj}"] = "PIPELINE INPUTS  (forward new supply — edit date / include)"
+    ws[f"J{pj}"].fill = fill(NAVY); ws[f"J{pj}"].font = font(bold=True, size=9, color=WHITE)
+    ws[f"J{pj}"].alignment = CENTER
+    hdr = pj + 1
+    for col, lab in zip("JKLM", ("Property", "Units", "Est. Delivery", "Include?")):
+        c = ws[f"{col}{hdr}"]
+        c.value = lab; c.fill = fill(BLUE); c.font = font(bold=True, size=8, color=WHITE)
+        c.alignment = CENTER; c.border = BORDER
+    p_first = hdr + 1
+    incl_dv = DataValidation(type="list", formula1='"Y,N"', allow_blank=True)
+    ws.add_data_validation(incl_dv)
+    rr = p_first
+    for p in sorted(pipeline, key=lambda x: (x.bucket, -(x.units or 0))):
+        # suggested delivery quarter (must land in the future to enter the forecast)
+        est_idx = None
+        if p.deliv_year and p.deliv_q:
+            est_idx = quarter_index(p.deliv_year, p.deliv_q)
+        elif p.bucket == "UNDER CONSTRUCTION" and p.year_built:
+            guess_q = 4 if p.year_built <= as_of[0] else 2
+            est_idx = quarter_index(p.year_built, guess_q)
+        if est_idx is not None:
+            est_idx = max(est_idx, quarter_index(*as_of) + 1)   # push to next quarter
+            est = fmt_quarter(est_idx // 4, est_idx % 4 + 1)
+        else:
+            est = ""
+        ws[f"J{rr}"] = p.name
+        ws[f"K{rr}"] = p.units
+        ws[f"L{rr}"] = est
+        ws[f"M{rr}"] = "Y" if p.bucket == "UNDER CONSTRUCTION" else "N"
+        for col in "JKLM":
+            c = ws[f"{col}{rr}"]; c.font = font(size=9); c.border = BORDER
+            c.alignment = LEFT if col == "J" else CENTER
+        for col in ("L", "M"):                          # editable -> yellow
+            ws[f"{col}{rr}"].fill = fill("FFFFF2CC")
+        ws[f"K{rr}"].number_format = "#,##0"
+        incl_dv.add(ws[f"M{rr}"])
+        rr += 1
+    p_last = rr - 1 if rr > p_first else p_first
+    urng = f"$K${p_first}:$K${p_last}"
+    lrng = f"$L${p_first}:$L${p_last}"
+    mrng = f"$M${p_first}:$M${p_last}"
+
+    # ---- Projection table ----
+    HR = max(13, p_last + 2)
+    cols = ["B", "C", "D", "E", "F", "G", "H"]
+    heads = ["Period", "New Supply", "Absorption", "Occupied",
+             "Inventory", "Overall Occ", "Phase"]
+    for col, lab in zip(cols, heads):
+        c = ws[f"{col}{HR}"]
+        c.value = lab; c.fill = fill(NAVY); c.font = font(bold=True, size=9, color=WHITE)
+        c.alignment = CENTER; c.border = BORDER
+    ws.row_dimensions[HR].height = 22
+
+    as_idx = quarter_index(*as_of)
+    start_idx = as_idx - (hist_qtrs - 1)
+    end_idx = as_idx + fwd_qtrs
+    row = HR + 1
+    target_ref = "$C$3"
+    qdemand_ref = "$C$10"
+    for qi in range(start_idx, end_idx + 1):
+        y, q = qi // 4, (qi % 4) + 1
+        label = fmt_quarter(y, q)
+        hist = qi <= as_idx
+        rec = series.get((y, q))
+        ws[f"B{row}"] = label
+        if hist and rec:
+            inv = _int(rec["inventory"])
+            occ_u = _int(rec["occ_units"])
+            if occ_u is None and inv is not None and rec.get("occ_pct"):
+                occ_u = int(round(inv * rec["occ_pct"]))
+            ws[f"C{row}"] = _int(rec["deliveries"]) or 0
+            ws[f"D{row}"] = _int(rec["absorption"]) or 0
+            ws[f"E{row}"] = occ_u
+            ws[f"F{row}"] = inv
+            ws[f"G{row}"] = f"=IFERROR(E{row}/F{row},0)"
+            ws[f"H{row}"] = "Actual"
+        else:
+            prev = row - 1
+            ws[f"C{row}"] = f'=SUMIFS({urng},{lrng},B{row},{mrng},"Y")'
+            ws[f"F{row}"] = f"=F{prev}+C{row}"
+            ws[f"D{row}"] = f"=MIN({qdemand_ref},MAX(0,{target_ref}*F{row}-E{prev}))"
+            ws[f"E{row}"] = f"=E{prev}+D{row}"
+            ws[f"G{row}"] = f"=IFERROR(E{row}/F{row},0)"
+            ws[f"H{row}"] = "Forecast"
+        for col in cols:
+            c = ws[f"{col}{row}"]
+            c.font = font(size=9); c.border = BORDER; c.alignment = CENTER
+            c.fill = fill(GRAY if hist and rec else "FFFFFFFF")
+        for col in ("C", "D", "E", "F"):
+            ws[f"{col}{row}"].number_format = "#,##0"
+        ws[f"G{row}"].number_format = "0.0%"
+        row += 1
+
+    note = row + 1
+    ws.merge_cells(f"B{note}:H{note}")
+    ws[f"B{note}"] = ("Historical = CoStar 5-mi actuals. Forecast: inventory grows by "
+                      "scheduled pipeline deliveries (edit dates/include at right); "
+                      "absorption = min(quarterly demand, units to reach target); "
+                      "overall occ = occupied / inventory. Yellow cells are editable.")
+    ws[f"B{note}"].font = font(size=8, color="FF808080")
+    return ws
+
+
 def write_workbook(props, subject_name, latest_inv, latest_label,
-                   as_of, target, out_path):
+                   as_of, target, out_path, series=None):
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Competitive Analysis"
@@ -694,108 +877,17 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
                 c.alignment = LEFT if col in ("C", "H", "K") else CENTER
             ws[f"D{r}"].number_format = "#,##0"
             ws[f"F{r}"].number_format = "0.0%"
-            ws[f"G{r}"].number_format = '#,##0;;"—"'
+            ws[f"G{r}"].number_format = '"$"#,##0;;"—"'
             r += 1
         r += 1  # spacer
 
-    # ---- Quarterly absorption summary ----
-    summ_start = r + 1
-    headers = ["Est. Delivery", "", "# Props", "Total Units",
-               "Wtd Avg\nOccupancy", "Currently\nOccupied", "Target\n@ Goal",
-               "Units to\n95%", "Units to\n92.5%", "Units to\n90%"]
-    cols = ["B", "C", "D", "E", "F", "G", "H", "I", "J", "K"]
-    ws.merge_cells(f"B{summ_start}:C{summ_start}")
-    for col, label in zip(cols, headers):
-        c = ws[f"{col}{summ_start}"]
-        if col != "C":            # C is inside the B:C merge (read-only)
-            c.value = label
-        c.fill = fill(BLUE); c.font = font(bold=True, size=8, color=WHITE)
-        c.alignment = CENTER; c.border = BORDER
-    ws.row_dimensions[summ_start].height = 24
-
-    # Quarter span: newest delivery quarter down to oldest (dated rows only)
-    dated = [(p.deliv_year, p.deliv_q) for p in props if p.deliv_year and p.deliv_q]
-    rng = f"$E${roster_first}:$E${roster_last}"
-    drng = f"$D${roster_first}:$D${roster_last}"
-    frng = f"$F${roster_first}:$F${roster_last}"
-    sr = summ_start + 1
-    first_q = sr
-    if dated:
-        hi = max(quarter_index(y, q) for y, q in dated)
-        lo = min(quarter_index(y, q) for y, q in dated)
-        for qi in range(hi, lo - 1, -1):
-            y, q = qi // 4, (qi % 4) + 1
-            label = fmt_quarter(y, q)
-            ws[f"B{sr}"] = label
-            ws.merge_cells(f"B{sr}:C{sr}")
-            ws[f"D{sr}"] = f'=COUNTIF({rng},B{sr})'
-            ws[f"E{sr}"] = f'=SUMIF({rng},B{sr},{drng})'
-            ws[f"F{sr}"] = ArrayFormula(
-                f"F{sr}",
-                f"=IFERROR(SUMPRODUCT(({rng}=B{sr})*IFERROR({drng}*{frng},0))"
-                f"/SUMPRODUCT(({rng}=B{sr})*ISNUMBER({frng})*{drng}),0)")
-            ws[f"G{sr}"] = f"=F{sr}*E{sr}"
-            ws[f"H{sr}"] = f"=E{sr}*Settings!$B$2"
-            ws[f"I{sr}"] = f"=(E{sr}*0.95)-G{sr}"
-            ws[f"J{sr}"] = f"=(E{sr}*0.925)-G{sr}"
-            ws[f"K{sr}"] = f"=(E{sr}*0.90)-G{sr}"
-            for col in cols:
-                c = ws[f"{col}{sr}"]
-                c.fill = fill(GRAY); c.font = font(size=9)
-                c.border = BORDER; c.alignment = CENTER
-            ws[f"E{sr}"].number_format = "#,##0"
-            ws[f"F{sr}"].number_format = "0.0%"
-            for col in ("G", "H", "I", "J", "K"):
-                ws[f"{col}{sr}"].number_format = "#,##0"
-            sr += 1
-    last_q = sr - 1
-
-    # ---- TOTAL row ----
-    tr = sr
-    ws.merge_cells(f"B{tr}:C{tr}")
-    ws[f"B{tr}"] = "TOTAL"
-    ws[f"D{tr}"] = f"=SUM(D{first_q}:D{last_q})"
-    ws[f"E{tr}"] = f"=SUM(E{first_q}:E{last_q})"
-    ws[f"F{tr}"] = f"=IFERROR(SUMPRODUCT($E${first_q}:$E${last_q},F{first_q}:F{last_q})/$E${tr},0)"
-    for col in ("G", "H", "I", "J", "K"):
-        ws[f"{col}{tr}"] = f"=SUM({col}{first_q}:{col}{last_q})"
-    for col in cols:
-        c = ws[f"{col}{tr}"]
-        c.fill = fill(NAVY); c.font = font(bold=True, size=9, color=WHITE)
-        c.border = BORDER; c.alignment = CENTER
-    ws[f"B{tr}"].alignment = LEFT
-    ws[f"E{tr}"].number_format = "#,##0"
-    ws[f"F{tr}"].number_format = "0.0%"
-    for col in ("G", "H", "I", "J", "K"):
-        ws[f"{col}{tr}"].number_format = "#,##0"
-
-    # ---- Inventory + % to be absorbed ----
-    ir = tr + 2
-    ws.merge_cells(f"G{ir}:H{ir}")
-    ws[f"G{ir}"] = "Total Current Inventory"
-    ws[f"G{ir}"].fill = fill(NAVY); ws[f"G{ir}"].font = font(bold=True, color=WHITE)
-    ws[f"G{ir}"].alignment = CENTER
-    ws[f"I{ir}"] = latest_inv
-    ws[f"I{ir}"].number_format = "#,##0"; ws[f"I{ir}"].alignment = CENTER
-    ws[f"J{ir}"] = f"=I{ir}"; ws[f"K{ir}"] = f"=I{ir}"
-    ws[f"J{ir}"].number_format = "#,##0"; ws[f"K{ir}"].number_format = "#,##0"
-
-    ar = ir + 1
-    ws.merge_cells(f"G{ar}:H{ar}")
-    ws[f"G{ar}"] = "% to be Absorbed"
-    ws[f"G{ar}"].fill = fill(NAVY); ws[f"G{ar}"].font = font(bold=True, color=WHITE)
-    ws[f"G{ar}"].alignment = CENTER
-    ws[f"I{ar}"] = f"=IFERROR(I{tr}/I{ir},0)"
-    ws[f"J{ar}"] = f"=IFERROR(J{tr}/J{ir},0)"
-    ws[f"K{ar}"] = f"=IFERROR(K{tr}/K{ir},0)"
-    for col in ("I", "J", "K"):
-        ws[f"{col}{ar}"].number_format = "0.0%"; ws[f"{col}{ar}"].alignment = CENTER
-
-    note_r = ar + 2
+    # ---- Pointer note (forward forecast lives on its own tab) ----
+    note_r = r + 1
     ws.merge_cells(f"B{note_r}:K{note_r}")
-    ws[f"B{note_r}"] = ("* 5-Mile radius. Total inventory from CoStar Data Analytics. "
-                        "Proximity (mi) to be filled manually. Lease-up rent/occupancy "
-                        "should be verified with a HelloData pull.")
+    ws[f"B{note_r}"] = ("* 5-Mile radius. Rent ($) = market asking. Proximity (mi) to be "
+                        "filled manually; lease-up rent/occupancy to be verified w/ HelloData. "
+                        "See the 'Supply & Absorption' tab for the forward supply / absorption "
+                        "/ overall-occupancy forecast.")
     ws[f"B{note_r}"].font = font(size=8, color="FF808080")
 
     # ---- Settings sheet ----
@@ -834,6 +926,10 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
     rlog.column_dimensions["A"].width = 30
     rlog.column_dimensions["B"].width = 24
     rlog.column_dimensions["L"].width = 44
+
+    # ---- Forward supply / absorption / occupancy forecast ----
+    if series:
+        build_forecast_sheet(wb, series, props, as_of, target)
 
     wb.save(out_path)
 
@@ -874,7 +970,7 @@ def main(argv=None):
                          "the absorption forecast.")
     args = ap.parse_args(argv)
 
-    latest_inv, deliveries, latest_label = parse_costar_analytics(args.costar_analytics)
+    latest_inv, deliveries, latest_label, series = parse_costar_analytics(args.costar_analytics)
     as_of = parse_as_of(args.as_of or latest_label)
 
     costar = parse_costar_roster(args.costar_roster)
@@ -911,7 +1007,7 @@ def main(argv=None):
         apply_pipeline_dates(props, applied)
 
     write_workbook(props, args.subject_name, latest_inv, latest_label,
-                   as_of, args.target, args.out)
+                   as_of, args.target, args.out, series=series)
 
     # Emit a template listing pipeline deals still missing a delivery quarter.
     import os
