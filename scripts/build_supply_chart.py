@@ -96,6 +96,12 @@ class Prop:
     year_built: Optional[int] = None
     construction_begin: Optional[str] = None
     status_raw: str = ""               # e.g. Existing / Stabilized / Pre-Planned
+    # Per-source occupancy / rent so the two can be compared (not just merged).
+    costar_occ: Optional[float] = None
+    costar_rent: Optional[float] = None     # CoStar asking rent / unit
+    rp_occ: Optional[float] = None
+    rp_rent: Optional[float] = None         # RealPage effective rent / unit
+    # Resolved primary values (chosen by source priority) used on the chart.
     occupancy: Optional[float] = None
     eff_rent: Optional[float] = None
     owner: Optional[str] = None
@@ -193,6 +199,10 @@ def parse_costar_roster(path) -> list[Prop]:
         name = col(row, "Property Name")
         if not name:
             continue
+        # CoStar v2 adds asking rent and vacancy; v1 lacks them.
+        rent = _float(col(row, "Avg Asking/Unit"))
+        vac = _float(col(row, "Vacancy %"))   # whole-percent, e.g. 8 -> 8%
+        occ = (1 - vac / 100.0) if vac is not None else None
         p = Prop(
             name=str(name).strip(),
             address=str(col(row, "Property Address") or "").strip(),
@@ -201,6 +211,8 @@ def parse_costar_roster(path) -> list[Prop]:
             construction_begin=(str(col(row, "Construction Begin")).strip()
                                 if col(row, "Construction Begin") else None),
             status_raw=str(col(row, "Building Status") or "").strip(),
+            costar_occ=occ,
+            costar_rent=rent,
             owner=(str(col(row, "Owner Name")).strip()
                    if col(row, "Owner Name") else None),
             stories=_int(col(row, "Number of Stories")),
@@ -230,8 +242,8 @@ def parse_realpage(path) -> list[Prop]:
             units=_int(col(row, "Total Units")),
             year_built=_int(col(row, "Year Built")),
             status_raw=str(col(row, "Property Status") or "").strip(),
-            occupancy=_float(col(row, "Occupancy")),
-            eff_rent=_float(col(row, "Effective Rent")),
+            rp_occ=_float(col(row, "Occupancy")),
+            rp_rent=_float(col(row, "Effective Rent")),
             owner=(str(col(row, "Property Owner")).strip()
                    if col(row, "Property Owner") else None),
             stories=_int(col(row, "Stories")),
@@ -302,11 +314,11 @@ def reconcile(costar: list[Prop], realpage: list[Prop]) -> list[Prop]:
             if hi - lo >= 3:  # ignore +/-2 unit noise
                 base.note(f"Units: CoStar {base.units if 'CoStar' in base.sources else hi} "
                           f"vs RealPage {other.units if 'RealPage' in other.sources else lo}")
-        # Occupancy / rent: take from whichever has them (RealPage today)
-        if base.occupancy is None and other.occupancy is not None:
-            base.occupancy = other.occupancy
-        if base.eff_rent is None and other.eff_rent is not None:
-            base.eff_rent = other.eff_rent
+        # Occupancy / rent: keep both sources' values for comparison.
+        base.costar_occ = base.costar_occ if base.costar_occ is not None else other.costar_occ
+        base.costar_rent = base.costar_rent if base.costar_rent is not None else other.costar_rent
+        base.rp_occ = base.rp_occ if base.rp_occ is not None else other.rp_occ
+        base.rp_rent = base.rp_rent if base.rp_rent is not None else other.rp_rent
         # Style / stories / owner backfill
         base.style = base.style or other.style
         base.stories = base.stories or other.stories
@@ -327,6 +339,30 @@ def reconcile(costar: list[Prop], realpage: list[Prop]) -> list[Prop]:
     for p in realpage:
         register(p)
     return list(merged.values())
+
+
+OCC_DIVERGENCE = 0.02   # >=2 pts occupancy gap between sources -> flag
+RENT_DIVERGENCE = 0.05  # >=5% rent gap between sources -> flag
+
+
+def resolve_occ_rent(p: Prop, occ_source: str, rent_source: str):
+    """Choose the displayed occupancy/rent by source priority; flag divergence.
+
+    CoStar rent is *asking*; RealPage rent is *effective* — divergence on rent is
+    expected and is surfaced rather than silently averaged.
+    """
+    prio = {"costar": (p.costar_occ, p.rp_occ), "realpage": (p.rp_occ, p.costar_occ)}
+    p.occupancy = next((v for v in prio[occ_source] if v is not None), None)
+    rprio = {"costar": (p.costar_rent, p.rp_rent), "realpage": (p.rp_rent, p.costar_rent)}
+    p.eff_rent = next((v for v in rprio[rent_source] if v is not None), None)
+
+    if p.costar_occ is not None and p.rp_occ is not None \
+            and abs(p.costar_occ - p.rp_occ) >= OCC_DIVERGENCE:
+        p.note(f"Occ: CoStar {p.costar_occ:.0%} vs RealPage {p.rp_occ:.0%}")
+    if p.costar_rent and p.rp_rent \
+            and abs(p.costar_rent - p.rp_rent) / max(p.costar_rent, p.rp_rent) >= RENT_DIVERGENCE:
+        p.note(f"Rent: CoStar ask ${p.costar_rent:,.0f} vs "
+               f"RealPage eff ${p.rp_rent:,.0f}")
 
 
 def _is_pipeline(status: str) -> bool:
@@ -361,6 +397,73 @@ def pin_delivery(p: Prop, deliveries: dict, as_of: tuple[int, int]):
     else:
         p.deliv_year = p.year_built
         p.est_delivery = f"Q? {p.year_built}"
+
+
+_QLABEL = re.compile(r"Q([1-4])\s*'?(\d{2,4})|(\d{4})\s*Q([1-4])", re.I)
+
+
+def parse_quarter_label(label: str) -> Optional[tuple[int, int]]:
+    """Parse 'Q2 2028' or '2028 Q2' (or Q2'28) -> (year, quarter)."""
+    if not label:
+        return None
+    m = _QLABEL.search(str(label).strip())
+    if not m:
+        return None
+    if m.group(1):
+        q = int(m.group(1)); y = int(m.group(2))
+        if y < 100:
+            y += 2000
+    else:
+        y = int(m.group(3)); q = int(m.group(4))
+    return y, q
+
+
+def load_pipeline_dates(path) -> dict:
+    """Read analyst-supplied delivery dates for pipeline deals.
+
+    CSV with headers: property, est_delivery[, units]. Returns
+    {name_key: {"yq": (y,q), "units": int|None}}.
+    """
+    import csv
+    out = {}
+    with open(path, newline="", encoding="utf-8-sig") as fh:
+        for row in csv.DictReader(fh):
+            r = {(k or "").strip().lower(): (v or "").strip()
+                 for k, v in row.items()}
+            name = r.get("property")
+            yq = parse_quarter_label(r.get("est_delivery", ""))
+            if not name or not yq:
+                continue
+            out[name_key(name)] = {"yq": yq, "units": _int(r.get("units"))}
+    return out
+
+
+def apply_pipeline_dates(props: list[Prop], dates: dict):
+    for p in props:
+        info = dates.get(name_key(p.name))
+        if not info:
+            continue
+        y, q = info["yq"]
+        p.deliv_year, p.deliv_q = y, q
+        p.est_delivery = fmt_quarter(y, q)
+        if info["units"]:
+            p.units = info["units"]
+        p.note("Est. delivery set by analyst")
+
+
+def emit_pipeline_template(props: list[Prop], path):
+    """Write a CSV of undated pipeline deals for the analyst to fill in."""
+    import csv
+    undated = [p for p in props
+               if p.bucket in ("PROPOSED", "UNDER CONSTRUCTION")
+               and not p.deliv_year]
+    with open(path, "w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["property", "est_delivery", "units",
+                    "# Fill est_delivery as 'Q2 2028'. Re-run with --pipeline-dates."])
+        for p in sorted(undated, key=lambda x: -(x.units or 0)):
+            w.writerow([p.name, "", p.units or "", ""])
+    return len(undated)
 
 
 def classify(p: Prop, as_of: tuple[int, int], target: float):
@@ -647,19 +750,30 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
     # ---- Reconciliation log sheet ----
     rlog = wb.create_sheet("Reconciliation Log")
     rlog.append(["Property", "Address", "Units", "Year Built", "Est. Delivery",
-                 "Bucket", "Occupancy", "Eff Rent", "Sources", "Notes"])
+                 "Bucket", "CoStar Occ", "RealPage Occ",
+                 "CoStar Ask Rent", "RealPage Eff Rent",
+                 "Sources", "Notes"])
     for c in rlog[1]:
         c.font = font(bold=True, color=WHITE); c.fill = fill(NAVY)
+        c.alignment = CENTER
     for p in sorted(props, key=lambda x: (BUCKET_ORDER.index(
             next(b for b in BUCKET_ORDER if b[0] == x.bucket)),
-            -(p_qi(x)))):
+            -p_qi(x))):
         rlog.append([p.name, p.address, p.units, p.year_built,
-                     p.est_delivery, p.bucket, p.occupancy, p.eff_rent,
+                     p.est_delivery, p.bucket,
+                     p.costar_occ, p.rp_occ, p.costar_rent, p.rp_rent,
                      "+".join(sorted(p.sources)), "; ".join(p.notes)])
-    for col in "ABCDEFGHIJ":
-        rlog.column_dimensions[col].width = 18
+    for i, p in enumerate(sorted(props, key=lambda x: (BUCKET_ORDER.index(
+            next(b for b in BUCKET_ORDER if b[0] == x.bucket)), -p_qi(x))), 2):
+        rlog[f"G{i}"].number_format = "0.0%"
+        rlog[f"H{i}"].number_format = "0.0%"
+        rlog[f"I{i}"].number_format = "#,##0"
+        rlog[f"J{i}"].number_format = "#,##0"
+    for col in "ABCDEFGHIJKL":
+        rlog.column_dimensions[col].width = 15
     rlog.column_dimensions["A"].width = 30
-    rlog.column_dimensions["J"].width = 40
+    rlog.column_dimensions["B"].width = 24
+    rlog.column_dimensions["L"].width = 44
 
     wb.save(out_path)
 
@@ -690,6 +804,14 @@ def main(argv=None):
     ap.add_argument("--as-of", default=None,
                     help="Override analysis quarter, e.g. '2026 Q2'")
     ap.add_argument("--target", type=float, default=DEFAULT_STABILIZATION_TARGET)
+    ap.add_argument("--occ-source", choices=("costar", "realpage"), default="costar",
+                    help="Which source's occupancy to display (default: costar)")
+    ap.add_argument("--rent-source", choices=("costar", "realpage"), default="costar",
+                    help="Which source's rent to display (default: costar asking)")
+    ap.add_argument("--pipeline-dates", default=None,
+                    help="CSV (property,est_delivery[,units]) of analyst-supplied "
+                         "delivery quarters for pipeline deals, so they flow into "
+                         "the absorption forecast.")
     args = ap.parse_args(argv)
 
     latest_inv, deliveries, latest_label = parse_costar_analytics(args.costar_analytics)
@@ -714,13 +836,24 @@ def main(argv=None):
         recent = (p.year_built and
                   p.year_built >= as_of[0] - NEW_CONSTRUCTION_LOOKBACK_YEARS)
         if recent or _is_pipeline(p.status_raw):
+            resolve_occ_rent(p, args.occ_source, args.rent_source)
             classify(p, as_of, args.target)
             p.prop_type = derive_type(p)
             keep.append(p)
     props = keep
 
+    # Apply analyst-supplied pipeline delivery quarters so they enter the forecast.
+    if args.pipeline_dates:
+        applied = load_pipeline_dates(args.pipeline_dates)
+        apply_pipeline_dates(props, applied)
+
     write_workbook(props, args.subject_name, latest_inv, latest_label,
                    as_of, args.target, args.out)
+
+    # Emit a template listing pipeline deals still missing a delivery quarter.
+    import os
+    tmpl = os.path.splitext(args.out)[0] + "__pipeline_dates_TEMPLATE.csv"
+    n_undated = emit_pipeline_template(props, tmpl)
 
     # Console reconciliation report
     print(f"\nSupply chart written: {args.out}")
@@ -739,6 +872,10 @@ def main(argv=None):
                   f"{p.est_delivery or 'TBD':>8}  occ {occ:>6}  "
                   f"[{'+'.join(sorted(p.sources))}]"
                   f"{('  | ' + '; '.join(p.notes)) if p.notes else ''}")
+    if n_undated:
+        print(f"\n  {n_undated} pipeline deal(s) have no delivery quarter and are "
+              f"NOT in the absorption forecast yet.\n  Fill {tmpl}\n"
+              f"  then re-run with --pipeline-dates to fold them in.")
     print()
 
 

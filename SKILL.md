@@ -37,12 +37,16 @@ skill only builds the supply chart.)
 |---|---|---|
 | **CoStar 50-unit property roster** (`Export…xlsx`) | Property-level roster of existing assets: name, address, year built, **construction begin**, units, bed mix, stories, owner. | Used as the **primary roster + unit counts + delivery timing basis**. Misses sub-50-unit and not-yet-tracked pipeline deals. |
 | **CoStar Data Analytics** (`MultifamilyDataGrid`) | Quarterly submarket time series: inventory, rent, occupancy, absorption, under-construction, **deliveries by quarter**. | Source of **Total Current Inventory** and of the **delivery-quarter pinning** (match a property's unit count to the quarter it was delivered). |
-| **RealPage 5-mile** | Competitor roster with **per-property occupancy & effective rent**, plus the **forward pipeline** (`Property Status` = Pre-Planned / Under Construction). | Fills occupancy/rent and catches deals CoStar hasn't picked up (sub-50u, pipeline). |
+| **RealPage 5-mile** | Competitor roster with **per-property occupancy & effective rent**, plus the **forward pipeline** (`Property Status` = Pre-Planned / Under Construction). | Catches deals CoStar hasn't picked up (sub-50u, pipeline). |
 
-> The current CoStar property export does **not** include per-property rent or
-> occupancy. When the user re-pulls CoStar with those fields, the script will
-> cross-check them against RealPage automatically (it already backfills occ/rent
-> only when missing, and notes unit/year conflicts).
+> **CoStar rent/occupancy:** if the CoStar export includes `Avg Asking/Unit` and
+> `Vacancy %` (the "v2" pull), the script reads them and **cross-checks against
+> RealPage** — occupancy gaps ≥2 pts and rent gaps ≥5% are flagged in Notes, and
+> both sources sit side-by-side in the Reconciliation Log. Note CoStar rent is
+> *asking* and RealPage rent is *effective*, so a gap is expected. Choose which
+> source drives the chart with `--occ-source` / `--rent-source` (default CoStar).
+> If the CoStar export lacks those columns ("v1"), occupancy/rent fall back to
+> RealPage automatically.
 
 ## How to run
 ```bash
@@ -54,12 +58,25 @@ python scripts/build_supply_chart.py \
   --realpage        path/to/Realpage_5mi.xlsx \
   --out             output/<Deal>__Supply_Chart.xlsx
 ```
-Optional: `--as-of "2026 Q2"` (defaults to the latest quarter in the analytics
-file) and `--target 0.95` (stabilization occupancy goal).
+Optional flags:
+- `--as-of "2026 Q2"` — analysis quarter (defaults to latest in the analytics file)
+- `--target 0.95` — stabilization occupancy goal
+- `--occ-source costar|realpage`, `--rent-source costar|realpage` — which source drives the chart (default `costar`)
+- `--pipeline-dates path.csv` — analyst-supplied delivery quarters for pipeline deals (see below)
 
 The script prints a reconciliation report to the console and writes the workbook.
 Always read the console report and the **Reconciliation Log** sheet, then review
 the workbook before handing it off.
+
+### Dating the pipeline (so it enters the absorption forecast)
+Pre-Planned / under-construction deals usually have no delivery date, so they are
+listed in the roster but **excluded from the absorption math** until dated. Every
+run writes `<out>__pipeline_dates_TEMPLATE.csv` listing the undated pipeline
+deals. Fill the `est_delivery` column (`Q2 2028`, units optional to override),
+then re-run with `--pipeline-dates that.csv`. Dated pipeline deals enter the
+quarterly table at 0% occupancy (lease-up not started), so their full unit count
+flows into "units to reach target" and lifts **% to be absorbed** — i.e. the
+forward supply the deal must compete with.
 
 ## Methodology
 
@@ -69,9 +86,9 @@ the workbook before handing it off.
   a **name fallback** for missing/typo'd addresses.
 - **Unit counts:** keep CoStar's; flag a note when the two sources differ by ≥3
   units (±2 is treated as noise).
-- **Occupancy & effective rent:** taken from RealPage today (CoStar lacks them);
-  if a future CoStar pull has them, only missing values are backfilled and
-  conflicts are noted.
+- **Occupancy & rent:** both sources' values are kept side-by-side; the displayed
+  value follows `--occ-source` / `--rent-source` (default CoStar), and material
+  divergence (≥2 pts occ, ≥5% rent) is flagged in Notes.
 - **Status:** a forward-looking status (Pre-Planned / Under Construction) from
   either source wins, so pipeline deals are never mislabeled as existing.
 - The **subject property** is dropped from the competitive roster.
@@ -110,15 +127,17 @@ pushing rents.
 ## Analyst follow-ups the script intentionally leaves open
 - **Proximity (miles)** — left blank; neither export carries distance-from-subject. Fill manually (or paste CoStar's "Distance" column if a future pull includes it).
 - **Lease-up rent & occupancy** — verify the flagged lease-ups with a HelloData pull.
-- **Pipeline timing** — Pre-Planned deals are undated (`TBD`); add an estimated delivery quarter if CoStar/RealPage provides one so they flow into the absorption table.
+- **Pipeline timing** — undated Pre-Planned deals (`TBD`) are listed but not in the forecast; fill the emitted `…__pipeline_dates_TEMPLATE.csv` and re-run with `--pipeline-dates` to fold them in.
 
 ## Tunable thresholds
 Top of `scripts/build_supply_chart.py`: `DEFAULT_STABILIZATION_TARGET`,
 `STABILIZED_OCC`, `LEASEUP_WINDOW_QTRS`, `NEW_CONSTRUCTION_LOOKBACK_YEARS`.
 
 ## Worked example
-`examples/canyon_ridge/` holds the three real exports for Canyon Ridge (Boise,
-ID). Running the command above reproduces
-`output/Canyon_Ridge__Supply_Chart.xlsx`: 3 stabilized comps (445 u, ≈fully
-absorbed) and a 1,763-unit proposed pipeline — i.e. minimal near-term
-competitive supply.
+`examples/canyon_ridge/` holds the real exports for Canyon Ridge (Boise, ID),
+including the CoStar v2 pull (with rent/occ) and a sample `pipeline_dates.csv`.
+Running the command above reproduces `output/Canyon_Ridge__Supply_Chart.xlsx`:
+3 stabilized comps (445 u, ≈fully absorbed near-term) plus a 1,763-unit proposed
+pipeline. With the pipeline dated via `--pipeline-dates`, the deliveries spread
+across 2026–2028 and "% to be absorbed" rises to ≈28% — the forward supply the
+deal will compete with.
