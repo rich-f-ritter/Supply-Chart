@@ -3,12 +3,13 @@ name: supply-chart
 description: >-
   Build a 5-mile new-construction "Supply Chart" for a multifamily underwriting
   deal. Reconciles CoStar and RealPage 5-mile-radius exports (plus the CoStar
-  Data Analytics time series) into one competitive-supply roster, pins delivery
-  quarters, buckets each property by lifecycle stage, and writes a formatted
-  workbook with a quarterly absorption summary. Use when the user asks to build,
-  update, or automate a supply chart / competitive supply analysis, or provides
-  CoStar + RealPage radius exports for a deal. Output feeds the rent-analysis tab
-  of the underwriting model.
+  Data Analytics time series) into one competitive-supply roster, buckets each
+  property by lifecycle stage, and writes a formatted workbook with a relative-
+  year (TTM) Supply & Absorption forecast — new supply, absorption, and overall
+  occupancy projected forward with editable demand scenarios and pipeline
+  toggles, plus subject rent/occupancy rows from the RR-T12 intake. Use when the
+  user asks to build, update, or automate a supply chart / competitive supply or
+  rent analysis, or provides CoStar + RealPage radius exports for a deal.
 ---
 
 # Supply Chart
@@ -69,15 +70,14 @@ The script prints a reconciliation report to the console and writes the workbook
 Always read the console report and the **Reconciliation Log** sheet, then review
 the workbook before handing it off.
 
-### Dating the pipeline (so it enters the absorption forecast)
-Pre-Planned / under-construction deals usually have no delivery date, so they are
-listed in the roster but **excluded from the absorption math** until dated. Every
-run writes `<out>__pipeline_dates_TEMPLATE.csv` listing the undated pipeline
-deals. Fill the `est_delivery` column (`Q2 2028`, units optional to override),
-then re-run with `--pipeline-dates that.csv`. Dated pipeline deals enter the
-quarterly table at 0% occupancy (lease-up not started), so their full unit count
-flows into "units to reach target" and lifts **% to be absorbed** — i.e. the
-forward supply the deal must compete with.
+### Dating the pipeline
+Under-construction deals are auto-dated (from CoStar `Construction Begin` + ~24
+mo) and flow into the forecast automatically. Proposed deals without a date are
+listed but undated; every run writes `<out>__pipeline_dates_TEMPLATE.csv` of the
+undated deals. Fill `est_delivery` (`Q2 2028`) and re-run with `--pipeline-dates
+that.csv`, or just edit the delivery quarter directly in the **Proposed Pipeline**
+block on the Supply & Absorption tab. Whether a proposed deal adds supply is
+controlled by its **Built In** toggle (Bear only / Bear+Base / All / None).
 
 ## Methodology
 
@@ -181,12 +181,21 @@ market-rent-growth → effective-rent step.
 
 ## Tunable thresholds
 Top of `scripts/build_supply_chart.py`: `DEFAULT_STABILIZATION_TARGET`,
-`STABILIZED_OCC`, `LEASEUP_WINDOW_QTRS`, `NEW_CONSTRUCTION_LOOKBACK_YEARS`.
+`STABILIZED_OCC`, `NEW_CONSTRUCTION_LOOKBACK_YEARS`, `CONSTRUCTION_MONTHS`.
 
 ## Worked examples
-`examples/bella_mirage/` is a large, supply-heavy Phoenix market (104 comps,
-26.6k-unit inventory) that exercises all four buckets — ~8.8% of inventory still
-absorbing from current lease-ups alone, before a large proposed pipeline.
+`examples/bella_mirage/` — a large, supply-heavy Phoenix market (104 comps,
+26.6k-unit inventory) that exercises all four buckets and the subject rows. Run:
+```bash
+python scripts/build_supply_chart.py \
+  --subject-name "Bella Mirage" --subject-address "3800 N El Mirage Rd" \
+  --costar-roster    examples/bella_mirage/CoStar_5mi_50unit_properties.xlsx \
+  --costar-analytics examples/bella_mirage/CoStar_5mi_Data_Analytics.xlsx \
+  --realpage         examples/bella_mirage/Realpage_5mi.xlsx \
+  --intake           examples/bella_mirage/Bella_Underwriting_Intake.xlsx \
+  --costar-subject-rents examples/bella_mirage/CoStar_5mi_property_rents.xlsx \
+  --out output/Bella_Mirage__Supply_Chart.xlsx
+```
 
 `examples/canyon_ridge/` holds the real exports for Canyon Ridge (Boise, ID),
 including the CoStar v2 pull (with rent/occ) and a sample `pipeline_dates.csv`.

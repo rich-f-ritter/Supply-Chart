@@ -6,12 +6,17 @@ Reads the three market exports (CoStar property roster, CoStar Data Analytics
 time series, RealPage roster) for a subject property's 5-mile radius, reconciles
 them into a single competitive-supply roster, buckets each property by lifecycle
 stage, pins delivery quarters against the CoStar quarterly deliveries series, and
-writes a formatted workbook that mirrors the reference "Supply Chart" template.
+writes a formatted workbook with:
+  - "Competitive Analysis": the colour-coded, chronological roster.
+  - "Supply & Absorption": a relative-year (TTM) forecast of new supply,
+    absorption, and overall occupancy with editable demand scenarios and pipeline
+    toggles; plus subject rent/occupancy/concession rows (with --intake and
+    --costar-subject-rents).
+  - "Reconciliation Log": per-property merged values, sources, and conflicts.
 
-See SKILL.md for the full methodology. This script handles the *mechanical* parts
-(parsing, address matching, quarter pinning, formatting). Judgment fields that the
-script cannot know — Proximity (miles) and verified lease-up rent/occupancy from
-HelloData — are intentionally left blank / flagged for the analyst.
+See SKILL.md for the full methodology. Judgment fields the script cannot know —
+Proximity (miles) and verified lease-up rent/occupancy from HelloData — are left
+blank / flagged for the analyst.
 
 Usage:
     python build_supply_chart.py \
@@ -35,16 +40,14 @@ import openpyxl
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
-from openpyxl.worksheet.formula import ArrayFormula
 
 # --------------------------------------------------------------------------- #
 # Tunable thresholds (documented in SKILL.md)
 # --------------------------------------------------------------------------- #
 DEFAULT_STABILIZATION_TARGET = 0.95
-# A delivered property is "stabilized" once occupancy >= this OR it has been open
-# longer than LEASEUP_WINDOW_QTRS quarters. Otherwise it is still "leasing up".
+# A delivered property is "stabilized" once occupancy >= this; recently delivered
+# (within ~2 years) and below it = still "leasing up".
 STABILIZED_OCC = 0.90
-LEASEUP_WINDOW_QTRS = 6          # ~18 months to lease up a new building
 # How far back a delivery counts as "new construction" worth charting.
 NEW_CONSTRUCTION_LOOKBACK_YEARS = 4
 
@@ -889,9 +892,6 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
     for k in range(1, fwd_years + 1):              # Y1 ... Y6
         plan.append((f"Y{k}", "fcst", k))
 
-    occ_asof = _int(at(as_idx, "occ_units"))
-    inv_asof = _int(at(as_idx, "inventory"))
-
     # ----- title -----
     ncols = len(plan)
     last_col = 2 + ncols                            # B=labels, C.. = years
@@ -1272,8 +1272,6 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
 
     # ---- Buckets ----
     r = hr + 1
-    roster_first = None
-    roster_last = None
     idx = 0
     for bucket, _desc in BUCKET_ORDER:
         members = [p for p in props if p.bucket == bucket]
@@ -1295,8 +1293,6 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
         r += 1
         for p in members:
             idx += 1
-            roster_first = roster_first or r
-            roster_last = r
             p.roster_row = r          # remember for cross-sheet links
             row_vals = {
                 "B": idx,

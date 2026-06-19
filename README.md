@@ -1,19 +1,21 @@
 # Supply-Chart
 
 A Claude Code **skill** that automates the multifamily 5-mile new-construction
-**Supply Chart** used in underwriting. It reconciles CoStar and RealPage
-radius exports into one competitive-supply roster, pins delivery quarters against
-the CoStar Data Analytics deliveries series, buckets each property by lifecycle
-stage, and writes a formatted workbook with a quarterly absorption summary.
+**Supply Chart** used in underwriting. It reconciles CoStar and RealPage radius
+exports into one competitive-supply roster, buckets each property by lifecycle
+stage (stabilized / leasing-up / under-construction / proposed), and writes a
+formatted workbook with a **Supply & Absorption** forecast tab — a relative-year
+(TTM) projection of new supply, absorption, and overall occupancy with editable
+demand scenarios, plus subject rent/occupancy rows.
 
-The supply layer feeds the **rent-analysis** step of the model (layering supply
-on top of historical occupancy / absorption / deliveries to forecast demand and
-identify when occupancy is strong enough to push rents).
+This is the **rent-analysis** layer: it shows when market occupancy re-stabilizes
+enough to push rents. Output feeds the underwriting model.
 
 ## Quick start
 ```bash
-pip install openpyxl
+pip install -r requirements.txt   # openpyxl
 
+# Minimal (3 market exports):
 python scripts/build_supply_chart.py \
   --subject-name    "Canyon Ridge" \
   --subject-address "2552 E Gowen Rd" \
@@ -21,6 +23,10 @@ python scripts/build_supply_chart.py \
   --costar-analytics examples/canyon_ridge/CoStar_5mi_Data_Analytics.xlsx \
   --realpage         examples/canyon_ridge/Realpage_5mi.xlsx \
   --out              output/Canyon_Ridge__Supply_Chart.xlsx
+
+# Full (adds subject rows from the RR-T12 intake + CoStar per-property rents):
+#   --intake examples/bella_mirage/Bella_Underwriting_Intake.xlsx \
+#   --costar-subject-rents examples/bella_mirage/CoStar_5mi_property_rents.xlsx
 ```
 
 ## Layout
