@@ -115,9 +115,13 @@ source beats a stale "pre-planned"):
 - **LEASING UP** — delivered within ~2 years and below 90% occupied. **Flagged
   "Verify rent/occ w/ HelloData"** — lease-ups are where accurate rent/occ matter
   most.
-- **UNDER CONSTRUCTION** — CoStar `Under Construction` or RealPage `Under
-  Construction[/Lease-Up]` (no rent/occ shown).
-- **PROPOSED** — CoStar `Proposed` or RealPage `Pre-Planned`/`Planned` (no rent/occ).
+- **UNDER CONSTRUCTION** — ground has broken: a UC status from either source, **or
+  `Construction Begin` ≤ the as-of quarter** (even if a source still lags as
+  "Proposed").
+- **PROPOSED** — not yet started: `Construction Begin` in the future (or absent)
+  and a proposed/pre-planned status. A future begin still yields an *estimated
+  completion* (begin + ~24 mo) for the pipeline, but the deal stays Proposed
+  until ground breaks.
 
 Only genuine new supply is charted: deliveries within the last
 `NEW_CONSTRUCTION_LOOKBACK_YEARS` (default 4) plus the entire pipeline. Each
@@ -144,7 +148,10 @@ the CoStar Data Analytics series + the supply pipeline, on **live Excel formulas
   speculative with a per-deal **"Built In"** dropdown (*Bear only / Bear+Base /
   All / None*) so a deal layers into the downside (more-supply) case only. Each
   hold-year's new supply = UC + proposed built under the selected scenario.
-- **Subject rows**: market & effective rent and occupancy, plus **YoY %** rows.
+- **Subject rows**: market & effective rent, occupancy, and **concession %**, plus
+  **YoY %** rows. A collapsed ("+") detail group lists the source used per year
+  (HelloData vs CoStar) and the UC-vs-CoStar reconciliation. Forward concession %
+  is an editable assumption block.
 - **Demand** is a Bear/Base/Bull annual-absorption assumption (Base = trailing
   CoStar average), with an **Implied 5-mi Occupancy** block (all three paths),
   editable **market-rent-growth / concession** blocks, and a derived
