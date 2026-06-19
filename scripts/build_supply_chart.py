@@ -65,8 +65,8 @@ def fill(color: str) -> PatternFill:
     return PatternFill("solid", fgColor=color)
 
 
-def font(bold=False, size=9, color="FF000000"):
-    return Font(name="Calibri", bold=bold, size=size, color=color)
+def font(bold=False, size=9, color="FF000000", italic=False):
+    return Font(name="Calibri", bold=bold, size=size, color=color, italic=italic)
 
 
 CENTER = Alignment(horizontal="center", vertical="center", wrap_text=True)
@@ -588,6 +588,7 @@ def parse_costar_subject_rents(path, subject_name):
     pc = hdr.get("Period")
     ask_c = grouped("Asking Rent", "Per Unit")
     eff_c = grouped("Effective Rent", "Per Unit")
+    occ_c = grouped("Occupancy", "Percent")
     key = name_key(subject_name)
     out = {}
     for r in range(3, ws.max_row + 1):
@@ -599,7 +600,8 @@ def parse_costar_subject_rents(path, subject_name):
             continue
         yq = (int(m.group(1)), int(m.group(2)))
         out[yq] = {"ask": _float(ws.cell(r, ask_c).value) if ask_c else None,
-                   "eff": _float(ws.cell(r, eff_c).value) if eff_c else None}
+                   "eff": _float(ws.cell(r, eff_c).value) if eff_c else None,
+                   "occ": _float(ws.cell(r, occ_c).value) if occ_c else None}
     return out
 
 
@@ -818,8 +820,12 @@ def subject_annual_by_window(plan, as_idx, subj_monthly, subj_costar):
                    if q in subj_costar and subj_costar[q].get("ask") is not None]
             eff = [subj_costar[q]["eff"] for q in qs
                    if q in subj_costar and subj_costar[q].get("eff") is not None]
-            occ = avg(hd, "occ")     # use any HD occupancy if present
-            if ask or eff:
+            occq = [subj_costar[q]["occ"] for q in qs
+                    if q in subj_costar and subj_costar[q].get("occ") is not None]
+            occ = avg(hd, "occ")     # prefer financials occupancy if present
+            if occ is None and occq:
+                occ = sum(occq) / len(occq)
+            if ask or eff or occq:
                 out[label] = {
                     "mkt": (sum(ask) / len(ask) * ratio) if ask else None,
                     "eff": (sum(eff) / len(eff) * ratio) if eff else None,
@@ -885,15 +891,13 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
     A = [
         ("As-of Quarter", fmt_quarter(*as_of), None, False),
         ("Close Quarter (Y1 start)", fmt_quarter(cy, cq), None, True),
-        ("Stabilization Target", "=Settings!$B$2", "0%", False),
+        ("Stabilization Target", target, "0%", True),
         ("Demand Scenario", "Base", None, True),
         ("Bear Annual Absorption", bear, "#,##0", True),
         ("Base Annual Absorption", base, "#,##0", True),
         ("Bull Annual Absorption", bull, "#,##0", True),
         ("Selected Annual Demand",
          '=IF($C$7="Bear",$C$8,IF($C$7="Bull",$C$10,$C$9))', "#,##0", False),
-        ("Occupied (as-of)", occ_asof, "#,##0", False),
-        ("Inventory (as-of)", inv_asof, "#,##0", False),
     ]
     for i, (lab, val, fmt, editable) in enumerate(A, start=4):
         ws.cell(i, 2, lab).font = font(size=9, bold=True)
@@ -903,16 +907,16 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
             c.number_format = fmt
         if editable:
             c.fill = EDIT
-    # numeric indices (helpers in col E)
-    ws["E4"] = as_idx                                       # as-of index
-    ws["E5"] = ('=IFERROR(VALUE(RIGHT($C$5,4))*4+'
-                'MATCH(LEFT($C$5,2),{"Q1","Q2","Q3","Q4"},0)-1,0)')   # close idx
     dv = DataValidation(type="list", formula1='"Bear,Base,Bull"', allow_blank=False)
     ws.add_data_validation(dv); dv.add(ws["C7"])
-    DEMAND = "$C$11"; TARGET = "$C$6"; OCC0 = "$C$12"; INV0 = "$C$13"
-    CLOSE = "$E$5"; ASOF = "$E$4"
-    # scenario "bearishness" rank: more supply / less demand = Bear (high)
-    ws["E6"] = '=IF($C$7="Bear",3,IF($C$7="Base",2,1))'      # selected rank
+    # numeric helpers in hidden column Z (asof / close index / selected rank)
+    ws["Z1"] = as_idx
+    ws["Z2"] = ('=IFERROR(VALUE(RIGHT($C$5,4))*4+'
+                'MATCH(LEFT($C$5,2),{"Q1","Q2","Q3","Q4"},0)-1,0)')
+    ws["Z3"] = '=IF($C$7="Bear",3,IF($C$7="Base",2,1))'
+    ws.column_dimensions["Z"].hidden = True
+    DEMAND = "$C$11"; TARGET = "$C$6"
+    CLOSE = "$Z$2"; ASOF = "$Z$1"; SELRANK = "$Z$3"
 
     # ----- pipeline blocks (cols R:X) -----
     # (A) UNDER CONSTRUCTION — certain supply, LINKED from the Competitive
@@ -930,36 +934,40 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
             cc.fill = fill(BLUE); cc.font = font(bold=True, size=8, color=WHITE)
             cc.alignment = CENTER; cc.border = BORDER
 
+    # Visible cols R(Property) S(Units) T(Est Delivery) U(Built In, proposed only);
+    # hidden helper cols V(DelivIdx) W(HoldYr) X(Built?).
+    DIDX = ('=IFERROR(VALUE(RIGHT(T{r},4))*4+'
+            'MATCH(LEFT(T{r},2),{{"Q1","Q2","Q3","Q4"}},0)-1,"")')
+    HYR = ('=IF(V{r}="","",IF(V{r}<=' + ASOF + ',0,'
+           'MAX(1,INT((V{r}-' + CLOSE + ')/4)+1)))')
+
     # (A) UC block
     uc_hdr = 4
     piped_headers(uc_hdr, "UNDER CONSTRUCTION (linked from Competitive Analysis)",
-                  ["Property", "Units", "Est. Delivery", "DelivIdx", "HoldYr"])
+                  ["Property", "Units", "Est. Delivery"])
     rr = uc_hdr + 1
     for p in sorted(uc, key=lambda x: -(x.units or 0)):
         rw = p.roster_row
         ws.cell(rr, 18, f"='Competitive Analysis'!C{rw}").font = font(size=9)
         ws.cell(rr, 19, f"='Competitive Analysis'!D{rw}").number_format = "#,##0"
         ws.cell(rr, 20, f"='Competitive Analysis'!E{rw}")
-        ws.cell(rr, 21, f'=IFERROR(VALUE(RIGHT(T{rr},4))*4+'
-                        f'MATCH(LEFT(T{rr},2),{{"Q1","Q2","Q3","Q4"}},0)-1,"")')
-        ws.cell(rr, 22, f'=IF(S{rr}="","",IF(U{rr}<={ASOF},0,'
-                        f'MAX(1,INT((U{rr}-{CLOSE})/4)+1)))')
-        for col in range(18, 23):
+        ws.cell(rr, 22, DIDX.format(r=rr))
+        ws.cell(rr, 23, HYR.format(r=rr))
+        for col in range(18, 21):
             cc = ws.cell(rr, col); cc.border = BORDER
             cc.alignment = LEFT if col == 18 else CENTER
             if col == 18:
                 cc.font = font(size=9)
         rr += 1
     ucf, ucl = uc_hdr + 1, max(uc_hdr + 1, rr - 1)
-    UC_U = f"$S${ucf}:$S${ucl}"; UC_H = f"$V${ucf}:$V${ucl}"
+    UC_U = f"$S${ucf}:$S${ucl}"; UC_H = f"$W${ucf}:$W${ucl}"
 
     # (B) Proposed block
     pp_hdr = ucl + 3
     piped_headers(pp_hdr, "PROPOSED PIPELINE (scenario toggle)",
-                  ["Property", "Units", "Est. Delivery", "Built In",
-                   "DelivIdx", "HoldYr", "Built?"])
-    builtin_dv = DataValidation(type="list", formula1='"Bear,Base,Bull,None"',
-                                allow_blank=True)
+                  ["Property", "Units", "Est. Delivery", "Built In"])
+    builtin_dv = DataValidation(
+        type="list", formula1='"Bear only,Bear+Base,All,None"', allow_blank=True)
     ws.add_data_validation(builtin_dv)
     rr = pp_hdr + 1
     for p in sorted(prop, key=lambda x: -(x.units or 0)):
@@ -967,15 +975,14 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
         ws.cell(rr, 18, p.name).font = font(size=9)
         ws.cell(rr, 19, p.units).number_format = "#,##0"
         ws.cell(rr, 20, est)
-        ws.cell(rr, 21, "Bear")                       # default: downside only
-        ws.cell(rr, 22, f'=IFERROR(VALUE(RIGHT(T{rr},4))*4+'
-                        f'MATCH(LEFT(T{rr},2),{{"Q1","Q2","Q3","Q4"}},0)-1,"")')
-        ws.cell(rr, 23, f'=IF(V{rr}="","",IF(V{rr}<={ASOF},0,'
-                        f'MAX(1,INT((V{rr}-{CLOSE})/4)+1)))')
-        # Built? = 1 if selected scenario is at least as bearish as the deal's
-        ws.cell(rr, 24, f'=IF(U{rr}="None",0,IF($E$6>='
-                        f'IF(U{rr}="Bear",3,IF(U{rr}="Base",2,1)),1,0))')
-        for col in range(18, 25):
+        ws.cell(rr, 21, "Bear only")                  # default: downside case only
+        ws.cell(rr, 22, DIDX.format(r=rr))
+        ws.cell(rr, 23, HYR.format(r=rr))
+        # Built? per selected scenario (more-supply/Bear has the most deals)
+        ws.cell(rr, 24, f'=IF(U{rr}="All",1,IF(U{rr}="Bear+Base",'
+                        f'IF({SELRANK}>=2,1,0),IF(U{rr}="Bear only",'
+                        f'IF({SELRANK}>=3,1,0),0)))')
+        for col in range(18, 22):
             cc = ws.cell(rr, col); cc.border = BORDER
             cc.alignment = LEFT if col == 18 else CENTER
             if col == 18:
@@ -986,6 +993,17 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
         rr += 1
     ppf, ppl = pp_hdr + 1, max(pp_hdr + 1, rr - 1)
     PP_U = f"$S${ppf}:$S${ppl}"; PP_H = f"$W${ppf}:$W${ppl}"; PP_B = f"$X${ppf}:$X${ppl}"
+    for hcol in ("V", "W", "X"):
+        ws.column_dimensions[hcol].hidden = True
+
+    # ----- reconciliation line (visible, under the assumptions) -----
+    uc_total = sum(p.units or 0 for p in uc)
+    ws.cell(12, 2, "UC scheduled vs CoStar UC").font = font(size=9, bold=True)
+    rc = ws.cell(12, 3, f"{uc_total:,} / {latest_uc:,}" if latest_uc else f"{uc_total:,}")
+    rc.font = font(size=9); rc.alignment = CENTER
+    ws.cell(13, 2, "Subject rent source").font = font(size=9, bold=True)
+    nm_src = "HelloData → CoStar" if subj_monthly else ("CoStar" if subj_costar else "—")
+    sc = ws.cell(13, 3, nm_src); sc.font = font(size=9); sc.alignment = CENTER
 
     # ----- subject annual series (HelloData -> CoStar, level-aligned) -----
     subj_annual = subject_annual_by_window(plan, as_idx, subj_monthly, subj_costar)
@@ -995,16 +1013,19 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
     ws.cell(HR, 2, "5-MILE MARKET").font = font(bold=True, size=9)
     rows = {"period": HR + 1, "supply": HR + 2, "absorp": HR + 3,
             "occ": HR + 4, "cum": HR + 5,
-            "smkt": HR + 7, "seff": HR + 8, "socc": HR + 9,
-            "_inv": HR + 11, "_occu": HR + 12}
+            "smkt": HR + 7, "smkt_yoy": HR + 8, "seff": HR + 9,
+            "seff_yoy": HR + 10, "socc": HR + 11,
+            "_inv": HR + 13, "_occu": HR + 14}
     ws.cell(rows["supply"], 2, "NEW SUPPLY (5-mi)").font = font(size=9, bold=True)
     ws.cell(rows["absorp"], 2, "ABSORPTION (5-mi)").font = font(size=9, bold=True)
     ws.cell(rows["occ"], 2, "OCCUPANCY (5-mi)").font = font(size=9, bold=True)
     ws.cell(rows["cum"], 2, "CUM. UNABSORBED (since -Y3)").font = font(size=9, bold=True)
     ws.cell(HR + 6, 2, "SUBJECT (" + (subject_name or "subject") + ")").font = font(bold=True, size=9)
-    ws.cell(rows["smkt"], 2, "  Market Rent  (HD→CoStar)").font = font(size=9, bold=True)
+    ws.cell(rows["smkt"], 2, "  Market Rent  (CoStar→HD)").font = font(size=9, bold=True)
+    ws.cell(rows["smkt_yoy"], 2, "    Market Rent YoY %").font = font(size=8, italic=True)
     ws.cell(rows["seff"], 2, "  Effective Rent").font = font(size=9, bold=True)
-    ws.cell(rows["socc"], 2, "  Occupancy (T12 financials)").font = font(size=9, bold=True)
+    ws.cell(rows["seff_yoy"], 2, "    Effective Rent YoY %").font = font(size=8, italic=True)
+    ws.cell(rows["socc"], 2, "  Occupancy (financials / CoStar)").font = font(size=9, bold=True)
     ws.cell(rows["_inv"], 2, "  inventory").font = font(size=8, color="FF808080")
     ws.cell(rows["_occu"], 2, "  occupied").font = font(size=8, color="FF808080")
 
@@ -1040,6 +1061,12 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
                 ws.cell(rows["smkt"], ci, round(srec["mkt"]) if srec.get("mkt") else None)
                 ws.cell(rows["seff"], ci, round(srec["eff"]) if srec.get("eff") else None)
                 ws.cell(rows["socc"], ci, srec.get("occ"))
+            if j > 0:        # YoY growth vs prior year column
+                pcl = L(ci - 1)
+                ws.cell(rows["smkt_yoy"], ci,
+                        f'=IFERROR({col}{rows["smkt"]}/{pcl}{rows["smkt"]}-1,"")')
+                ws.cell(rows["seff_yoy"], ci,
+                        f'=IFERROR({col}{rows["seff"]}/{pcl}{rows["seff"]}-1,"")')
         else:
             prev = L(ci - 1)
             ws.cell(rows["period"], ci, f"Hold Yr {k}")
@@ -1074,6 +1101,10 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
             oc = ws.cell(rows[rk], ci)
             oc.number_format = "0.0%"; oc.alignment = CENTER
             oc.font = font(size=9, bold=(rk == "occ")); oc.border = BORDER
+        for rk in ("smkt_yoy", "seff_yoy"):
+            yc = ws.cell(rows[rk], ci)
+            yc.number_format = "0.0%"; yc.alignment = CENTER
+            yc.font = font(size=8, italic=True, color="FF808080"); yc.border = BORDER
         for rk in ("smkt", "seff"):
             sc = ws.cell(rows[rk], ci)
             sc.number_format = '"$"#,##0'; sc.alignment = CENTER
@@ -1081,13 +1112,15 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
         pc = ws.cell(rows["period"], ci)
         pc.font = font(size=8, color="FF808080"); pc.alignment = CENTER
         band = fill("FFF2F2F2" if kind == "hist" else "FFFFFFFF")
-        for rk in ("supply", "absorp", "occ", "smkt", "seff", "socc"):
+        for rk in ("supply", "absorp", "occ", "smkt", "smkt_yoy",
+                   "seff", "seff_yoy", "socc"):
             ws.cell(rows[rk], ci).fill = band
     # hide helper rows
     for rk in ("_inv", "_occu"):
         ws.row_dimensions[rows[rk]].hidden = True
 
     # ----- scenario block: implied 5-mi occupancy (Bear/Base/Bull) -----
+    y0_occu = f"${L(3 + hist_years)}${rows['_occu']}"   # actual occupied at Y0
     sb = rows["_occu"] + 2          # below the hidden inventory/occupied helpers
     ws.cell(sb, 2, "IMPLIED 5-MI OCCUPANCY BY DEMAND SCENARIO").font = font(bold=True, size=9)
     fcst_cols = [3 + j for j, (_, kind, _) in enumerate(plan) if kind == "fcst"]
@@ -1098,7 +1131,7 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
         for k, ci in enumerate(fcst_cols, start=1):
             col = L(ci)
             cc = ws.cell(rrow, ci,
-                         f"=MIN({TARGET},({OCC0}+{abs_cell}*{k})/{col}{rows['_inv']})")
+                         f"=MIN({TARGET},({y0_occu}+{abs_cell}*{k})/{col}{rows['_inv']})")
             cc.number_format = "0.0%"; cc.alignment = CENTER; cc.font = font(size=9)
             cc.border = BORDER
         # label the forecast year columns above
@@ -1212,7 +1245,7 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
                f"As of {latest_label}  |  Stabilization Target:")
     s.fill = fill(BLUE); s.font = font(size=9, color=WHITE); s.alignment = LEFT
     g = ws["G3"]
-    g.value = '=TEXT(Settings!$B$2,"0%")&" target"'
+    g.value = f"{target:.0%} target"
     g.fill = fill(BLUE); g.font = font(bold=True, size=9, color=YELLOW)
     g.alignment = CENTER
 
@@ -1284,15 +1317,6 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
                         "/ overall-occupancy forecast.")
     ws[f"B{note_r}"].font = font(size=8, color="FF808080")
 
-    # ---- Settings sheet ----
-    sset = wb.create_sheet("Settings")
-    sset["A1"] = "ANALYSIS SETTINGS"; sset["A1"].font = font(bold=True, size=11)
-    sset["A2"] = "Stabilized Occupancy Target"
-    sset["B2"] = target; sset["B2"].number_format = "0%"
-    sset["C2"] = "Target occupancy for absorption calculation"
-    sset.column_dimensions["A"].width = 28
-    sset.column_dimensions["C"].width = 42
-
     # ---- Reconciliation log sheet ----
     rlog = wb.create_sheet("Reconciliation Log")
     rlog.append(["Property", "Address", "Units", "Year Built", "Est. Delivery",
@@ -1323,9 +1347,11 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
 
     # ---- Forward supply / absorption / occupancy forecast ----
     if series:
-        build_forecast_sheet(wb, series, props, as_of, target, latest_uc=latest_uc,
-                             latest_label=latest_label, subj_monthly=subj_monthly,
-                             subj_costar=subj_costar, subject_name=subject_name)
+        sa = build_forecast_sheet(wb, series, props, as_of, target, latest_uc=latest_uc,
+                                  latest_label=latest_label, subj_monthly=subj_monthly,
+                                  subj_costar=subj_costar, subject_name=subject_name)
+        # make "Supply & Absorption" the 2nd tab
+        wb.move_sheet(sa, -(wb.index(sa) - 1))
 
     wb.save(out_path)
 

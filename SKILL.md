@@ -17,12 +17,11 @@ description: >-
 A workbook (mirroring `reference/EXAMPLE_Seasons_Supply_Chart_v2.xlsx`) with:
 
 1. **Competitive Analysis** — the new-construction roster grouped into four
-   lifecycle buckets, then a per-quarter absorption summary
-   (# props, total units, weighted-avg occupancy, currently occupied,
-   target @ goal, units needed to reach 95% / 92.5% / 90%), a TOTAL row, the
-   total current 5-mile inventory, and **% to be absorbed**.
-2. **Settings** — the stabilization occupancy target (default 95%) that the
-   absorption formulas reference.
+   lifecycle (colour-coded) buckets.
+2. **Supply & Absorption** — the relative-year (TTM) supply / absorption /
+   occupancy forecast, subject rent & occupancy rows, demand & rent-growth
+   scenarios, and the editable pipeline blocks (see §4). All editable inputs live
+   here (yellow cells), including the stabilization target.
 3. **Reconciliation Log** — every property with its merged values, sources, and
    any conflict notes, so the analyst can audit the automated decisions.
 
@@ -137,17 +136,22 @@ the CoStar Data Analytics series + the supply pipeline, on **live Excel formulas
   quarters), so the analysis→close gap is one cell.
 - **Historical years** = CoStar 5-mi actuals (Σ deliveries, Σ absorption,
   end-of-window occupancy).
-- **Forecast years**: `Inventory += scheduled pipeline` (pipeline deals are
-  assigned a hold-year by their delivery quarter vs. the close quarter);
-  `Occupied += selected annual demand` (capped at target × inventory);
-  `Occupancy = Occupied / Inventory`. Also a **cumulative-unabsorbed** row since -Y3.
+- **Forecast years**: `Inventory += scheduled pipeline`; `Occupied += selected
+  annual demand` (capped at target × inventory); `Occupancy = Occupied /
+  Inventory`. Plus a **cumulative-unabsorbed** row since -Y3.
+- **Pipeline = two blocks** (right side): **UNDER CONSTRUCTION** is linked from
+  the Competitive Analysis roster and counts in every scenario; **PROPOSED** is
+  speculative with a per-deal **"Built In"** dropdown (*Bear only / Bear+Base /
+  All / None*) so a deal layers into the downside (more-supply) case only. Each
+  hold-year's new supply = UC + proposed built under the selected scenario.
+- **Subject rows**: market & effective rent and occupancy, plus **YoY %** rows.
 - **Demand** is a Bear/Base/Bull annual-absorption assumption (Base = trailing
-  CoStar average), with an **Implied 5-mi Occupancy** block showing all three
-  paths, plus editable **market-rent-growth / concession** blocks and a derived
-  **effective-rent-growth** block (the bridge to rents).
-- **Editable (yellow) cells**: close quarter, demand scenario & the three
-  absorption levels, each pipeline deal's delivery quarter & Include? (Y/N), and
-  the rent-growth/concession assumptions.
+  CoStar average), with an **Implied 5-mi Occupancy** block (all three paths),
+  editable **market-rent-growth / concession** blocks, and a derived
+  **effective-rent-growth** block.
+- **Editable (yellow) cells**: stabilization target, close quarter, demand
+  scenario & the three absorption levels, each proposed deal's delivery quarter &
+  Built-In, and the rent-growth/concession assumptions.
 - A **reconciliation note** compares the scheduled pipeline (Include=Y) against
   CoStar's current Under-Construction unit count so the pipeline ties out.
 
