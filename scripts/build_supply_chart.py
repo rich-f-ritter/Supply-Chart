@@ -117,6 +117,7 @@ class Prop:
     deliv_q: Optional[int] = None
     bucket: Optional[str] = None
     prop_type: Optional[str] = None
+    roster_row: Optional[int] = None     # row on the Competitive Analysis sheet
     notes: list = field(default_factory=list)
 
     def note(self, txt: str):
@@ -688,7 +689,7 @@ def hist_annual_absorption(series: dict, as_of: tuple[int, int], n_qtrs=12):
 
 
 def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
-                         hist_years=6, fwd_years=6):
+                         latest_label=None, hist_years=6, fwd_years=6):
     """Relative-year (trailing-12-month) supply / absorption / occupancy view.
 
     Columns are TTM windows: Y0 = the T12 ending at the as-of quarter, -Y1..-Yn
@@ -770,43 +771,81 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
     ws.add_data_validation(dv); dv.add(ws["C7"])
     DEMAND = "$C$11"; TARGET = "$C$6"; OCC0 = "$C$12"; INV0 = "$C$13"
     CLOSE = "$E$5"; ASOF = "$E$4"
+    # scenario "bearishness" rank: more supply / less demand = Bear (high)
+    ws["E6"] = '=IF($C$7="Bear",3,IF($C$7="Base",2,1))'      # selected rank
 
-    # ----- pipeline inputs block (far right cols R:W) -----
-    pipeline = [p for p in props if p.bucket in ("UNDER CONSTRUCTION", "PROPOSED")]
-    pr0 = 4
-    ws.cell(pr0 - 1, 18, "PIPELINE INPUTS (forward new supply)").font = NAVYF
-    ws.cell(pr0 - 1, 18).fill = fill(NAVY)
-    for j, lab in enumerate(["Property", "Units", "Est. Delivery", "Incl?",
-                             "DelivIdx", "HoldYr"]):
-        cc = ws.cell(pr0, 18 + j, lab)
-        cc.fill = fill(BLUE); cc.font = font(bold=True, size=8, color=WHITE)
-        cc.alignment = CENTER; cc.border = BORDER
-    incl_dv = DataValidation(type="list", formula1='"Y,N"', allow_blank=True)
-    ws.add_data_validation(incl_dv)
-    rr = pr0 + 1
-    for p in sorted(pipeline, key=lambda x: (x.bucket, -(x.units or 0))):
+    # ----- pipeline blocks (cols R:X) -----
+    # (A) UNDER CONSTRUCTION — certain supply, LINKED from the Competitive
+    #     Analysis roster (units & delivery date), counts in every scenario.
+    # (B) PROPOSED — speculative; per-deal "Built In" scenario toggle so you can
+    #     layer a deal into the Bear (downside / more-supply) case only.
+    uc = [p for p in props if p.bucket == "UNDER CONSTRUCTION" and p.roster_row]
+    prop = [p for p in props if p.bucket == "PROPOSED"]
+
+    def piped_headers(row, title, cols):
+        ws.cell(row - 1, 18, title).font = NAVYF
+        ws.cell(row - 1, 18).fill = fill(NAVY)
+        for j, lab in enumerate(cols):
+            cc = ws.cell(row, 18 + j, lab)
+            cc.fill = fill(BLUE); cc.font = font(bold=True, size=8, color=WHITE)
+            cc.alignment = CENTER; cc.border = BORDER
+
+    # (A) UC block
+    uc_hdr = 4
+    piped_headers(uc_hdr, "UNDER CONSTRUCTION (linked from Competitive Analysis)",
+                  ["Property", "Units", "Est. Delivery", "DelivIdx", "HoldYr"])
+    rr = uc_hdr + 1
+    for p in sorted(uc, key=lambda x: -(x.units or 0)):
+        rw = p.roster_row
+        ws.cell(rr, 18, f"='Competitive Analysis'!C{rw}").font = font(size=9)
+        ws.cell(rr, 19, f"='Competitive Analysis'!D{rw}").number_format = "#,##0"
+        ws.cell(rr, 20, f"='Competitive Analysis'!E{rw}")
+        ws.cell(rr, 21, f'=IFERROR(VALUE(RIGHT(T{rr},4))*4+'
+                        f'MATCH(LEFT(T{rr},2),{{"Q1","Q2","Q3","Q4"}},0)-1,"")')
+        ws.cell(rr, 22, f'=IF(S{rr}="","",IF(U{rr}<={ASOF},0,'
+                        f'MAX(1,INT((U{rr}-{CLOSE})/4)+1)))')
+        for col in range(18, 23):
+            cc = ws.cell(rr, col); cc.border = BORDER
+            cc.alignment = LEFT if col == 18 else CENTER
+            if col == 18:
+                cc.font = font(size=9)
+        rr += 1
+    ucf, ucl = uc_hdr + 1, max(uc_hdr + 1, rr - 1)
+    UC_U = f"$S${ucf}:$S${ucl}"; UC_H = f"$V${ucf}:$V${ucl}"
+
+    # (B) Proposed block
+    pp_hdr = ucl + 3
+    piped_headers(pp_hdr, "PROPOSED PIPELINE (scenario toggle)",
+                  ["Property", "Units", "Est. Delivery", "Built In",
+                   "DelivIdx", "HoldYr", "Built?"])
+    builtin_dv = DataValidation(type="list", formula1='"Bear,Base,Bull,None"',
+                                allow_blank=True)
+    ws.add_data_validation(builtin_dv)
+    rr = pp_hdr + 1
+    for p in sorted(prop, key=lambda x: -(x.units or 0)):
         est = p.est_delivery if (p.deliv_year and p.deliv_q) else ""
         ws.cell(rr, 18, p.name).font = font(size=9)
         ws.cell(rr, 19, p.units).number_format = "#,##0"
         ws.cell(rr, 20, est)
-        ws.cell(rr, 21, "Y" if p.bucket == "UNDER CONSTRUCTION" else "N")
-        # DelivIdx (V) parses the editable Est. Delivery text
+        ws.cell(rr, 21, "Bear")                       # default: downside only
         ws.cell(rr, 22, f'=IFERROR(VALUE(RIGHT(T{rr},4))*4+'
                         f'MATCH(LEFT(T{rr},2),{{"Q1","Q2","Q3","Q4"}},0)-1,"")')
-        # HoldYr (W): 0 if before close, else hold-year index
         ws.cell(rr, 23, f'=IF(V{rr}="","",IF(V{rr}<={ASOF},0,'
                         f'MAX(1,INT((V{rr}-{CLOSE})/4)+1)))')
-        for col in range(18, 24):
+        # Built? = 1 if selected scenario is at least as bearish as the deal's
+        ws.cell(rr, 24, f'=IF(U{rr}="None",0,IF($E$6>='
+                        f'IF(U{rr}="Bear",3,IF(U{rr}="Base",2,1)),1,0))')
+        for col in range(18, 25):
             cc = ws.cell(rr, col); cc.border = BORDER
             cc.alignment = LEFT if col == 18 else CENTER
             if col == 18:
                 cc.font = font(size=9)
         for col in (20, 21):
             ws.cell(rr, col).fill = EDIT
-        incl_dv.add(ws.cell(rr, 21))
+        builtin_dv.add(ws.cell(rr, 21))
         rr += 1
-    pf, pl = pr0 + 1, max(pr0 + 1, rr - 1)
-    URNG = f"$S${pf}:$S${pl}"; WRNG = f"$W${pf}:$W${pl}"; IRNG = f"$U${pf}:$U${pl}"
+    ppf, ppl = pp_hdr + 1, max(pp_hdr + 1, rr - 1)
+    PP_U = f"$S${ppf}:$S${ppl}"; PP_H = f"$W${ppf}:$W${ppl}"; PP_B = f"$X${ppf}:$X${ppl}"
 
     # ----- annual table -----
     HR = 17                                    # relative-year header row
@@ -849,8 +888,10 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
         else:
             prev = L(ci - 1)
             ws.cell(rows["period"], ci, f"Hold Yr {k}")
+            # New supply = UC (always) + proposed that are "built" this scenario
             ws.cell(rows["supply"], ci,
-                    f'=SUMIFS({URNG},{WRNG},{k},{IRNG},"Y")')
+                    f"=SUMIFS({UC_U},{UC_H},{k})"
+                    f"+SUMIFS({PP_U},{PP_H},{k},{PP_B},1)")
             ws.cell(rows["_inv"], ci,
                     f"={prev}{rows['_inv']}+{col}{rows['supply']}")
             ws.cell(rows["_occu"], ci,
@@ -955,23 +996,30 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
             cc.number_format = "0.0%"; cc.alignment = CENTER; cc.font = font(size=9)
             cc.border = BORDER
 
-    # ----- UC reconciliation + note -----
-    note = eg + 5
+    # ----- UC reconciliation + notes -----
+    note = eg + 4
+    uc_total = sum(p.units or 0 for p in uc)
     if latest_uc:
-        ws.cell(note - 1, 2,
-                f"Reconciliation: scheduled pipeline (Incl=Y) vs CoStar Under "
-                f"Construction = {latest_uc:,} units.").font = font(size=8, color="FF808080")
-    ws.cell(note, 2,
-            "Historical = CoStar 5-mi TTM actuals. Forecast: inventory += scheduled "
-            "pipeline; occupied += selected demand (capped at target). Edit yellow "
-            "cells (close quarter, demand scenario/levels, pipeline dates & include, "
-            "rent-growth & concessions).").font = font(size=8, color="FF808080")
+        ws.cell(note, 2,
+                f"Reconciliation: UC pipeline scheduled = {uc_total:,} units vs "
+                f"CoStar current Under Construction = {latest_uc:,} units.").font = \
+            font(size=8, color="FF808080")
+    if latest_label and "QTD" in str(latest_label):
+        ws.cell(note + 1, 2,
+                f"Note: as-of quarter ({latest_label}) is partial (quarter-to-date). "
+                f"Occupancy is point-in-time (valid); Y0 supply/absorption sums for "
+                f"that quarter are partial.").font = font(size=8, color="FF808080")
+    ws.cell(note + 2, 2,
+            "Historical = CoStar 5-mi TTM actuals. Forecast: inventory += UC "
+            "(linked from Competitive Analysis) + proposed built this scenario; "
+            "occupied += selected demand (capped at target). Yellow cells are "
+            "editable.").font = font(size=8, color="FF808080")
 
     ws.column_dimensions["A"].width = 2.5
     ws.column_dimensions["B"].width = 26
     for ci in range(3, last_col + 1):
         ws.column_dimensions[L(ci)].width = 9.5
-    for cw, w in {"R": 28, "S": 7, "T": 11, "U": 6, "V": 8, "W": 7}.items():
+    for cw, w in {"R": 28, "S": 7, "T": 11, "U": 8, "V": 8, "W": 7, "X": 6}.items():
         ws.column_dimensions[cw].width = w
     return ws
 
@@ -1040,6 +1088,7 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
             idx += 1
             roster_first = roster_first or r
             roster_last = r
+            p.roster_row = r          # remember for cross-sheet links
             row_vals = {
                 "B": idx,
                 "C": p.name,
@@ -1112,7 +1161,8 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
 
     # ---- Forward supply / absorption / occupancy forecast ----
     if series:
-        build_forecast_sheet(wb, series, props, as_of, target, latest_uc=latest_uc)
+        build_forecast_sheet(wb, series, props, as_of, target, latest_uc=latest_uc,
+                             latest_label=latest_label)
 
     wb.save(out_path)
 
