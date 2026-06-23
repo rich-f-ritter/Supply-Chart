@@ -995,7 +995,8 @@ def subject_annual_by_window(plan, as_idx, subj_monthly, subj_costar,
 def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
                          latest_label=None, subj_monthly=None, subj_costar=None,
                          subj_realpage=None, subject_name="", hist_years=6,
-                         fwd_years=6):
+                         fwd_years=6, model_link=False,
+                         model_sheet="Cash Flow (Annual)"):
     """Relative-year (trailing-12-month) supply / absorption / occupancy view.
 
     Columns are TTM windows: Y0 = the T12 ending at the as-of quarter, -Y1..-Yn
@@ -1260,6 +1261,20 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
     for rk in ("_inv", "_occu"):
         ws.row_dimensions[rows[rk]].hidden = True
 
+    # ----- optional: link the subject rows to the underwriting model -----
+    # Internal references to the TMG model's "Cash Flow (Annual)" tab, so when
+    # these tabs are dragged into (or embedded in) the model they resolve to its
+    # own projection: Y0 <- col F (T12/Y0), Y1..Y6 <- cols K..P; Market Rent <-
+    # row 4, Effective Rent <- row 5, Occupancy <- row 14. Historical columns
+    # (-Y6..-Y1) stay as the static RealPage/HelloData actuals.
+    if model_link:
+        link_rows = {"smkt": 4, "seff": 5, "socc": 14}
+        chart_cols = [3 + hist_years + i for i in range(fwd_years + 1)]   # Y0,Y1..Y6
+        model_cols = ["F"] + [get_column_letter(11 + k) for k in range(fwd_years)]  # F,K..P
+        for rk, mrow in link_rows.items():
+            for ci, mcol in zip(chart_cols, model_cols):
+                ws.cell(rows[rk], ci).value = f"='{model_sheet}'!${mcol}${mrow}"
+
     # ----- scenario block: implied 5-mi occupancy (Bear/Base/Bull) -----
     y0_occu = f"${L(3 + hist_years)}${rows['_occu']}"   # actual occupied at Y0
     sb = rows["_occu"] + 2          # below the hidden inventory/occupied helpers
@@ -1376,7 +1391,8 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
 def write_workbook(props, subject_name, latest_inv, latest_label,
                    as_of, target, out_path, series=None, latest_uc=None,
                    subj_monthly=None, subj_costar=None, subj_realpage=None,
-                   diligence_rows=None):
+                   diligence_rows=None, model_link=False,
+                   model_sheet="Cash Flow (Annual)"):
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Competitive Analysis"
@@ -1508,7 +1524,8 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
         sa = build_forecast_sheet(wb, series, props, as_of, target, latest_uc=latest_uc,
                                   latest_label=latest_label, subj_monthly=subj_monthly,
                                   subj_costar=subj_costar, subj_realpage=subj_realpage,
-                                  subject_name=subject_name)
+                                  subject_name=subject_name, model_link=model_link,
+                                  model_sheet=model_sheet)
         # make "Supply & Absorption" the 2nd tab
         wb.move_sheet(sa, -(wb.index(sa) - 1))
 
@@ -1700,6 +1717,15 @@ def main(argv=None):
     ap.add_argument("--no-geocode", action="store_true",
                     help="Skip Nominatim geocoding for the Proximity column "
                          "(falls back to offline ZIP centroids only).")
+    ap.add_argument("--model-link", action="store_true",
+                    help="Wire the subject Market Rent / Effective Rent / Occupancy "
+                         "rows to the underwriting model's projection (internal refs "
+                         "to 'Cash Flow (Annual)' rows 4/5/14, Y0<-F, Y1..Y6<-K:P) so "
+                         "the tab resolves once dragged into / embedded in the model. "
+                         "Use only when incorporating into the model.")
+    ap.add_argument("--model-sheet", default="Cash Flow (Annual)",
+                    help="Model tab the --model-link refs point to "
+                         "(default: 'Cash Flow (Annual)').")
     args = ap.parse_args(argv)
 
     latest_inv, deliveries, latest_label, series, latest_uc = parse_costar_analytics(args.costar_analytics)
@@ -1736,7 +1762,8 @@ def main(argv=None):
     write_workbook(props, args.subject_name, latest_inv, latest_label,
                    as_of, args.target, args.out, series=series, latest_uc=latest_uc,
                    subj_monthly=subj_monthly, subj_costar=subj_costar,
-                   subj_realpage=subj_realpage, diligence_rows=diligence_rows)
+                   subj_realpage=subj_realpage, diligence_rows=diligence_rows,
+                   model_link=args.model_link, model_sheet=args.model_sheet)
 
     # Emit templates: undated pipeline + a per-project research template.
     base = os.path.splitext(args.out)[0]

@@ -32,6 +32,21 @@ Analytics) so demand can be forecast and the "when is occupancy strong enough to
 push rents" question answered. (Rent analysis is a *separate, later* step — this
 skill only builds the supply chart.)
 
+## Operating procedure (the order to work in)
+1. **Build the supply chart standalone first** — reconcile the exports, bucket the
+   roster, build the Supply & Absorption forecast. Hand it over as its own workbook.
+2. **Let the user refine** — delivery quarters, demand scenarios, source selection,
+   diligence corrections. Re-run with their edits.
+3. **Make it jive with every input you were given** before calling it done:
+   - the **RR-T12 intake** (from the RR-T12-Processor skill) drives the subject
+     market/effective-rent and occupancy rows — confirm those reconcile;
+   - the delivered roster ties to CoStar's deliveries series (the completeness
+     check, §3a);
+   - diligence corrections (if run) are reflected in the buckets and pipeline.
+4. **Only then ask whether to incorporate into the underwriting model.** If yes,
+   regenerate with `--model-link` and follow **Incorporating into the underwriting
+   model** below. Don't link to the model until the chart itself is settled.
+
 ## Inputs (three exports, all 5-mile radius around the subject)
 | Input | Provides | Notes |
 |---|---|---|
@@ -66,6 +81,7 @@ Optional flags:
 - `--intake path.xlsx` — RR-T12 underwriting intake; adds **subject rows** (market/effective rent from HelloData mix-weighted, occupancy from the T12 financials) to the Supply & Absorption tab
 - `--costar-subject-rents path.xlsx` and/or `--realpage-subject-rents path.xlsx` — per-property rent histories used to extend the subject rents before HelloData coverage; whichever tracks HelloData more closely in the overlap is auto-selected (varies by market)
 - `--no-geocode` — skip Nominatim and fill the **Proximity (mi)** column from offline ZIP centroids only (no network)
+- `--model-link` — wire the subject rows to the underwriting model (see **Incorporating into the underwriting model** below). Off by default; only used in the incorporation step, not the standalone deliverable. `--model-sheet "…"` overrides the target tab (default `Cash Flow (Annual)`)
 
 The script prints a reconciliation report to the console and writes the workbook.
 Always read the console report and the **Reconciliation Log** sheet, then review
@@ -221,7 +237,45 @@ some markets, RealPage in others), level-aligned to HelloData via the overlap
 ratio. The chosen source is shown in the row label (`…→HD`) and per-year in the
 collapsed detail group. Subject occupancy comes from the **T12 financial
 statements** (filled from CoStar where the financials have gaps). Forecast-year
-subject rents are deferred to the (later) market-rent-growth → effective step.
+subject rents are deferred to the (later) market-rent-growth → effective step —
+unless the chart is linked to the model (next section), in which case Y0→Y6 read
+the model's own projection.
+
+## Incorporating into the underwriting model
+After the chart is settled and the user asks to incorporate it (step 4 above),
+run with `--model-link`. This rewrites the subject **Market Rent**, **Effective
+Rent**, and **Occupancy** rows (cols Y0→Y6) as **internal references** to the
+TMG model's `Cash Flow (Annual)` tab — so the chart shows the deal's own
+projected path next to the 5-mile market frame, as a **sanity overlay** (the
+chart reads the model; it does *not* drive it). The fixed mapping:
+
+| Subject row | Model row (`Cash Flow (Annual)`) | Y0 = col I | Y1–Y6 = cols J:O |
+|---|---|---|---|
+| Market Rent | row 4 (Market Rent /U) | ← `F` | ← `K,L,M,N,O,P` |
+| Effective Rent | row 5 (Eff Mkt Rent /U) | ← `F` | ← `K:P` |
+| Occupancy | row 14 (Physical Occupancy) | ← `F` | ← `K:P` |
+
+Historical columns (−Y6…−Y1) stay as the static RealPage/HelloData actuals. The
+YoY% and Concession% rows are live formulas, so once linked they automatically
+show the **model's** market-rent growth, effective-rent growth, and concession
+trend in the same frame as the market assumption blocks — the comparison is
+implicit, no separate delta block. Refs are written **internal** (`='Cash Flow
+(Annual)'!…`), so they resolve the moment the tab lives in the model.
+
+**Two delivery modes** (both produce the same linked tabs):
+- **User drags the tabs in** — they Move/Copy the `Supply & Absorption` (and its
+  `Competitive Analysis` dependency) sheets into the model; the internal refs
+  resolve to the model's own `Cash Flow (Annual)`. In the standalone file those
+  Y0→Y6 cells read `#REF!` until the tab is in the model (everything else shows).
+- **You embed it for them** — given the model, insert the linked tabs **without
+  round-tripping the .xlsm through openpyxl** (it silently drops charts,
+  conditional formatting, slicers — it warns on this very model). Graft the
+  sheet XML into the package directly so the live macro workbook is preserved.
+
+Keep the distinction the model already encodes: the chart's **market-rent
+growth** is a pure asking-rent trend; the model's **AGPR growth** bakes in
+loss-to-lease/gain-to-lease burn-off and lease-term roll. They are *not* the same
+line — compare market-rent growth to the model's `RRA` GPR-growth row, not AGPR.
 
 ## Research & diligence (opt-in)
 The mechanical build trusts whatever CoStar/RealPage report. When the user asks to
