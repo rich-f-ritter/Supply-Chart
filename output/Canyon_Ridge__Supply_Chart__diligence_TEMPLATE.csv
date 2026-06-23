@@ -1,0 +1,8 @@
+type,property,units,est_delivery,status,leasing_pace,notes,source
+pipeline,Vista Point,893,Q2 2028,,,(verify proposed),
+pipeline,Seasons on the Bench,358,Q4 2027,,,(verify proposed),
+pipeline,1519 South Londoner Avenue,189,Q3 2027,,,(verify proposed),
+pipeline,3300 South Vista Avenue,180,Q1 2028,,,(verify proposed),
+pipeline,Station Village,84,Q2 2027,,,(verify proposed),
+pipeline,Harris Ranch East,59,Q4 2026,,,(verify proposed),
+shadow,<latent site / rezoning / land sale>,,,,,potential future supply not in CoStar/RealPage,

@@ -14,9 +14,9 @@ writes a formatted workbook with:
     --costar-subject-rents).
   - "Reconciliation Log": per-property merged values, sources, and conflicts.
 
-See SKILL.md for the full methodology. Judgment fields the script cannot know —
-Proximity (miles) and verified lease-up rent/occupancy from HelloData — are left
-blank / flagged for the analyst.
+See SKILL.md for the full methodology. Proximity (miles) is computed by geocoding
+the subject and each comp (Nominatim, cached; offline ZIP-centroid fallback).
+Verified lease-up rent/occupancy from HelloData is left flagged for the analyst.
 
 Usage:
     python build_supply_chart.py \
@@ -37,6 +37,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import openpyxl
+import geo
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
@@ -123,6 +124,7 @@ class Prop:
     deliv_q: Optional[int] = None
     bucket: Optional[str] = None
     prop_type: Optional[str] = None
+    proximity_mi: Optional[float] = None   # straight-line miles subject -> comp
     roster_row: Optional[int] = None     # row on the Competitive Analysis sheet
     notes: list = field(default_factory=list)
 
@@ -1445,7 +1447,8 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
                 "F": p.occupancy,
                 "G": p.eff_rent if p.eff_rent else "—",
                 "H": p.owner or "—",
-                "I": None,                       # Proximity — manual fill
+                "I": (round(p.proximity_mi, 1)
+                      if p.proximity_mi is not None else None),
                 "J": p.prop_type,
                 "K": "; ".join(p.notes) if p.notes else None,
             }
@@ -1458,16 +1461,18 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
             ws[f"D{r}"].number_format = "#,##0"
             ws[f"F{r}"].number_format = "0.0%"
             ws[f"G{r}"].number_format = '"$"#,##0;;"—"'
+            ws[f"I{r}"].number_format = '0.0" mi";;"—"'
             r += 1
         r += 1  # spacer
 
     # ---- Pointer note (forward forecast lives on its own tab) ----
     note_r = r + 1
     ws.merge_cells(f"B{note_r}:K{note_r}")
-    ws[f"B{note_r}"] = ("* 5-Mile radius. Rent ($) = market asking. Proximity (mi) to be "
-                        "filled manually; lease-up rent/occupancy to be verified w/ HelloData. "
-                        "See the 'Supply & Absorption' tab for the forward supply / absorption "
-                        "/ overall-occupancy forecast.")
+    ws[f"B{note_r}"] = ("* 5-Mile radius. Rent ($) = market asking. Proximity (mi) = "
+                        "straight-line distance from the subject (geocoded); lease-up "
+                        "rent/occupancy to be verified w/ HelloData. See the 'Supply & "
+                        "Absorption' tab for the forward supply / absorption / "
+                        "overall-occupancy forecast.")
     ws[f"B{note_r}"].font = font(size=8, color="FF808080")
 
     # ---- Reconciliation log sheet ----
@@ -1595,6 +1600,26 @@ def build_competitive_roster(costar_roster_path, realpage_path, deliveries, as_o
     return keep
 
 
+def compute_proximity(props, subject_name, subject_address, cache_path,
+                      use_geocoder=True):
+    """Set p.proximity_mi = straight-line miles from the subject to each comp.
+
+    Uses the shared geo.Locator (Nominatim, cached) with an offline ZIP-centroid
+    fallback. The subject must geocode to a real point; if it can't (no address /
+    geocoding off and no ZIP), proximity is left as None for the analyst."""
+    loc = geo.Locator(use_geocoder, cache_path)
+    subj_ll, subj_approx = loc.locate(subject_name, subject_address, None, None,
+                                      geo.subject_zip(subject_address))
+    if not subj_ll:
+        loc.save()
+        return
+    for p in props:
+        ll, _ = loc.locate(p.name, p.address, p.city, p.state, p.zipcode)
+        if ll:
+            p.proximity_mi = geo.haversine_miles(subj_ll, ll)
+    loc.save()
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--subject-name", required=True)
@@ -1628,6 +1653,9 @@ def main(argv=None):
                     help="Filled per-project research CSV (see the emitted "
                          "…__diligence_TEMPLATE.csv) — adds a Diligence + shadow-"
                          "supply sheet and folds researched delivery dates back in.")
+    ap.add_argument("--no-geocode", action="store_true",
+                    help="Skip Nominatim geocoding for the Proximity column "
+                         "(falls back to offline ZIP centroids only).")
     args = ap.parse_args(argv)
 
     latest_inv, deliveries, latest_label, series, latest_uc = parse_costar_analytics(args.costar_analytics)
@@ -1648,6 +1676,13 @@ def main(argv=None):
         diligence_rows = load_diligence(args.diligence)
         apply_diligence(props, diligence_rows)
 
+    # Proximity: straight-line miles from the subject to each comp (geocoded,
+    # cached). Falls back to offline ZIP centroids when geocoding is unavailable.
+    import os
+    compute_proximity(props, args.subject_name, args.subject_address,
+                      os.path.join(os.path.dirname(args.out) or ".", ".geocode_cache.json"),
+                      use_geocoder=not args.no_geocode)
+
     subj_monthly = parse_intake_subject(args.intake) if args.intake else {}
     subj_costar = (parse_costar_subject_rents(args.costar_subject_rents, args.subject_name)
                    if args.costar_subject_rents else {})
@@ -1660,7 +1695,6 @@ def main(argv=None):
                    subj_realpage=subj_realpage, diligence_rows=diligence_rows)
 
     # Emit templates: undated pipeline + a per-project research template.
-    import os
     base = os.path.splitext(args.out)[0]
     n_undated = emit_pipeline_template(props, base + "__pipeline_dates_TEMPLATE.csv")
     emit_diligence_template(props, base + "__diligence_TEMPLATE.csv")

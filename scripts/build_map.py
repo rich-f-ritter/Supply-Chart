@@ -23,20 +23,14 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import hashlib
-import json
 import math
 import os
-import re
 import sys
-import time
-import urllib.parse
-import urllib.request
 
 import folium
-import zipcodes
 
 import build_supply_chart as bc
+import geo
 
 MILE_M = 1609.34
 
@@ -56,107 +50,14 @@ TILES = {
                   "World_Imagery/MapServer/tile/{z}/{y}/{x}", "Satellite", "Esri"),
 }
 
-_USER_AGENT = "supply-chart-skill/1.0 (multifamily supply map)"
-_last_call = [0.0]
-
-
-# --------------------------------------------------------------------------- #
-# Geocoding (cached + rate-limited) with ZIP-centroid fallback
-# --------------------------------------------------------------------------- #
-def _load_cache(path):
-    try:
-        with open(path) as fh:
-            return json.load(fh)
-    except Exception:
-        return {}
-
-
-def geocode_nominatim(query):
-    gap = time.time() - _last_call[0]
-    if gap < 1.1:                                  # respect Nominatim 1 req/sec
-        time.sleep(1.1 - gap)
-    url = ("https://nominatim.openstreetmap.org/search?format=json&limit=1&q="
-           + urllib.parse.quote(query))
-    req = urllib.request.Request(url, headers={"User-Agent": _USER_AGENT})
-    try:
-        with urllib.request.urlopen(req, timeout=25) as r:
-            data = json.load(r)
-    finally:
-        _last_call[0] = time.time()
-    return (float(data[0]["lat"]), float(data[0]["lon"])) if data else None
-
-
-def zip_centroid(zipcode):
-    if not zipcode:
-        return None
-    z = str(zipcode)[:5]
-    recs = zipcodes.matching(z) if zipcodes.is_real(z) else []
-    return (float(recs[0]["lat"]), float(recs[0]["long"])) if recs else None
-
-
-def jitter(seed, scale=0.0055):
-    h = int(hashlib.md5(seed.encode()).hexdigest(), 16)
-    ang = (h % 360) * math.pi / 180
-    rad = ((h // 360) % 100) / 100 * scale
-    return rad * math.cos(ang), rad * math.sin(ang)
-
-
-class Locator:
-    def __init__(self, use_geocoder, cache_path):
-        self.use_geocoder = use_geocoder
-        self.cache_path = cache_path
-        self.cache = _load_cache(cache_path)
-        self.dirty = False
-
-    def save(self):
-        if self.dirty:
-            try:
-                with open(self.cache_path, "w") as fh:
-                    json.dump(self.cache, fh)
-            except Exception:
-                pass
-
-    def locate(self, name, address, city, state, zipcode):
-        """Return ((lat, lng), approximate_bool)."""
-        if self.use_geocoder and address:
-            al = address.lower()
-            parts = [address]
-            for extra in (city, state, str(zipcode) if zipcode else None):
-                if extra and extra.lower() not in al:
-                    parts.append(extra)
-            q = ", ".join(parts)
-            if q in self.cache:
-                v = self.cache[q]
-                if v:
-                    return (v[0], v[1]), False
-            else:
-                try:
-                    ll = geocode_nominatim(q)
-                except Exception:
-                    ll = None
-                self.cache[q] = list(ll) if ll else None
-                self.dirty = True
-                if ll:
-                    return ll, False
-        c = zip_centroid(zipcode)
-        if c:
-            dy, dx = jitter(name or address or str(zipcode))
-            return (c[0] + dy, c[1] + dx), True
-        return None, True
-
-
-def _subject_zip(address):
-    m = re.search(r"\b(\d{5})\b", address or "")
-    return m.group(1) if m else None
-
 
 # --------------------------------------------------------------------------- #
 # Map rendering
 # --------------------------------------------------------------------------- #
 def build_map(props, subject_name, subject_address, subject_latlng,
               use_geocoder, base, out_path, shadow_rows=None):
-    loc = Locator(use_geocoder,
-                  os.path.join(os.path.dirname(out_path) or ".", ".geocode_cache.json"))
+    loc = geo.Locator(use_geocoder,
+                      os.path.join(os.path.dirname(out_path) or ".", ".geocode_cache.json"))
 
     # ---- subject ----
     subj_approx = False
@@ -164,7 +65,7 @@ def build_map(props, subject_name, subject_address, subject_latlng,
         slat, slng = [float(x) for x in subject_latlng.split(",")]
     else:
         ll, subj_approx = loc.locate(subject_name, subject_address, None, None,
-                                     _subject_zip(subject_address))
+                                     geo.subject_zip(subject_address))
         if not ll:
             raise SystemExit("Could not locate subject — pass --subject-latlng "
                              "'lat,lng' or an address with a ZIP.")

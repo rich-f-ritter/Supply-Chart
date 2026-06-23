@@ -65,6 +65,7 @@ Optional flags:
 - `--pipeline-dates path.csv` — analyst-supplied delivery quarters for pipeline deals (see below)
 - `--intake path.xlsx` — RR-T12 underwriting intake; adds **subject rows** (market/effective rent from HelloData mix-weighted, occupancy from the T12 financials) to the Supply & Absorption tab
 - `--costar-subject-rents path.xlsx` and/or `--realpage-subject-rents path.xlsx` — per-property rent histories used to extend the subject rents before HelloData coverage; whichever tracks HelloData more closely in the overlap is auto-selected (varies by market)
+- `--no-geocode` — skip Nominatim and fill the **Proximity (mi)** column from offline ZIP centroids only (no network)
 
 The script prints a reconciliation report to the console and writes the workbook.
 Always read the console report and the **Reconciliation Log** sheet, then review
@@ -92,10 +93,11 @@ python scripts/build_map.py \
   --realpage examples/aura_beacon_island/Realpage_5mi.xlsx \
   --out output/Aura_Beacon_Island__Map.html
 ```
-Geocoding: street-level with `--geocode` (needs network); otherwise offline
-**ZIP-centroid** placement (approximate — same-ZIP properties are jittered apart).
-Pass `--subject-latlng "lat,lng"` to pin the subject exactly. Needs
-`folium`, `zipcodes`, `matplotlib`.
+Geocoding: street-level by default (Nominatim, cached, needs network); pass
+`--no-geocode` for offline **ZIP-centroid** placement (approximate — same-ZIP
+properties are jittered apart). Pass `--subject-latlng "lat,lng"` to pin the
+subject exactly. Needs `folium`, `zipcodes`, `matplotlib`. The chart and the map
+share one geocode cache (`output/.geocode_cache.json`) via `scripts/geo.py`.
 
 ## Methodology
 
@@ -220,8 +222,16 @@ under-construction / proposed deals. The research workflow:
    researched delivery dates flow into the forecast. Pass the same CSV's
    `type=shadow` rows to `build_map.py --shadow-supply` to plot them.
 
+## Proximity
+The **Proximity (mi)** column is filled automatically: the script geocodes the
+subject and each comp (OpenStreetMap Nominatim, cached in
+`output/.geocode_cache.json`) and writes the straight-line distance. Comps that
+only resolve to a ZIP centroid — or that sit just past the 5-mile road radius —
+can read slightly over 5 mi; the export defines membership, the column is an
+approximate as-the-crow-flies distance. Pass `--no-geocode` to skip the network
+call and use offline ZIP centroids only.
+
 ## Analyst follow-ups the script intentionally leaves open
-- **Proximity (miles)** — left blank; neither export carries distance-from-subject. Fill manually (or paste CoStar's "Distance" column if a future pull includes it).
 - **Lease-up rent & occupancy** — verify the flagged lease-ups with a HelloData pull.
 - **Pipeline timing** — undated Pre-Planned deals (`TBD`) are listed but not in the forecast; fill the emitted `…__pipeline_dates_TEMPLATE.csv` and re-run with `--pipeline-dates`, or research them via the diligence phase above.
 
