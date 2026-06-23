@@ -267,10 +267,22 @@ implicit, no separate delta block. Refs are written **internal** (`='Cash Flow
   `Competitive Analysis` dependency) sheets into the model; the internal refs
   resolve to the model's own `Cash Flow (Annual)`. In the standalone file those
   Y0→Y6 cells read `#REF!` until the tab is in the model (everything else shows).
-- **You embed it for them** — given the model, insert the linked tabs **without
-  round-tripping the .xlsm through openpyxl** (it silently drops charts,
-  conditional formatting, slicers — it warns on this very model). Graft the
-  sheet XML into the package directly so the live macro workbook is preserved.
+- **You embed it for them** — `scripts/embed_into_model.py` grafts the chart's
+  sheets into the model **at the package/XML level**, so VBA, charts, conditional
+  formatting, pivot caches, and external links are preserved byte-for-byte (it
+  never round-trips the .xlsm through openpyxl, which silently drops those — it
+  warns on this very model). It only edits `styles.xml` (appending + index-
+  remapping the chart's styles), `workbook.xml`, the rels, and `[Content_Types]`,
+  drops `calcChain.xml`, and sets `fullCalcOnLoad` so the links compute on open:
+  ```bash
+  python scripts/build_supply_chart.py … --model-link --out chart_linked.xlsx
+  python scripts/embed_into_model.py \
+    --chart chart_linked.xlsx --model "TMG Acquisition Model.xlsm" \
+    --out "TMG Acquisition Model__with_Supply_Chart.xlsm"
+  ```
+  It self-validates (zip integrity, XML well-formedness, every retained model
+  part byte-identical) and prints what changed. Always open the result in Excel
+  once to confirm before relying on it.
 
 Keep the distinction the model already encodes: the chart's **market-rent
 growth** is a pure asking-rent trend; the model's **AGPR growth** bakes in
