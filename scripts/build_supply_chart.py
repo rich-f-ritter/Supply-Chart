@@ -593,6 +593,34 @@ def parse_intake_subject(path):
     return out
 
 
+def parse_realpage_subject_rents(path, subject_name):
+    """Subject quarterly asking/effective rent from a RealPage per-property
+    10-yr export (wide format: Metric rows, Y####Q# columns). Returns
+    {(year, q): {ask, eff}}."""
+    wb = openpyxl.load_workbook(path, data_only=True)
+    ws = wb.active
+    hdr = [ws.cell(1, c).value for c in range(1, ws.max_column + 1)]
+    qcols = {}
+    for c, v in enumerate(hdr, 1):
+        m = re.match(r"Y(\d{4})Q([1-4])", str(v or ""))
+        if m:
+            qcols[c] = (int(m.group(1)), int(m.group(2)))
+    key = name_key(subject_name)
+    out = {}
+    for r in range(2, ws.max_row + 1):
+        if name_key(str(ws.cell(r, 1).value or "")) != key:
+            continue
+        metric = str(ws.cell(r, 4).value or "").strip().lower()
+        field = "eff" if "effective" in metric else "ask" if "asking" in metric else None
+        if not field:
+            continue
+        for c, yq in qcols.items():
+            v = _float(ws.cell(r, c).value)
+            if v:
+                out.setdefault(yq, {}).setdefault(field, v)
+    return out
+
+
 def parse_costar_subject_rents(path, subject_name):
     """Subject quarterly asking/effective rent from the CoStar per-property
     (50-unit) analytics export. Returns {(year, q): {ask, eff}}."""
@@ -802,18 +830,22 @@ def hist_annual_absorption(series: dict, as_of: tuple[int, int], n_qtrs=12):
     return sum(vals) * 4 / len(vals)
 
 
-def subject_annual_by_window(plan, as_idx, subj_monthly, subj_costar):
+def subject_annual_by_window(plan, as_idx, subj_monthly, subj_costar,
+                             subj_realpage=None):
     """Aggregate subject rents/occupancy into each relative-year TTM window.
 
-    HelloData (mix-weighted) is preferred; where it doesn't cover a window
-    (>2 missing months) fall back to CoStar subject rents, level-aligned to
-    HelloData via the overlap ratio. Returns {column_label: {mkt,eff,occ,src}}.
+    HelloData (mix-weighted) is preferred; where it doesn't cover a window fall
+    back to CoStar or RealPage per-property rents — whichever tracks HelloData
+    more closely in the overlap (chosen per deal/market) — level-aligned via the
+    overlap ratio. Occupancy fallback always comes from CoStar (RealPage 10-yr has
+    no occupancy). Returns {column_label: {mkt,eff,occ,conc,src}} and the chosen
+    fallback source name.
     """
     out = {}
     subj_monthly = subj_monthly or {}
     subj_costar = subj_costar or {}
+    subj_realpage = subj_realpage or {}
 
-    # HelloData calendar-year effective avg vs CoStar, to align levels
     def cal_year_avg(d, key, idxfn):
         agg = {}
         for k, rec in d.items():
@@ -821,10 +853,21 @@ def subject_annual_by_window(plan, as_idx, subj_monthly, subj_costar):
                 agg.setdefault(idxfn(k), []).append(rec[key])
         return {y: sum(v) / len(v) for y, v in agg.items()}
     hd_eff_y = cal_year_avg(subj_monthly, "eff", lambda k: k[0])
-    cs_eff_y = cal_year_avg(subj_costar, "eff", lambda k: k[0])
-    ratios = [hd_eff_y[y] / cs_eff_y[y] for y in hd_eff_y
-              if y in cs_eff_y and cs_eff_y[y]]
-    ratio = sum(ratios) / len(ratios) if ratios else 1.0
+
+    def fit(src):
+        sy = cal_year_avg(src, "eff", lambda k: k[0])
+        common = [y for y in hd_eff_y if y in sy and sy[y]]
+        if not common:
+            return (float("inf"), 1.0)
+        miss = sum(abs(hd_eff_y[y] - sy[y]) for y in common) / len(common)
+        ratio = sum(hd_eff_y[y] / sy[y] for y in common) / len(common)
+        return (miss, ratio)
+    cs_fit, rp_fit = fit(subj_costar), fit(subj_realpage)
+    # pick the better-tracking source for rents (CoStar wins ties / when no HD)
+    if rp_fit[0] < cs_fit[0]:
+        fb, ratio, fb_name = subj_realpage, rp_fit[1], "RealPage"
+    else:
+        fb, ratio, fb_name = subj_costar, cs_fit[1], "CoStar"
 
     for (label, kind, k) in plan:
         if kind != "hist":
@@ -845,40 +888,36 @@ def subject_annual_by_window(plan, as_idx, subj_monthly, subj_costar):
             return sum(vals) / len(vals) if vals else None
         qs = [(yy, qq) for yy in (ey, ey - 1) for qq in (1, 2, 3, 4)
               if end_idx - 4 < quarter_index(yy, qq) <= end_idx]
-        def csavg(key):
-            vals = [subj_costar[q][key] for q in qs
-                    if q in subj_costar and subj_costar[q].get(key) is not None]
+        def srcavg(source, key):
+            vals = [source[q][key] for q in qs
+                    if q in source and source[q].get(key) is not None]
             return (sum(vals) / len(vals)) if vals else None
         if len(hd) >= 10:
             occ = avg(hd, "occ")
             if occ is None:                      # fill financials gap from CoStar
-                occ = csavg("occ")
+                occ = srcavg(subj_costar, "occ")
             out[label] = {"mkt": avg(hd, "mkt"), "eff": avg(hd, "eff"),
                           "occ": occ, "conc": avg(hd, "conc"), "src": "HD"}
         else:
-            ask = [subj_costar[q]["ask"] for q in qs
-                   if q in subj_costar and subj_costar[q].get("ask") is not None]
-            eff = [subj_costar[q]["eff"] for q in qs
-                   if q in subj_costar and subj_costar[q].get("eff") is not None]
-            occq = [subj_costar[q]["occ"] for q in qs
-                    if q in subj_costar and subj_costar[q].get("occ") is not None]
-            occ = avg(hd, "occ")     # prefer financials occupancy if present
-            if occ is None and occq:
-                occ = sum(occq) / len(occq)
+            ask = srcavg(fb, "ask")              # rents from the better-fit source
+            eff = srcavg(fb, "eff")
+            occ = avg(hd, "occ")                 # occupancy: financials, else CoStar
+            if occ is None:
+                occ = srcavg(subj_costar, "occ")
             conc = avg(hd, "conc")
             if conc is None:
-                conc = csavg("conc")
-            if ask or eff or occq:
-                out[label] = {"conc": conc,
-                    "mkt": (sum(ask) / len(ask) * ratio) if ask else None,
-                    "eff": (sum(eff) / len(eff) * ratio) if eff else None,
-                    "occ": occ, "src": "CoStar"}
-    return out
+                conc = srcavg(subj_costar, "conc")
+            if ask or eff or occ is not None:
+                out[label] = {"conc": conc, "occ": occ, "src": fb_name,
+                              "mkt": (ask * ratio) if ask else None,
+                              "eff": (eff * ratio) if eff else None}
+    return out, fb_name
 
 
 def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
                          latest_label=None, subj_monthly=None, subj_costar=None,
-                         subject_name="", hist_years=6, fwd_years=6):
+                         subj_realpage=None, subject_name="", hist_years=6,
+                         fwd_years=6):
     """Relative-year (trailing-12-month) supply / absorption / occupancy view.
 
     Columns are TTM windows: Y0 = the T12 ending at the as-of quarter, -Y1..-Yn
@@ -1037,7 +1076,8 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
         ws.column_dimensions[hcol].hidden = True
 
     # ----- subject annual series (HelloData -> CoStar, level-aligned) -----
-    subj_annual = subject_annual_by_window(plan, as_idx, subj_monthly, subj_costar)
+    subj_annual, fb_name = subject_annual_by_window(
+        plan, as_idx, subj_monthly, subj_costar, subj_realpage)
 
     # ----- annual table -----
     HR = 17                                    # relative-year header row
@@ -1049,7 +1089,7 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
     ws.cell(rows["absorp"], 2, "ABSORPTION (5-mi)").font = font(size=9, bold=True)
     ws.cell(rows["occ"], 2, "OCCUPANCY (5-mi)").font = font(size=9, bold=True)
     ws.cell(HR + 5, 2, "SUBJECT (" + (subject_name or "subject") + ")").font = font(bold=True, size=9)
-    ws.cell(rows["smkt"], 2, "  Market Rent  (CoStar→HD)").font = font(size=9, bold=True)
+    ws.cell(rows["smkt"], 2, f"  Market Rent  ({fb_name}→HD)").font = font(size=9, bold=True)
     ws.cell(rows["smkt_yoy"], 2, "    Market Rent YoY %").font = font(size=8, italic=True)
     ws.cell(rows["seff"], 2, "  Effective Rent").font = font(size=9, bold=True)
     ws.cell(rows["seff_yoy"], 2, "    Effective Rent YoY %").font = font(size=8, italic=True)
@@ -1254,7 +1294,7 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
 
 def write_workbook(props, subject_name, latest_inv, latest_label,
                    as_of, target, out_path, series=None, latest_uc=None,
-                   subj_monthly=None, subj_costar=None):
+                   subj_monthly=None, subj_costar=None, subj_realpage=None):
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Competitive Analysis"
@@ -1382,7 +1422,8 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
     if series:
         sa = build_forecast_sheet(wb, series, props, as_of, target, latest_uc=latest_uc,
                                   latest_label=latest_label, subj_monthly=subj_monthly,
-                                  subj_costar=subj_costar, subject_name=subject_name)
+                                  subj_costar=subj_costar, subj_realpage=subj_realpage,
+                                  subject_name=subject_name)
         # make "Supply & Absorption" the 2nd tab
         wb.move_sheet(sa, -(wb.index(sa) - 1))
 
@@ -1429,6 +1470,10 @@ def main(argv=None):
     ap.add_argument("--costar-subject-rents", default=None,
                     help="CoStar per-property (50-unit) analytics export, used for "
                          "subject rent history before HelloData coverage begins.")
+    ap.add_argument("--realpage-subject-rents", default=None,
+                    help="RealPage per-property 10-yr rent export (alternative "
+                         "subject rent source; the better-tracking of CoStar/"
+                         "RealPage vs HelloData is auto-selected).")
     args = ap.parse_args(argv)
 
     latest_inv, deliveries, latest_label, series, latest_uc = parse_costar_analytics(args.costar_analytics)
@@ -1472,10 +1517,13 @@ def main(argv=None):
     subj_monthly = parse_intake_subject(args.intake) if args.intake else {}
     subj_costar = (parse_costar_subject_rents(args.costar_subject_rents, args.subject_name)
                    if args.costar_subject_rents else {})
+    subj_realpage = (parse_realpage_subject_rents(args.realpage_subject_rents, args.subject_name)
+                     if args.realpage_subject_rents else {})
 
     write_workbook(props, args.subject_name, latest_inv, latest_label,
                    as_of, args.target, args.out, series=series, latest_uc=latest_uc,
-                   subj_monthly=subj_monthly, subj_costar=subj_costar)
+                   subj_monthly=subj_monthly, subj_costar=subj_costar,
+                   subj_realpage=subj_realpage)
 
     # Emit a template listing pipeline deals still missing a delivery quarter.
     import os
