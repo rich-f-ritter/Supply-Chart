@@ -98,6 +98,7 @@ class Prop:
     address: str
     units: Optional[int] = None
     city: Optional[str] = None
+    state: Optional[str] = None
     zipcode: Optional[str] = None
     year_built: Optional[int] = None
     construction_begin: Optional[str] = None
@@ -216,6 +217,7 @@ def parse_costar_roster(path) -> list[Prop]:
             name=str(name).strip(),
             address=str(col(row, "Property Address") or "").strip(),
             city=(str(col(row, "City")).strip() if col(row, "City") else None),
+            state=(str(col(row, "State")).strip() if col(row, "State") else None),
             zipcode=(str(col(row, "Zip")).strip()[:5] if col(row, "Zip") else None),
             units=_int(col(row, "Number of Units")),
             year_built=_int(col(row, "Year Built")),
@@ -252,6 +254,7 @@ def parse_realpage(path) -> list[Prop]:
             name=str(name).strip(),
             address=str(col(row, "Address") or "").strip(),
             city=(str(col(row, "City")).strip() if col(row, "City") else None),
+            state=(str(col(row, "State")).strip() if col(row, "State") else None),
             zipcode=(str(col(row, "Zip Code")).strip()[:5] if col(row, "Zip Code") else None),
             units=_int(col(row, "Total Units")),
             year_built=_int(col(row, "Year Built")),
@@ -378,6 +381,7 @@ def reconcile(costar: list[Prop], realpage: list[Prop]) -> list[Prop]:
         base.stories = base.stories or other.stories
         base.owner = base.owner or other.owner
         base.city = base.city or other.city
+        base.state = base.state or other.state
         base.zipcode = base.zipcode or other.zipcode
         # Year built conflict
         if other.year_built and base.year_built and other.year_built != base.year_built:

@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_5e499455e4f04a2182eb2c3ea06aa68e {
+                #map_7a5470d4f08eaa68c5a89474ce3006c3 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -54,27 +54,27 @@
 <body>
     
     
-    <div style="position:fixed;top:10px;left:50px;z-index:9999;background:white;
-         padding:8px 12px;border:1px solid #999;border-radius:4px;
-         font-family:Arial;font-size:13px"><b>Aura Beacon Island — 5-Mile Competitive Supply</b><br><span style='font-size:11px'>15 competitive properties &middot; 5-mile radius</span></div>
-    <div style="position:fixed;bottom:24px;left:12px;z-index:9999;background:white;
-         padding:8px 12px;border:1px solid #999;border-radius:4px;
-         font-family:Arial;font-size:12px">
-         <b>Lifecycle</b><div><span style='display:inline-block;width:11px;height:11px;background:#2E75B6;border-radius:50%;margin-right:6px'></span>Stabilized (5)</div><div><span style='display:inline-block;width:11px;height:11px;background:#ED7D31;border-radius:50%;margin-right:6px'></span>Leasing Up (0)</div><div><span style='display:inline-block;width:11px;height:11px;background:#375623;border-radius:50%;margin-right:6px'></span>Under Construction (5)</div><div><span style='display:inline-block;width:11px;height:11px;background:#C00000;border-radius:50%;margin-right:6px'></span>Proposed (5)</div>
-         <div style="margin-top:4px">&#9733; Subject</div>
-         <div style="color:#b00;margin-top:4px;max-width:240px">&#9888; Marker positions are approximate (ZIP-centroid) — street geocoding unavailable; re-run with --geocode for exact pins.</div></div>
+      <div style="position:fixed;top:10px;left:50px;z-index:9999;background:white;
+        padding:8px 12px;border:1px solid #999;border-radius:4px;font-family:Arial;
+        font-size:13px"><b>Aura Beacon Island — 5-Mile Competitive Supply</b><br>
+        <span style="font-size:11px">15 competitive properties &middot;
+        5-mile radius</span></div>
+      <div style="position:fixed;bottom:24px;left:12px;z-index:9999;background:white;
+        padding:8px 12px;border:1px solid #999;border-radius:4px;font-family:Arial;
+        font-size:12px"><b>Lifecycle</b><div><span style='display:inline-block;width:11px;height:11px;background:#2E75B6;border-radius:50%;margin-right:6px'></span>Stabilized (5)</div><div><span style='display:inline-block;width:11px;height:11px;background:#ED7D31;border-radius:50%;margin-right:6px'></span>Leasing Up (0)</div><div><span style='display:inline-block;width:11px;height:11px;background:#375623;border-radius:50%;margin-right:6px'></span>Under Construction (5)</div><div><span style='display:inline-block;width:11px;height:11px;background:#C00000;border-radius:50%;margin-right:6px'></span>Proposed (5)</div>
+        <div style="margin-top:4px">&#9733; Subject</div>
+        <div style="color:#b00;margin-top:4px">&#9888; Some pins ZIP-approximate (geocode failed).</div></div>
     
-    
-            <div class="folium-map" id="map_5e499455e4f04a2182eb2c3ea06aa68e" ></div>
+            <div class="folium-map" id="map_7a5470d4f08eaa68c5a89474ce3006c3" ></div>
         
 </body>
 <script>
     
     
-            var map_5e499455e4f04a2182eb2c3ea06aa68e = L.map(
-                "map_5e499455e4f04a2182eb2c3ea06aa68e",
+            var map_7a5470d4f08eaa68c5a89474ce3006c3 = L.map(
+                "map_7a5470d4f08eaa68c5a89474ce3006c3",
                 {
-                    center: [29.51708775923602, -95.09555982849413],
+                    center: [29.543511, -95.070054],
                     crs: L.CRS.EPSG3857,
                     ...{
   "zoom": 12,
@@ -84,21 +84,21 @@
 
                 }
             );
-            L.control.scale().addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+            L.control.scale().addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
 
             
 
         
     
-            var tile_layer_1f2b96f2ee046c51059f2ddac072af9d = L.tileLayer(
-                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+            var tile_layer_8082dcb889c406ec8d98fa330a23c1bc = L.tileLayer(
+                "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
-  "maxZoom": 20,
-  "maxNativeZoom": 20,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
   "noWrap": false,
-  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
-  "subdomains": "abcd",
+  "attribution": "Map data \u00a9 OpenStreetMap contributors, SRTM | \u00a9 OpenTopoMap (CC-BY-SA)",
+  "subdomains": "abc",
   "detectRetina": false,
   "tms": false,
   "opacity": 1,
@@ -107,16 +107,56 @@
             );
         
     
-            tile_layer_1f2b96f2ee046c51059f2ddac072af9d.addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+            tile_layer_8082dcb889c406ec8d98fa330a23c1bc.addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-            var circle_cbeff784d95ad7a44c3e81fd550166c2 = L.circle(
-                [29.51708775923602, -95.09555982849413],
+            var tile_layer_3a2ee148ef0e27e9f81101f07c34a4ef = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_3a2ee148ef0e27e9f81101f07c34a4ef.addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
+        
+    
+            var tile_layer_ccceab04095a419531331dd7808d5aba = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Esri",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_ccceab04095a419531331dd7808d5aba.addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
+        
+    
+            var circle_b2dfa620f7f83156697cc98a928c3662 = L.circle(
+                [29.543511, -95.070054],
                 {"bubblingMouseEvents": true, "color": "#1F3864", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1F3864", "fillOpacity": 0.04, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8046.7, "stroke": true, "weight": 2}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-            circle_cbeff784d95ad7a44c3e81fd550166c2.bindTooltip(
+            circle_b2dfa620f7f83156697cc98a928c3662.bindTooltip(
                 `<div>
                      5-mile radius
                  </div>`,
@@ -126,30 +166,30 @@
             );
         
     
-            var circle_marker_a91cdb3267229b13dfc099291e30b36e = L.circleMarker(
-                [29.552692344895306, -95.14088890796913],
-                {"bubblingMouseEvents": true, "color": "#2E75B6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2E75B6", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.746794344808963, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+            var circle_marker_36401e614fa652424e778c205f9c2505 = L.circleMarker(
+                [29.5455057, -95.1430185],
+                {"bubblingMouseEvents": true, "color": "#2E75B6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2E75B6", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.746794344808963, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_fad141bc4fe0180eb163257fac4dde15 = L.popup({
+        var popup_e1da2da3441a273f1b4d9ac6204d40c0 = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_1164e85a3ffcc09dca5ffcd2f2d1153a = $(`<div id="html_1164e85a3ffcc09dca5ffcd2f2d1153a" style="width: 100.0%; height: 100.0%;"><b>Broadstone Baybrook</b><br>Stabilized<br>380 units &middot; Q3 2024<br>Occ 93% &middot; Rent $1,795<br><span style='color:#888'>19101 Town Ridge Ln 77598</span></div>`)[0];
-                popup_fad141bc4fe0180eb163257fac4dde15.setContent(html_1164e85a3ffcc09dca5ffcd2f2d1153a);
+                var html_14bcc555e5f891cb9a79f388e407cec5 = $(`<div id="html_14bcc555e5f891cb9a79f388e407cec5" style="width: 100.0%; height: 100.0%;"><b>Broadstone Baybrook</b><br>Stabilized<br>380 units &middot; Q3 2024<br>Occ 93% &middot; Rent $1,795<br><span style='color:#888'>19101 Town Ridge Ln 77598</span></div>`)[0];
+                popup_e1da2da3441a273f1b4d9ac6204d40c0.setContent(html_14bcc555e5f891cb9a79f388e407cec5);
             
         
 
-        circle_marker_a91cdb3267229b13dfc099291e30b36e.bindPopup(popup_fad141bc4fe0180eb163257fac4dde15)
+        circle_marker_36401e614fa652424e778c205f9c2505.bindPopup(popup_e1da2da3441a273f1b4d9ac6204d40c0)
         ;
 
         
     
     
-            circle_marker_a91cdb3267229b13dfc099291e30b36e.bindTooltip(
+            circle_marker_36401e614fa652424e778c205f9c2505.bindTooltip(
                 `<div>
                      Broadstone Baybrook (Stabilized)
                  </div>`,
@@ -159,30 +199,30 @@
             );
         
     
-            var circle_marker_4f440d6877d4488b13f5a74e0a5fee40 = L.circleMarker(
+            var circle_marker_dbf61eff53e80724c8acc6a17877759f = L.circleMarker(
                 [29.524949737377238, -95.02786236236865],
-                {"bubblingMouseEvents": true, "color": "#2E75B6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2E75B6", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.486832980505138, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+                {"bubblingMouseEvents": true, "color": "#2E75B6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2E75B6", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.486832980505138, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_9cb824bc0b70794e1d764f58d5576b67 = L.popup({
+        var popup_8ae864a2d92a821fd43e9da227c1b699 = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_396e23b8d4eda31aa280e0a1805281e9 = $(`<div id="html_396e23b8d4eda31aa280e0a1805281e9" style="width: 100.0%; height: 100.0%;"><b>The Kippford at Kemah Crossing</b><br>Stabilized<br>360 units &middot; Q3 2023<br>Occ 90% &middot; Rent $1,765<br><span style='color:#888'>2201 Evergreen Memorial Pky 77565</span></div>`)[0];
-                popup_9cb824bc0b70794e1d764f58d5576b67.setContent(html_396e23b8d4eda31aa280e0a1805281e9);
+                var html_ade8bae009a66897725d1ece61495bb9 = $(`<div id="html_ade8bae009a66897725d1ece61495bb9" style="width: 100.0%; height: 100.0%;"><b>The Kippford at Kemah Crossing</b><br>Stabilized<br>360 units &middot; Q3 2023<br>Occ 90% &middot; Rent $1,765<br><span style='color:#888'>2201 Evergreen Memorial Pky 77565</span></div>`)[0];
+                popup_8ae864a2d92a821fd43e9da227c1b699.setContent(html_ade8bae009a66897725d1ece61495bb9);
             
         
 
-        circle_marker_4f440d6877d4488b13f5a74e0a5fee40.bindPopup(popup_9cb824bc0b70794e1d764f58d5576b67)
+        circle_marker_dbf61eff53e80724c8acc6a17877759f.bindPopup(popup_8ae864a2d92a821fd43e9da227c1b699)
         ;
 
         
     
     
-            circle_marker_4f440d6877d4488b13f5a74e0a5fee40.bindTooltip(
+            circle_marker_dbf61eff53e80724c8acc6a17877759f.bindTooltip(
                 `<div>
                      The Kippford at Kemah Crossing (Stabilized)
                  </div>`,
@@ -192,30 +232,30 @@
             );
         
     
-            var circle_marker_77890da316877ee9cf57219213bcce94 = L.circleMarker(
+            var circle_marker_e57b8949ce89f474463340e88af92b87 = L.circleMarker(
                 [29.555817254588714, -95.14430985123144],
-                {"bubblingMouseEvents": true, "color": "#2E75B6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2E75B6", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.874119674649425, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+                {"bubblingMouseEvents": true, "color": "#2E75B6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2E75B6", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.874119674649425, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_574d593ddf24a13da5a2fb79238b44aa = L.popup({
+        var popup_fb1cb79ceaa6592bce292b0211cf74fd = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_6e9b88dbeffaf81f49d5f086dd080aa2 = $(`<div id="html_6e9b88dbeffaf81f49d5f086dd080aa2" style="width: 100.0%; height: 100.0%;"><b>Lenox Bayside</b><br>Stabilized<br>315 units &middot; Q2 2023<br>Occ 88% &middot; Rent $1,836<br><span style='color:#888'>250 N Village Dr 77598</span></div>`)[0];
-                popup_574d593ddf24a13da5a2fb79238b44aa.setContent(html_6e9b88dbeffaf81f49d5f086dd080aa2);
+                var html_536a225e61010c5345cd49c0654483bf = $(`<div id="html_536a225e61010c5345cd49c0654483bf" style="width: 100.0%; height: 100.0%;"><b>Lenox Bayside</b><br>Stabilized<br>315 units &middot; Q2 2023<br>Occ 88% &middot; Rent $1,836<br><span style='color:#888'>250 N Village Dr 77598</span></div>`)[0];
+                popup_fb1cb79ceaa6592bce292b0211cf74fd.setContent(html_536a225e61010c5345cd49c0654483bf);
             
         
 
-        circle_marker_77890da316877ee9cf57219213bcce94.bindPopup(popup_574d593ddf24a13da5a2fb79238b44aa)
+        circle_marker_e57b8949ce89f474463340e88af92b87.bindPopup(popup_fb1cb79ceaa6592bce292b0211cf74fd)
         ;
 
         
     
     
-            circle_marker_77890da316877ee9cf57219213bcce94.bindTooltip(
+            circle_marker_e57b8949ce89f474463340e88af92b87.bindTooltip(
                 `<div>
                      Lenox Bayside (Stabilized)
                  </div>`,
@@ -225,30 +265,30 @@
             );
         
     
-            var circle_marker_2d319f428bddbb7afeb88d1c054e846b = L.circleMarker(
-                [29.527640743046984, -95.02536017955447],
-                {"bubblingMouseEvents": true, "color": "#2E75B6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2E75B6", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.013878188659973, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+            var circle_marker_cfed2980793523100892e0fb080547e9 = L.circleMarker(
+                [29.5427297, -95.0204837],
+                {"bubblingMouseEvents": true, "color": "#2E75B6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2E75B6", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.013878188659973, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_3d05c058824d9da77bf363f1c914bf7e = L.popup({
+        var popup_4ddd7abe08e5bd1d054c93689a3f0080 = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_f6e0dfd15b7457548cf117fe83950f67 = $(`<div id="html_f6e0dfd15b7457548cf117fe83950f67" style="width: 100.0%; height: 100.0%;"><b>Livano Kemah</b><br>Stabilized<br>325 units &middot; Q3 2022<br>Occ 92% &middot; Rent $1,861<br><span style='color:#888'>800 FM 518 Rd E 77565</span></div>`)[0];
-                popup_3d05c058824d9da77bf363f1c914bf7e.setContent(html_f6e0dfd15b7457548cf117fe83950f67);
+                var html_66982e92089dcf22eb6adcc8688e88a3 = $(`<div id="html_66982e92089dcf22eb6adcc8688e88a3" style="width: 100.0%; height: 100.0%;"><b>Livano Kemah</b><br>Stabilized<br>325 units &middot; Q3 2022<br>Occ 92% &middot; Rent $1,861<br><span style='color:#888'>800 FM 518 Rd E 77565</span></div>`)[0];
+                popup_4ddd7abe08e5bd1d054c93689a3f0080.setContent(html_66982e92089dcf22eb6adcc8688e88a3);
             
         
 
-        circle_marker_2d319f428bddbb7afeb88d1c054e846b.bindPopup(popup_3d05c058824d9da77bf363f1c914bf7e)
+        circle_marker_cfed2980793523100892e0fb080547e9.bindPopup(popup_4ddd7abe08e5bd1d054c93689a3f0080)
         ;
 
         
     
     
-            circle_marker_2d319f428bddbb7afeb88d1c054e846b.bindTooltip(
+            circle_marker_cfed2980793523100892e0fb080547e9.bindTooltip(
                 `<div>
                      Livano Kemah (Stabilized)
                  </div>`,
@@ -258,30 +298,30 @@
             );
         
     
-            var circle_marker_abc83044cc2a82eaca64e479e581c79e = L.circleMarker(
+            var circle_marker_eda5de96d19c076e78e526b1cad6ca53 = L.circleMarker(
                 [29.522198877732055, -95.18808754954901],
-                {"bubblingMouseEvents": true, "color": "#2E75B6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2E75B6", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.52936105461599, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+                {"bubblingMouseEvents": true, "color": "#2E75B6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2E75B6", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.52936105461599, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_3582d6595a7f421128a096de50644960 = L.popup({
+        var popup_2dc882959b6c28cd7ffed2b1df17864c = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_0bcb4b907353eca971f8dce22bc3a1ea = $(`<div id="html_0bcb4b907353eca971f8dce22bc3a1ea" style="width: 100.0%; height: 100.0%;"><b>The Reserve at Baybrook</b><br>Stabilized<br>291 units &middot; Q3 2022<br>Occ 95% &middot; Rent $1,897<br><span style='color:#888'>19302 Glenwest Dr 77546</span></div>`)[0];
-                popup_3582d6595a7f421128a096de50644960.setContent(html_0bcb4b907353eca971f8dce22bc3a1ea);
+                var html_e5f4a5c604dbc593f2f1d4d944f4622c = $(`<div id="html_e5f4a5c604dbc593f2f1d4d944f4622c" style="width: 100.0%; height: 100.0%;"><b>The Reserve at Baybrook</b><br>Stabilized<br>291 units &middot; Q3 2022<br>Occ 95% &middot; Rent $1,897<br><span style='color:#888'>19302 Glenwest Dr 77546</span></div>`)[0];
+                popup_2dc882959b6c28cd7ffed2b1df17864c.setContent(html_e5f4a5c604dbc593f2f1d4d944f4622c);
             
         
 
-        circle_marker_abc83044cc2a82eaca64e479e581c79e.bindPopup(popup_3582d6595a7f421128a096de50644960)
+        circle_marker_eda5de96d19c076e78e526b1cad6ca53.bindPopup(popup_2dc882959b6c28cd7ffed2b1df17864c)
         ;
 
         
     
     
-            circle_marker_abc83044cc2a82eaca64e479e581c79e.bindTooltip(
+            circle_marker_eda5de96d19c076e78e526b1cad6ca53.bindTooltip(
                 `<div>
                      The Reserve at Baybrook (Stabilized)
                  </div>`,
@@ -291,30 +331,30 @@
             );
         
     
-            var circle_marker_5b600541c21f7918b9353adf55caade0 = L.circleMarker(
-                [29.556514981309594, -95.1429060259151],
-                {"bubblingMouseEvents": true, "color": "#375623", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#375623", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.16515138991168, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+            var circle_marker_61f20d06697edc6753ed18c1586bfcef = L.circleMarker(
+                [29.5562939, -95.135551],
+                {"bubblingMouseEvents": true, "color": "#375623", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#375623", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.16515138991168, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_6694d915cba1da916e7cc2f639536050 = L.popup({
+        var popup_99cc7a2977964b17d5d6985d62588973 = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_8fcd1e7ee62af39bdf1bb6c094b95ff0 = $(`<div id="html_8fcd1e7ee62af39bdf1bb6c094b95ff0" style="width: 100.0%; height: 100.0%;"><b>Lenox Clear Creek</b><br>Under Construction<br>336 units &middot; Q4 2027<br>Occ — &middot; Rent —<br><span style='color:#888'>16200 State Highway 3 77598</span></div>`)[0];
-                popup_6694d915cba1da916e7cc2f639536050.setContent(html_8fcd1e7ee62af39bdf1bb6c094b95ff0);
+                var html_da15c3eab9ae5db629f1b65141ead56f = $(`<div id="html_da15c3eab9ae5db629f1b65141ead56f" style="width: 100.0%; height: 100.0%;"><b>Lenox Clear Creek</b><br>Under Construction<br>336 units &middot; Q4 2027<br>Occ — &middot; Rent —<br><span style='color:#888'>16200 State Highway 3 77598</span></div>`)[0];
+                popup_99cc7a2977964b17d5d6985d62588973.setContent(html_da15c3eab9ae5db629f1b65141ead56f);
             
         
 
-        circle_marker_5b600541c21f7918b9353adf55caade0.bindPopup(popup_6694d915cba1da916e7cc2f639536050)
+        circle_marker_61f20d06697edc6753ed18c1586bfcef.bindPopup(popup_99cc7a2977964b17d5d6985d62588973)
         ;
 
         
     
     
-            circle_marker_5b600541c21f7918b9353adf55caade0.bindTooltip(
+            circle_marker_61f20d06697edc6753ed18c1586bfcef.bindTooltip(
                 `<div>
                      Lenox Clear Creek (Under Construction)
                  </div>`,
@@ -324,30 +364,30 @@
             );
         
     
-            var circle_marker_71e07c718b400b39b011926302ea4a04 = L.circleMarker(
-                [29.513075174739576, -95.09555504931781],
-                {"bubblingMouseEvents": true, "color": "#375623", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#375623", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.616843969807043, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+            var circle_marker_035ad0e14e9f1ca3c03b14ab1e597401 = L.circleMarker(
+                [29.5068651, -95.1152828],
+                {"bubblingMouseEvents": true, "color": "#375623", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#375623", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.616843969807043, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_39bf3cb1b88aa99d457cf21440d65099 = L.popup({
+        var popup_9481e43c593646dd6230d71f3d4b1ba5 = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_73b742c9ac8612774b586e9e22cc3a5d = $(`<div id="html_73b742c9ac8612774b586e9e22cc3a5d" style="width: 100.0%; height: 100.0%;"><b>Riverview at Clear Creek</b><br>Under Construction<br>297 units &middot; Q2 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>301 N Wesley Dr 77573</span></div>`)[0];
-                popup_39bf3cb1b88aa99d457cf21440d65099.setContent(html_73b742c9ac8612774b586e9e22cc3a5d);
+                var html_cadbfb5de1774fabe0cadefe85ba2721 = $(`<div id="html_cadbfb5de1774fabe0cadefe85ba2721" style="width: 100.0%; height: 100.0%;"><b>Riverview at Clear Creek</b><br>Under Construction<br>297 units &middot; Q2 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>301 N Wesley Dr 77573</span></div>`)[0];
+                popup_9481e43c593646dd6230d71f3d4b1ba5.setContent(html_cadbfb5de1774fabe0cadefe85ba2721);
             
         
 
-        circle_marker_71e07c718b400b39b011926302ea4a04.bindPopup(popup_39bf3cb1b88aa99d457cf21440d65099)
+        circle_marker_035ad0e14e9f1ca3c03b14ab1e597401.bindPopup(popup_9481e43c593646dd6230d71f3d4b1ba5)
         ;
 
         
     
     
-            circle_marker_71e07c718b400b39b011926302ea4a04.bindTooltip(
+            circle_marker_035ad0e14e9f1ca3c03b14ab1e597401.bindTooltip(
                 `<div>
                      Riverview at Clear Creek (Under Construction)
                  </div>`,
@@ -357,30 +397,30 @@
             );
         
     
-            var circle_marker_b6b808f87d4756d05306235086e230bf = L.circleMarker(
-                [29.57857877688884, -95.03877392135026],
-                {"bubblingMouseEvents": true, "color": "#375623", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#375623", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.94427190999916, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+            var circle_marker_3528257c8e5d2aa55c874f644fe9b367 = L.circleMarker(
+                [29.5792311, -95.0295657],
+                {"bubblingMouseEvents": true, "color": "#375623", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#375623", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.94427190999916, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_f77371f2a5d7e2c51287754838980de3 = L.popup({
+        var popup_74a8dff9061a4f7f3397b1e100b04028 = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_1e4568297818bc5729e3f9511a2c5cfb = $(`<div id="html_1e4568297818bc5729e3f9511a2c5cfb" style="width: 100.0%; height: 100.0%;"><b>The Edge at Seabrook Town Centre</b><br>Under Construction<br>320 units &middot; Q2 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>2101 Humble Dr 77586</span></div>`)[0];
-                popup_f77371f2a5d7e2c51287754838980de3.setContent(html_1e4568297818bc5729e3f9511a2c5cfb);
+                var html_ca4cafbdcb7a75543ec91ea6a55298b7 = $(`<div id="html_ca4cafbdcb7a75543ec91ea6a55298b7" style="width: 100.0%; height: 100.0%;"><b>The Edge at Seabrook Town Centre</b><br>Under Construction<br>320 units &middot; Q2 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>2101 Humble Dr 77586</span></div>`)[0];
+                popup_74a8dff9061a4f7f3397b1e100b04028.setContent(html_ca4cafbdcb7a75543ec91ea6a55298b7);
             
         
 
-        circle_marker_b6b808f87d4756d05306235086e230bf.bindPopup(popup_f77371f2a5d7e2c51287754838980de3)
+        circle_marker_3528257c8e5d2aa55c874f644fe9b367.bindPopup(popup_74a8dff9061a4f7f3397b1e100b04028)
         ;
 
         
     
     
-            circle_marker_b6b808f87d4756d05306235086e230bf.bindTooltip(
+            circle_marker_3528257c8e5d2aa55c874f644fe9b367.bindTooltip(
                 `<div>
                      The Edge at Seabrook Town Centre (Under Construction)
                  </div>`,
@@ -390,30 +430,30 @@
             );
         
     
-            var circle_marker_8c2d29072f788b331593b65834aaeeaa = L.circleMarker(
+            var circle_marker_9cf4258e20744f7ea47d5697ac1e9542 = L.circleMarker(
                 [29.52270630469062, -95.02878597373243],
-                {"bubblingMouseEvents": true, "color": "#375623", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#375623", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.56637297521078, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+                {"bubblingMouseEvents": true, "color": "#375623", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#375623", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.56637297521078, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_1ed9a3048634ae671914eae2a16a4b82 = L.popup({
+        var popup_2fc214d50715aab831b64ffd3df678d3 = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_487fc1f9dbb1977a07808f558d86f0e6 = $(`<div id="html_487fc1f9dbb1977a07808f558d86f0e6" style="width: 100.0%; height: 100.0%;"><b>Dakota at Kemah</b><br>Under Construction<br>229 units &middot; Q2 2027<br>Occ — &middot; Rent —<br><span style='color:#888'>2801 Lawrence Rd 77565</span></div>`)[0];
-                popup_1ed9a3048634ae671914eae2a16a4b82.setContent(html_487fc1f9dbb1977a07808f558d86f0e6);
+                var html_b18e8c3b5e51da59f1eae507c1877757 = $(`<div id="html_b18e8c3b5e51da59f1eae507c1877757" style="width: 100.0%; height: 100.0%;"><b>Dakota at Kemah</b><br>Under Construction<br>229 units &middot; Q2 2027<br>Occ — &middot; Rent —<br><span style='color:#888'>2801 Lawrence Rd 77565</span></div>`)[0];
+                popup_2fc214d50715aab831b64ffd3df678d3.setContent(html_b18e8c3b5e51da59f1eae507c1877757);
             
         
 
-        circle_marker_8c2d29072f788b331593b65834aaeeaa.bindPopup(popup_1ed9a3048634ae671914eae2a16a4b82)
+        circle_marker_9cf4258e20744f7ea47d5697ac1e9542.bindPopup(popup_2fc214d50715aab831b64ffd3df678d3)
         ;
 
         
     
     
-            circle_marker_8c2d29072f788b331593b65834aaeeaa.bindTooltip(
+            circle_marker_9cf4258e20744f7ea47d5697ac1e9542.bindTooltip(
                 `<div>
                      Dakota at Kemah (Under Construction)
                  </div>`,
@@ -423,30 +463,30 @@
             );
         
     
-            var circle_marker_5edb56334bdc040688ed5451bdf59e3b = L.circleMarker(
+            var circle_marker_6db626a56debe39282e005b21b959fbc = L.circleMarker(
                 [29.518965601599678, -95.09117380537717],
-                {"bubblingMouseEvents": true, "color": "#375623", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#375623", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.717797887081348, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+                {"bubblingMouseEvents": true, "color": "#375623", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#375623", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.717797887081348, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_7031c648546a59ed30c638e18c5361d5 = L.popup({
+        var popup_61c98a30fbf933382c08b6da042c7536 = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_05b9952c5c904a4cd4b062ae97ca5d5d = $(`<div id="html_05b9952c5c904a4cd4b062ae97ca5d5d" style="width: 100.0%; height: 100.0%;"><b>The League I</b><br>Under Construction<br>304 units &middot; Q2 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>E FM 518 & Main St 77573</span></div>`)[0];
-                popup_7031c648546a59ed30c638e18c5361d5.setContent(html_05b9952c5c904a4cd4b062ae97ca5d5d);
+                var html_6e046c69e6b9a53e8ddd0c1405ab60a6 = $(`<div id="html_6e046c69e6b9a53e8ddd0c1405ab60a6" style="width: 100.0%; height: 100.0%;"><b>The League I</b><br>Under Construction<br>304 units &middot; Q2 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>E FM 518 & Main St 77573</span></div>`)[0];
+                popup_61c98a30fbf933382c08b6da042c7536.setContent(html_6e046c69e6b9a53e8ddd0c1405ab60a6);
             
         
 
-        circle_marker_5edb56334bdc040688ed5451bdf59e3b.bindPopup(popup_7031c648546a59ed30c638e18c5361d5)
+        circle_marker_6db626a56debe39282e005b21b959fbc.bindPopup(popup_61c98a30fbf933382c08b6da042c7536)
         ;
 
         
     
     
-            circle_marker_5edb56334bdc040688ed5451bdf59e3b.bindTooltip(
+            circle_marker_6db626a56debe39282e005b21b959fbc.bindTooltip(
                 `<div>
                      The League I (Under Construction)
                  </div>`,
@@ -456,30 +496,30 @@
             );
         
     
-            var circle_marker_5117172b56843c5c587f48b9404121f3 = L.circleMarker(
-                [29.585783471214036, -95.03316984641481],
-                {"bubblingMouseEvents": true, "color": "#C00000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#C00000", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.06225774829855, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+            var circle_marker_4ae4d2121413f30e8bc9d63b171cb52d = L.circleMarker(
+                [29.5606933, -95.0406868],
+                {"bubblingMouseEvents": true, "color": "#C00000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#C00000", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.06225774829855, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_bffc80abfecc29347bccc082210765d8 = L.popup({
+        var popup_8766f1de6435d7e82122fe5ac100d1e7 = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_ef1533f8ef77c8501798a493e4e81c8b = $(`<div id="html_ef1533f8ef77c8501798a493e4e81c8b" style="width: 100.0%; height: 100.0%;"><b>Seabrook Plaza</b><br>Proposed<br>260 units &middot; Q3 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>3101 Nasa Pky 77586</span></div>`)[0];
-                popup_bffc80abfecc29347bccc082210765d8.setContent(html_ef1533f8ef77c8501798a493e4e81c8b);
+                var html_624e5a6e125d49a08d6078f62c9e7906 = $(`<div id="html_624e5a6e125d49a08d6078f62c9e7906" style="width: 100.0%; height: 100.0%;"><b>Seabrook Plaza</b><br>Proposed<br>260 units &middot; Q3 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>3101 Nasa Pky 77586</span></div>`)[0];
+                popup_8766f1de6435d7e82122fe5ac100d1e7.setContent(html_624e5a6e125d49a08d6078f62c9e7906);
             
         
 
-        circle_marker_5117172b56843c5c587f48b9404121f3.bindPopup(popup_bffc80abfecc29347bccc082210765d8)
+        circle_marker_4ae4d2121413f30e8bc9d63b171cb52d.bindPopup(popup_8766f1de6435d7e82122fe5ac100d1e7)
         ;
 
         
     
     
-            circle_marker_5117172b56843c5c587f48b9404121f3.bindTooltip(
+            circle_marker_4ae4d2121413f30e8bc9d63b171cb52d.bindTooltip(
                 `<div>
                      Seabrook Plaza (Proposed)
                  </div>`,
@@ -489,30 +529,30 @@
             );
         
     
-            var circle_marker_82a4ff1635eb55fa0aebea476686c88b = L.circleMarker(
-                [29.5236, -95.0276],
-                {"bubblingMouseEvents": true, "color": "#C00000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#C00000", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.035623639735144, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+            var circle_marker_468d80c0a9c95d61a3ac25554545bab7 = L.circleMarker(
+                [29.5427297, -95.0204837],
+                {"bubblingMouseEvents": true, "color": "#C00000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#C00000", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.035623639735144, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_02b43a9086785fc88686e0cea6619cd6 = L.popup({
+        var popup_4a6a7deb24b6d7e323c582f3427575d2 = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_2e7147af20f1c876ea31c658b6a67bb8 = $(`<div id="html_2e7147af20f1c876ea31c658b6a67bb8" style="width: 100.0%; height: 100.0%;"><b>Avalon at Kemah I</b><br>Proposed<br>198 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>Bel Rd & N Hwy 146 77565</span></div>`)[0];
-                popup_02b43a9086785fc88686e0cea6619cd6.setContent(html_2e7147af20f1c876ea31c658b6a67bb8);
+                var html_ab49dcbfd3b7e2669ba6b3b5b84aa1d8 = $(`<div id="html_ab49dcbfd3b7e2669ba6b3b5b84aa1d8" style="width: 100.0%; height: 100.0%;"><b>Avalon at Kemah I</b><br>Proposed<br>198 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>Bel Rd & N Hwy 146 77565</span></div>`)[0];
+                popup_4a6a7deb24b6d7e323c582f3427575d2.setContent(html_ab49dcbfd3b7e2669ba6b3b5b84aa1d8);
             
         
 
-        circle_marker_82a4ff1635eb55fa0aebea476686c88b.bindPopup(popup_02b43a9086785fc88686e0cea6619cd6)
+        circle_marker_468d80c0a9c95d61a3ac25554545bab7.bindPopup(popup_4a6a7deb24b6d7e323c582f3427575d2)
         ;
 
         
     
     
-            circle_marker_82a4ff1635eb55fa0aebea476686c88b.bindTooltip(
+            circle_marker_468d80c0a9c95d61a3ac25554545bab7.bindTooltip(
                 `<div>
                      Avalon at Kemah I (Proposed)
                  </div>`,
@@ -522,30 +562,30 @@
             );
         
     
-            var circle_marker_435cdbbcf2f83ae9a94b0156e0156682 = L.circleMarker(
+            var circle_marker_01c1959f5c4d20aeda4f22d3dd344360 = L.circleMarker(
                 [29.516443986113718, -95.09570061262401],
-                {"bubblingMouseEvents": true, "color": "#C00000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#C00000", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.0, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+                {"bubblingMouseEvents": true, "color": "#C00000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#C00000", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.0, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_3f46ae8aa30439cb9994cd94b0bfce30 = L.popup({
+        var popup_44d6e26aad226b5e659df09263b9e0c1 = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_08f3cc7e72889d4964d7f9f2b1ad8185 = $(`<div id="html_08f3cc7e72889d4964d7f9f2b1ad8185" style="width: 100.0%; height: 100.0%;"><b>The League Future Phases</b><br>Proposed<br>400 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>E FM 518 & Main St 77573</span></div>`)[0];
-                popup_3f46ae8aa30439cb9994cd94b0bfce30.setContent(html_08f3cc7e72889d4964d7f9f2b1ad8185);
+                var html_10033fa8ccb37eee39f5e97da0f39bd0 = $(`<div id="html_10033fa8ccb37eee39f5e97da0f39bd0" style="width: 100.0%; height: 100.0%;"><b>The League Future Phases</b><br>Proposed<br>400 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>E FM 518 & Main St 77573</span></div>`)[0];
+                popup_44d6e26aad226b5e659df09263b9e0c1.setContent(html_10033fa8ccb37eee39f5e97da0f39bd0);
             
         
 
-        circle_marker_435cdbbcf2f83ae9a94b0156e0156682.bindPopup(popup_3f46ae8aa30439cb9994cd94b0bfce30)
+        circle_marker_01c1959f5c4d20aeda4f22d3dd344360.bindPopup(popup_44d6e26aad226b5e659df09263b9e0c1)
         ;
 
         
     
     
-            circle_marker_435cdbbcf2f83ae9a94b0156e0156682.bindTooltip(
+            circle_marker_01c1959f5c4d20aeda4f22d3dd344360.bindTooltip(
                 `<div>
                      The League Future Phases (Proposed)
                  </div>`,
@@ -555,30 +595,30 @@
             );
         
     
-            var circle_marker_76b907628b84a296a6a933c0f3944590 = L.circleMarker(
+            var circle_marker_fe8581e8a16b06904c46ee8dc186cec4 = L.circleMarker(
                 [29.583799267459657, -95.03582387138808],
-                {"bubblingMouseEvents": true, "color": "#C00000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#C00000", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.2915619758885, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+                {"bubblingMouseEvents": true, "color": "#C00000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#C00000", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.2915619758885, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_7de119381bad3f738d1f603071348ca6 = L.popup({
+        var popup_48bf220244a83d8b750f9ad6686f84e4 = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_687d90142acd3565c94c6ade3d7a11b1 = $(`<div id="html_687d90142acd3565c94c6ade3d7a11b1" style="width: 100.0%; height: 100.0%;"><b>Residences at Highland Center</b><br>Proposed<br>275 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>3805 & 3813 NASA Rd 1 77586</span></div>`)[0];
-                popup_7de119381bad3f738d1f603071348ca6.setContent(html_687d90142acd3565c94c6ade3d7a11b1);
+                var html_261dc41598487bb5f03da077078cabe5 = $(`<div id="html_261dc41598487bb5f03da077078cabe5" style="width: 100.0%; height: 100.0%;"><b>Residences at Highland Center</b><br>Proposed<br>275 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>3805 & 3813 NASA Rd 1 77586</span></div>`)[0];
+                popup_48bf220244a83d8b750f9ad6686f84e4.setContent(html_261dc41598487bb5f03da077078cabe5);
             
         
 
-        circle_marker_76b907628b84a296a6a933c0f3944590.bindPopup(popup_7de119381bad3f738d1f603071348ca6)
+        circle_marker_fe8581e8a16b06904c46ee8dc186cec4.bindPopup(popup_48bf220244a83d8b750f9ad6686f84e4)
         ;
 
         
     
     
-            circle_marker_76b907628b84a296a6a933c0f3944590.bindTooltip(
+            circle_marker_fe8581e8a16b06904c46ee8dc186cec4.bindTooltip(
                 `<div>
                      Residences at Highland Center (Proposed)
                  </div>`,
@@ -588,30 +628,30 @@
             );
         
     
-            var circle_marker_c1951b5f475e7379f06fc540c49f9cae = L.circleMarker(
-                [29.52187306956171, -95.02538962983614],
-                {"bubblingMouseEvents": true, "color": "#C00000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#C00000", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.54983443527075, "stroke": true, "weight": 1}
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+            var circle_marker_ac75ecbad54c02920b1db2dadab8500f = L.circleMarker(
+                [29.5427297, -95.0204837],
+                {"bubblingMouseEvents": true, "color": "#C00000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#C00000", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.54983443527075, "stroke": true, "weight": 1}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-        var popup_92928a95519e57c733e456ec32affa37 = L.popup({
+        var popup_b85762c27f17462c1dec6cf2c6558b9f = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_74c8e52ee55368e3d4790752c20e869c = $(`<div id="html_74c8e52ee55368e3d4790752c20e869c" style="width: 100.0%; height: 100.0%;"><b>Avalon at Kemah II</b><br>Proposed<br>228 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>Bel Rd & N Hwy 146 77565</span></div>`)[0];
-                popup_92928a95519e57c733e456ec32affa37.setContent(html_74c8e52ee55368e3d4790752c20e869c);
+                var html_999ba157704738d64f54bfd2ec45e482 = $(`<div id="html_999ba157704738d64f54bfd2ec45e482" style="width: 100.0%; height: 100.0%;"><b>Avalon at Kemah II</b><br>Proposed<br>228 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>Bel Rd & N Hwy 146 77565</span></div>`)[0];
+                popup_b85762c27f17462c1dec6cf2c6558b9f.setContent(html_999ba157704738d64f54bfd2ec45e482);
             
         
 
-        circle_marker_c1951b5f475e7379f06fc540c49f9cae.bindPopup(popup_92928a95519e57c733e456ec32affa37)
+        circle_marker_ac75ecbad54c02920b1db2dadab8500f.bindPopup(popup_b85762c27f17462c1dec6cf2c6558b9f)
         ;
 
         
     
     
-            circle_marker_c1951b5f475e7379f06fc540c49f9cae.bindTooltip(
+            circle_marker_ac75ecbad54c02920b1db2dadab8500f.bindTooltip(
                 `<div>
                      Avalon at Kemah II (Proposed)
                  </div>`,
@@ -621,14 +661,14 @@
             );
         
     
-            var marker_cfa0432fd5f227642aee36349ac21f10 = L.marker(
-                [29.51708775923602, -95.09555982849413],
+            var marker_39fff0c81bb3b4ccc31598c580c31158 = L.marker(
+                [29.543511, -95.070054],
                 {
 }
-            ).addTo(map_5e499455e4f04a2182eb2c3ea06aa68e);
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
         
     
-            var icon_a584d6257ef6bb8363384215c15eadbd = L.AwesomeMarkers.icon(
+            var icon_51d6fbed9b1600b8c7df6bb4d98e5f10 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "black",
   "iconColor": "white",
@@ -639,24 +679,24 @@
             );
         
     
-        var popup_c89d2093498cff0df180f4feda23402a = L.popup({
+        var popup_a783cbf696df2681148e7525b0005752 = L.popup({
   "maxWidth": 260,
 });
 
         
             
-                var html_1621bf45d6532c0452a1775470ac3069 = $(`<div id="html_1621bf45d6532c0452a1775470ac3069" style="width: 100.0%; height: 100.0%;"><b>SUBJECT</b><br>Aura Beacon Island<br>2200 Beacon Cir, League City, TX 77573</div>`)[0];
-                popup_c89d2093498cff0df180f4feda23402a.setContent(html_1621bf45d6532c0452a1775470ac3069);
+                var html_b0e3e9475617952315b32bd1dafa17b9 = $(`<div id="html_b0e3e9475617952315b32bd1dafa17b9" style="width: 100.0%; height: 100.0%;"><b>SUBJECT</b><br>Aura Beacon Island<br>2200 Beacon Cir, League City, TX 77573</div>`)[0];
+                popup_a783cbf696df2681148e7525b0005752.setContent(html_b0e3e9475617952315b32bd1dafa17b9);
             
         
 
-        marker_cfa0432fd5f227642aee36349ac21f10.bindPopup(popup_c89d2093498cff0df180f4feda23402a)
+        marker_39fff0c81bb3b4ccc31598c580c31158.bindPopup(popup_a783cbf696df2681148e7525b0005752)
         ;
 
         
     
     
-            marker_cfa0432fd5f227642aee36349ac21f10.bindTooltip(
+            marker_39fff0c81bb3b4ccc31598c580c31158.bindTooltip(
                 `<div>
                      SUBJECT: Aura Beacon Island
                  </div>`,
@@ -666,7 +706,28 @@
             );
         
     
-                marker_cfa0432fd5f227642aee36349ac21f10.setIcon(icon_a584d6257ef6bb8363384215c15eadbd);
+                marker_39fff0c81bb3b4ccc31598c580c31158.setIcon(icon_51d6fbed9b1600b8c7df6bb4d98e5f10);
             
+    
+            var layer_control_6d185052f3b64f7dec8d9a82231570c7_layers = {
+                base_layers : {
+                    "Terrain" : tile_layer_8082dcb889c406ec8d98fa330a23c1bc,
+                    "Streets" : tile_layer_3a2ee148ef0e27e9f81101f07c34a4ef,
+                    "Satellite" : tile_layer_ccceab04095a419531331dd7808d5aba,
+                },
+                overlays :  {
+                },
+            };
+            let layer_control_6d185052f3b64f7dec8d9a82231570c7 = L.control.layers(
+                layer_control_6d185052f3b64f7dec8d9a82231570c7_layers.base_layers,
+                layer_control_6d185052f3b64f7dec8d9a82231570c7_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_7a5470d4f08eaa68c5a89474ce3006c3);
+
+        
 </script>
 </html>

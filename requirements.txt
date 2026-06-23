@@ -3,3 +3,4 @@ openpyxl>=3.1
 folium>=0.14
 zipcodes>=1.2
 matplotlib>=3.5
+contextily>=1.3
