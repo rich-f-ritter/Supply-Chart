@@ -79,6 +79,24 @@ that.csv`, or just edit the delivery quarter directly in the **Proposed Pipeline
 block on the Supply & Absorption tab. Whether a proposed deal adds supply is
 controlled by its **Built In** toggle (Bear only / Bear+Base / All / None).
 
+### Companion map (optional)
+`scripts/build_map.py` plots the subject + competitive roster on a map, colour-
+coded by the same lifecycle buckets, with a 5-mile ring and per-property popups.
+It writes an interactive **HTML** map and a static **PNG** quick-look.
+```bash
+python scripts/build_map.py \
+  --subject-name "Aura Beacon Island" \
+  --subject-address "2200 Beacon Cir, League City, TX 77573" \
+  --costar-roster examples/aura_beacon_island/CoStar_5mi_50unit_properties.xlsx \
+  --costar-analytics examples/aura_beacon_island/CoStar_5mi_Data_Analytics.xlsx \
+  --realpage examples/aura_beacon_island/Realpage_5mi.xlsx \
+  --out output/Aura_Beacon_Island__Map.html
+```
+Geocoding: street-level with `--geocode` (needs network); otherwise offline
+**ZIP-centroid** placement (approximate — same-ZIP properties are jittered apart).
+Pass `--subject-latlng "lat,lng"` to pin the subject exactly. Needs
+`folium`, `zipcodes`, `matplotlib`.
+
 ## Methodology
 
 ### 1. Reconcile the two rosters

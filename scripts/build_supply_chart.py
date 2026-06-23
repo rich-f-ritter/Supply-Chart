@@ -97,6 +97,8 @@ class Prop:
     name: str
     address: str
     units: Optional[int] = None
+    city: Optional[str] = None
+    zipcode: Optional[str] = None
     year_built: Optional[int] = None
     construction_begin: Optional[str] = None
     status_raw: str = ""               # e.g. Existing / Stabilized / Pre-Planned
@@ -213,6 +215,8 @@ def parse_costar_roster(path) -> list[Prop]:
         p = Prop(
             name=str(name).strip(),
             address=str(col(row, "Property Address") or "").strip(),
+            city=(str(col(row, "City")).strip() if col(row, "City") else None),
+            zipcode=(str(col(row, "Zip")).strip()[:5] if col(row, "Zip") else None),
             units=_int(col(row, "Number of Units")),
             year_built=_int(col(row, "Year Built")),
             construction_begin=(str(col(row, "Construction Begin")).strip()
@@ -247,6 +251,8 @@ def parse_realpage(path) -> list[Prop]:
         p = Prop(
             name=str(name).strip(),
             address=str(col(row, "Address") or "").strip(),
+            city=(str(col(row, "City")).strip() if col(row, "City") else None),
+            zipcode=(str(col(row, "Zip Code")).strip()[:5] if col(row, "Zip Code") else None),
             units=_int(col(row, "Total Units")),
             year_built=_int(col(row, "Year Built")),
             status_raw=str(col(row, "Property Status") or "").strip(),
@@ -367,10 +373,12 @@ def reconcile(costar: list[Prop], realpage: list[Prop]) -> list[Prop]:
         base.costar_rent = base.costar_rent if base.costar_rent is not None else other.costar_rent
         base.rp_occ = base.rp_occ if base.rp_occ is not None else other.rp_occ
         base.rp_rent = base.rp_rent if base.rp_rent is not None else other.rp_rent
-        # Style / stories / owner backfill
+        # Style / stories / owner / location backfill
         base.style = base.style or other.style
         base.stories = base.stories or other.stories
         base.owner = base.owner or other.owner
+        base.city = base.city or other.city
+        base.zipcode = base.zipcode or other.zipcode
         # Year built conflict
         if other.year_built and base.year_built and other.year_built != base.year_built:
             base.note(f"Year built: {min(base.year_built, other.year_built)}/"
@@ -1448,6 +1456,37 @@ def parse_as_of(label: str) -> tuple[int, int]:
     return today.year, (today.month - 1) // 3 + 1
 
 
+def build_competitive_roster(costar_roster_path, realpage_path, deliveries, as_of,
+                             subject_name, subject_address, target=0.95,
+                             occ_source="costar", rent_source="costar"):
+    """Parse + reconcile + classify the competitive new-construction roster.
+
+    Shared by the chart and the map. Returns the kept Prop list (subject excluded,
+    bucketed, with delivery quarters pinned/estimated)."""
+    props = reconcile(parse_costar_roster(costar_roster_path),
+                      parse_realpage(realpage_path))
+    subj_addr = addr_key(subject_address)
+    subj_name = name_key(subject_name)
+    props = [p for p in props
+             if not ((subj_addr and addr_key(p.address) == subj_addr)
+                     or name_key(p.name) == subj_name)]
+    keep = []
+    for p in props:
+        delivered = _existing_signal(p)
+        if delivered:
+            pin_delivery(p, deliveries)
+        else:
+            estimate_pipeline_delivery(p, as_of)
+        resolve_occ_rent(p, occ_source, rent_source, flag_divergence=delivered)
+        classify(p, as_of, target)
+        p.prop_type = derive_type(p)
+        within_lookback = (p.year_built and
+                           p.year_built >= as_of[0] - NEW_CONSTRUCTION_LOOKBACK_YEARS)
+        if _is_pipeline(p) or within_lookback:
+            keep.append(p)
+    return keep
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--subject-name", required=True)
@@ -1482,35 +1521,10 @@ def main(argv=None):
     latest_inv, deliveries, latest_label, series, latest_uc = parse_costar_analytics(args.costar_analytics)
     as_of = parse_as_of(args.as_of or latest_label)
 
-    costar = parse_costar_roster(args.costar_roster)
-    realpage = parse_realpage(args.realpage)
-
-    props = reconcile(costar, realpage)
-
-    # Drop the subject property from the *competitive* roster.
-    subj_addr = addr_key(args.subject_address)
-    subj_name = name_key(args.subject_name)
-    props = [p for p in props
-             if not ((subj_addr and addr_key(p.address) == subj_addr)
-                     or name_key(p.name) == subj_name)]
-
-    # Keep only genuine new-construction supply: recent deliveries + pipeline.
-    keep = []
-    for p in props:
-        delivered = _existing_signal(p)
-        if delivered:
-            pin_delivery(p, deliveries)
-        else:
-            estimate_pipeline_delivery(p, as_of)
-        resolve_occ_rent(p, args.occ_source, args.rent_source,
-                         flag_divergence=delivered)
-        classify(p, as_of, args.target)
-        p.prop_type = derive_type(p)
-        within_lookback = (p.year_built and
-                           p.year_built >= as_of[0] - NEW_CONSTRUCTION_LOOKBACK_YEARS)
-        if _is_pipeline(p) or within_lookback:
-            keep.append(p)
-    props = keep
+    props = build_competitive_roster(
+        args.costar_roster, args.realpage, deliveries, as_of,
+        args.subject_name, args.subject_address, args.target,
+        args.occ_source, args.rent_source)
 
     # Apply analyst-supplied pipeline delivery quarters so they enter the forecast.
     if args.pipeline_dates:

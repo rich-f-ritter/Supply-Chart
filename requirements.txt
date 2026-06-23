@@ -1,1 +1,5 @@
 openpyxl>=3.1
+# Optional — only needed for the companion map (scripts/build_map.py):
+folium>=0.14
+zipcodes>=1.2
+matplotlib>=3.5
