@@ -151,6 +151,31 @@ section is colour-coded, carried over from the reference template: **blue**
 (stabilized), **orange** (leasing up), **green** (under construction), **red**
 (proposed), each with a light matching row tint.
 
+### 3a. Completeness check — tie the roster to CoStar's deliveries series
+Before trusting the stabilized/lease-up section, **reconcile the named comps
+against CoStar's own delivered-units series** per TTM window. For each relative
+year, sum the analytics `deliveries` and compare to the roster units delivered in
+that window; they should jive (often to the unit). When they don't, the gap is
+one of:
+- **The subject itself.** CoStar's *submarket* deliveries include the subject,
+  but the subject is dropped from the *competitive* roster — so always **add the
+  subject's units back** before comparing. (Worked example: Aura -Y3 = 1,221 =
+  Reserve 291 + Livano 325 + Lenox 315 **+ subject Aura 290** — exact once the
+  subject is added back; the apparent 290 "gap" was the subject, not a missing
+  comp.)
+- **Sub-50-unit product** CoStar's submarket series counts but the 50-unit
+  property pull never lists (small, can't be itemized — note it and move on).
+- **A genuinely missing or mis-bucketed 50+ comp** — the case worth catching.
+  Look for a property whose CoStar `year_built` falls just outside the lookback
+  (so it was filtered out) but which actually *delivered* inside the window, or
+  one pinned to the wrong quarter. A delivery quarter can be off by one (the
+  pin estimates from year/unit-count) without changing a TTM total, but a comp
+  dropped for an off-by-one **year** will silently vanish — check it.
+
+This is a fast, high-value audit: if the three historical TTM windows tie to
+CoStar's deliveries (modulo the subject and sub-50 product), the stabilized
+section is complete.
+
 ### 4. Supply & absorption forecast (the "Supply & Absorption" tab)
 The rent-analysis core: a market-level view of **new supply, absorption, and
 overall occupancy** in **relative-year (trailing-12-month) columns**, built from

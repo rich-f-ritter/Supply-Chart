@@ -1600,6 +1600,49 @@ def build_competitive_roster(costar_roster_path, realpage_path, deliveries, as_o
     return keep
 
 
+def reconcile_deliveries(props, series, as_of, lookback=4):
+    """Print delivered-units reconciliation vs CoStar's analytics series per TTM.
+
+    For each historical trailing-12-month window, compares the named roster comps'
+    delivered units to CoStar's submarket `deliveries`. They should tie; a positive
+    gap (CoStar > roster) is normally the **subject** (counted in the submarket
+    total but excluded from the competitive roster) plus any sub-50-unit product.
+    A gap that those don't explain means a 50+ comp is missing or mis-dated — the
+    case worth catching (see SKILL.md §3a)."""
+    if not series:
+        return
+    aq = quarter_index(*as_of)
+    ql = lambda i: f"Q{i % 4 + 1} {i // 4}"
+    rows = []
+    for k in range(lookback, -1, -1):
+        end, start = aq - 4 * k, aq - 4 * k - 3
+        costar = sum((v.get("deliveries") or 0) for (y, q), v in series.items()
+                     if start <= quarter_index(y, q) <= end)
+        members = [p for p in props if p.deliv_year
+                   and start <= quarter_index(p.deliv_year, p.deliv_q) <= end]
+        roster = sum(p.units or 0 for p in members)
+        rows.append((k, start, end, costar, roster, members))
+    if not any(r[3] or r[4] for r in rows):
+        return
+    print("\n  Delivered-units reconciliation vs CoStar analytics (TTM windows):")
+    flagged = False
+    for k, start, end, costar, roster, members in rows:
+        diff = costar - roster
+        flag = ""
+        if diff > 0:
+            flag = f"  (+{diff:,.0f} = subject / sub-50 product?)"
+        elif diff < 0:
+            flag = f"  (roster exceeds CoStar by {-diff:,.0f} — check pins)"; flagged = True
+        print(f"    -Y{k} [{ql(start)}..{ql(end)}]  CoStar {costar:>6,.0f}  |  "
+              f"roster {roster:>6,}{flag}")
+        if abs(diff) >= 50 and diff > 0:
+            flagged = True
+    if flagged:
+        print("    ⚠ Reconcile the flagged window(s): add the subject's units "
+              "back, account for sub-50 product, else look for a missing/mis-dated "
+              "50+ comp (SKILL.md §3a).")
+
+
 def compute_proximity(props, subject_name, subject_address, cache_path,
                       use_geocoder=True):
     """Set p.proximity_mi = straight-line miles from the subject to each comp.
@@ -1717,6 +1760,7 @@ def main(argv=None):
                   f"{p.est_delivery or 'TBD':>8}  occ {occ:>6}  "
                   f"[{'+'.join(sorted(p.sources))}]"
                   f"{('  | ' + '; '.join(p.notes)) if p.notes else ''}")
+    reconcile_deliveries(props, series, as_of)
     if n_undated:
         print(f"\n  {n_undated} pipeline deal(s) have no delivery quarter and are "
               f"NOT in the absorption forecast yet.\n"
