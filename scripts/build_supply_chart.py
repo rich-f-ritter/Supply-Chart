@@ -995,7 +995,7 @@ def subject_annual_by_window(plan, as_idx, subj_monthly, subj_costar,
 def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
                          latest_label=None, subj_monthly=None, subj_costar=None,
                          subj_realpage=None, subject_name="", hist_years=6,
-                         fwd_years=6, model_link=False,
+                         fwd_years=6, model_link=True,
                          model_sheet="Cash Flow (Annual)"):
     """Relative-year (trailing-12-month) supply / absorption / occupancy view.
 
@@ -1209,16 +1209,6 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
                 ws.cell(rows["smkt"], ci, round(srec["mkt"]) if srec.get("mkt") else None)
                 ws.cell(rows["seff"], ci, round(srec["eff"]) if srec.get("eff") else None)
                 ws.cell(rows["socc"], ci, srec.get("occ"))
-                # Concession % = (market - effective) / market, derived live
-                ws.cell(rows["sconc"], ci,
-                        f'=IFERROR(({col}{rows["smkt"]}-{col}{rows["seff"]})'
-                        f'/{col}{rows["smkt"]},"")')
-            if j > 0:        # YoY growth vs prior year column
-                pcl = L(ci - 1)
-                ws.cell(rows["smkt_yoy"], ci,
-                        f'=IFERROR({col}{rows["smkt"]}/{pcl}{rows["smkt"]}-1,"")')
-                ws.cell(rows["seff_yoy"], ci,
-                        f'=IFERROR({col}{rows["seff"]}/{pcl}{rows["seff"]}-1,"")')
         else:
             prev = L(ci - 1)
             ws.cell(rows["period"], ci, f"Hold Yr {k}")
@@ -1261,19 +1251,41 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
     for rk in ("_inv", "_occu"):
         ws.row_dimensions[rows[rk]].hidden = True
 
-    # ----- optional: link the subject rows to the underwriting model -----
+    # ----- link the subject rows to the underwriting model (default) -----
     # Internal references to the TMG model's "Cash Flow (Annual)" tab, so when
     # these tabs are dragged into (or embedded in) the model they resolve to its
     # own projection: Y0 <- col F (T12/Y0), Y1..Y6 <- cols K..P; Market Rent <-
-    # row 4, Effective Rent <- row 5, Occupancy <- row 14. Historical columns
+    # row 4, Effective Rent <- row 5, Occupancy <- row 14. Wrapped in IFERROR so
+    # the standalone file shows a clean blank (Y1..Y6) or the chart's own value
+    # (Y0 fallback) until the tab is carried into the model. Historical columns
     # (-Y6..-Y1) stay as the static RealPage/HelloData actuals.
     if model_link:
         link_rows = {"smkt": 4, "seff": 5, "socc": 14}
         chart_cols = [3 + hist_years + i for i in range(fwd_years + 1)]   # Y0,Y1..Y6
         model_cols = ["F"] + [get_column_letter(11 + k) for k in range(fwd_years)]  # F,K..P
         for rk, mrow in link_rows.items():
-            for ci, mcol in zip(chart_cols, model_cols):
-                ws.cell(rows[rk], ci).value = f"='{model_sheet}'!${mcol}${mrow}"
+            for idx, (ci, mcol) in enumerate(zip(chart_cols, model_cols)):
+                cell = ws.cell(rows[rk], ci)
+                fb = cell.value if (idx == 0 and isinstance(cell.value, (int, float))) else None
+                link = f"'{model_sheet}'!${mcol}${mrow}"
+                cell.value = (f"=IFERROR({link},{fb})" if fb is not None
+                              else f'=IFERROR({link},"")')
+
+    # ----- subject derived rows (YoY % + concession %) — all columns -----
+    # Written for every year (hist + forecast) so they populate wherever the
+    # subject rent rows have data (static history, or the model links once in
+    # the model). IFERROR keeps them blank when a year has no rent.
+    for j in range(len(plan)):
+        ci = 3 + j
+        col = L(ci)
+        ws.cell(rows["sconc"], ci,
+                f'=IFERROR(({col}{rows["smkt"]}-{col}{rows["seff"]})/{col}{rows["smkt"]},"")')
+        if j > 0:
+            pcl = L(ci - 1)
+            ws.cell(rows["smkt_yoy"], ci,
+                    f'=IFERROR({col}{rows["smkt"]}/{pcl}{rows["smkt"]}-1,"")')
+            ws.cell(rows["seff_yoy"], ci,
+                    f'=IFERROR({col}{rows["seff"]}/{pcl}{rows["seff"]}-1,"")')
 
     # ----- scenario block: implied 5-mi occupancy (Bear/Base/Bull) -----
     y0_occu = f"${L(3 + hist_years)}${rows['_occu']}"   # actual occupied at Y0
@@ -1391,7 +1403,7 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
 def write_workbook(props, subject_name, latest_inv, latest_label,
                    as_of, target, out_path, series=None, latest_uc=None,
                    subj_monthly=None, subj_costar=None, subj_realpage=None,
-                   diligence_rows=None, model_link=False,
+                   diligence_rows=None, model_link=True,
                    model_sheet="Cash Flow (Annual)"):
     wb = openpyxl.Workbook()
     ws = wb.active
@@ -1717,14 +1729,16 @@ def main(argv=None):
     ap.add_argument("--no-geocode", action="store_true",
                     help="Skip Nominatim geocoding for the Proximity column "
                          "(falls back to offline ZIP centroids only).")
-    ap.add_argument("--model-link", action="store_true",
-                    help="Wire the subject Market Rent / Effective Rent / Occupancy "
-                         "rows to the underwriting model's projection (internal refs "
-                         "to 'Cash Flow (Annual)' rows 4/5/14, Y0<-F, Y1..Y6<-K:P) so "
-                         "the tab resolves once dragged into / embedded in the model. "
-                         "Use only when incorporating into the model.")
+    ap.add_argument("--no-model-link", action="store_true",
+                    help="Don't wire the subject rows to the underwriting model. "
+                         "By default the subject Market Rent / Effective Rent / "
+                         "Occupancy rows (Y0..Y6) carry IFERROR'd internal refs to "
+                         "'Cash Flow (Annual)' rows 4/5/14 (Y0<-F, Y1..Y6<-K:P), so "
+                         "the tab is ready to drag into / embed in the model and "
+                         "shows clean blanks until then. Pass this for a pure "
+                         "standalone chart with no model references.")
     ap.add_argument("--model-sheet", default="Cash Flow (Annual)",
-                    help="Model tab the --model-link refs point to "
+                    help="Model tab the subject-row refs point to "
                          "(default: 'Cash Flow (Annual)').")
     args = ap.parse_args(argv)
 
@@ -1763,7 +1777,7 @@ def main(argv=None):
                    as_of, args.target, args.out, series=series, latest_uc=latest_uc,
                    subj_monthly=subj_monthly, subj_costar=subj_costar,
                    subj_realpage=subj_realpage, diligence_rows=diligence_rows,
-                   model_link=args.model_link, model_sheet=args.model_sheet)
+                   model_link=not args.no_model_link, model_sheet=args.model_sheet)
 
     # Emit templates: undated pipeline + a per-project research template.
     base = os.path.splitext(args.out)[0]

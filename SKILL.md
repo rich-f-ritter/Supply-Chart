@@ -43,9 +43,12 @@ skill only builds the supply chart.)
    - the delivered roster ties to CoStar's deliveries series (the completeness
      check, §3a);
    - diligence corrections (if run) are reflected in the buckets and pipeline.
-4. **Only then ask whether to incorporate into the underwriting model.** If yes,
-   regenerate with `--model-link` and follow **Incorporating into the underwriting
-   model** below. Don't link to the model until the chart itself is settled.
+4. **Only then ask whether to incorporate into the underwriting model.** The
+   subject rows already carry the model links by default (they sit dormant as
+   clean blanks until the tab is in the model), so incorporating is just the
+   carry-over: the user drags the tabs in, or you embed them with
+   `scripts/embed_into_model.py` — see **Incorporating into the underwriting
+   model** below.
 
 ## Inputs (three exports, all 5-mile radius around the subject)
 | Input | Provides | Notes |
@@ -81,7 +84,7 @@ Optional flags:
 - `--intake path.xlsx` — RR-T12 underwriting intake; adds **subject rows** (market/effective rent from HelloData mix-weighted, occupancy from the T12 financials) to the Supply & Absorption tab
 - `--costar-subject-rents path.xlsx` and/or `--realpage-subject-rents path.xlsx` — per-property rent histories used to extend the subject rents before HelloData coverage; whichever tracks HelloData more closely in the overlap is auto-selected (varies by market)
 - `--no-geocode` — skip Nominatim and fill the **Proximity (mi)** column from offline ZIP centroids only (no network)
-- `--model-link` — wire the subject rows to the underwriting model (see **Incorporating into the underwriting model** below). Off by default; only used in the incorporation step, not the standalone deliverable. `--model-sheet "…"` overrides the target tab (default `Cash Flow (Annual)`)
+- `--no-model-link` — by **default** the subject rows are wired to the underwriting model (see **Incorporating into the underwriting model** below) so the tab is carry-over-ready; pass this for a pure standalone chart with no model references. `--model-sheet "…"` overrides the target tab (default `Cash Flow (Annual)`)
 
 The script prints a reconciliation report to the console and writes the workbook.
 Always read the console report and the **Reconciliation Log** sheet, then review
@@ -242,12 +245,17 @@ unless the chart is linked to the model (next section), in which case Y0→Y6 re
 the model's own projection.
 
 ## Incorporating into the underwriting model
-After the chart is settled and the user asks to incorporate it (step 4 above),
-run with `--model-link`. This rewrites the subject **Market Rent**, **Effective
-Rent**, and **Occupancy** rows (cols Y0→Y6) as **internal references** to the
-TMG model's `Cash Flow (Annual)` tab — so the chart shows the deal's own
-projected path next to the 5-mile market frame, as a **sanity overlay** (the
-chart reads the model; it does *not* drive it). The fixed mapping:
+The subject **Market Rent**, **Effective Rent**, and **Occupancy** rows (cols
+Y0→Y6) are written **by default** as `IFERROR`'d **internal references** to the
+TMG model's `Cash Flow (Annual)` tab, so every chart is carry-over-ready: drag
+the tabs into the model and they resolve to the deal's own projected path next
+to the 5-mile market frame, as a **sanity overlay** (the chart reads the model;
+it does *not* drive it). Until the tab is in the model the refs show a clean
+blank (Y1→Y6) or the chart's own value (Y0 fallback), not `#REF!`. The YoY% and
+Concession% rows are live formulas across all columns, so once carried over they
+show the **model's** market-rent growth, effective-rent growth, and concession
+trend in the same frame — the comparison is implicit, no separate delta block.
+The fixed mapping:
 
 | Subject row | Model row (`Cash Flow (Annual)`) | Y0 = col I | Y1–Y6 = cols J:O |
 |---|---|---|---|
@@ -255,18 +263,14 @@ chart reads the model; it does *not* drive it). The fixed mapping:
 | Effective Rent | row 5 (Eff Mkt Rent /U) | ← `F` | ← `K:P` |
 | Occupancy | row 14 (Physical Occupancy) | ← `F` | ← `K:P` |
 
-Historical columns (−Y6…−Y1) stay as the static RealPage/HelloData actuals. The
-YoY% and Concession% rows are live formulas, so once linked they automatically
-show the **model's** market-rent growth, effective-rent growth, and concession
-trend in the same frame as the market assumption blocks — the comparison is
-implicit, no separate delta block. Refs are written **internal** (`='Cash Flow
-(Annual)'!…`), so they resolve the moment the tab lives in the model.
+Historical columns (−Y6…−Y1) stay as the static RealPage/HelloData actuals.
 
-**Two delivery modes** (both produce the same linked tabs):
-- **User drags the tabs in** — they Move/Copy the `Supply & Absorption` (and its
-  `Competitive Analysis` dependency) sheets into the model; the internal refs
-  resolve to the model's own `Cash Flow (Annual)`. In the standalone file those
-  Y0→Y6 cells read `#REF!` until the tab is in the model (everything else shows).
+**Two delivery modes** (both use the same default linked tabs):
+- **User drags the tabs in** (the default expectation) — they Move/Copy the
+  `Supply & Absorption` (and its `Competitive Analysis` dependency) sheets into
+  the model; the internal refs resolve to the model's own `Cash Flow (Annual)`.
+  Until then the standalone shows clean blanks / Y0 fallbacks (IFERROR), not
+  `#REF!`.
 - **You embed it for them** — `scripts/embed_into_model.py` grafts the chart's
   sheets into the model **at the package/XML level**, so VBA, charts, conditional
   formatting, pivot caches, and external links are preserved byte-for-byte (it
@@ -275,9 +279,9 @@ implicit, no separate delta block. Refs are written **internal** (`='Cash Flow
   remapping the chart's styles), `workbook.xml`, the rels, and `[Content_Types]`,
   drops `calcChain.xml`, and sets `fullCalcOnLoad` so the links compute on open:
   ```bash
-  python scripts/build_supply_chart.py … --model-link --out chart_linked.xlsx
+  python scripts/build_supply_chart.py … --out chart.xlsx     # links are default
   python scripts/embed_into_model.py \
-    --chart chart_linked.xlsx --model "TMG Acquisition Model.xlsm" \
+    --chart chart.xlsx --model "TMG Acquisition Model.xlsm" \
     --out "TMG Acquisition Model__with_Supply_Chart.xlsm"
   ```
   It self-validates (zip integrity, XML well-formedness, every retained model
