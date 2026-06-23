@@ -81,9 +81,11 @@ block on the Supply & Absorption tab. Whether a proposed deal adds supply is
 controlled by its **Built In** toggle (Bear only / Bear+Base / All / None).
 
 ### Companion map (optional)
-`scripts/build_map.py` plots the subject + competitive roster on a map, colour-
-coded by the same lifecycle buckets, with a 5-mile ring and per-property popups.
-It writes an interactive **HTML** map and a static **PNG** quick-look.
+`scripts/build_map.py` plots the subject + competitive roster on a **satellite**
+basemap (default; `--base terrain|streets` to switch), colour-coded by the same
+lifecycle buckets, with a yellow 5-mile ring and per-property popups. Markers use
+saturated colours and white halos so they read over imagery (Under Construction =
+spring green). It writes an interactive **HTML** map and a static **PNG**.
 ```bash
 python scripts/build_map.py \
   --subject-name "Aura Beacon Island" \
@@ -228,8 +230,11 @@ subject and each comp (OpenStreetMap Nominatim, cached in
 `output/.geocode_cache.json`) and writes the straight-line distance. Comps that
 only resolve to a ZIP centroid — or that sit just past the 5-mile road radius —
 can read slightly over 5 mi; the export defines membership, the column is an
-approximate as-the-crow-flies distance. Pass `--no-geocode` to skip the network
-call and use offline ZIP centroids only.
+approximate as-the-crow-flies distance. Geocoding tries the full address, then
+relaxes (drops the city, which roster exports often get wrong) and **rejects any
+hit more than 8 mi from the subject** before falling back to the ZIP centroid, so
+a mis-geocoded street name can't produce a wild distance. Pass `--no-geocode` to
+skip the network call and use offline ZIP centroids only.
 
 ## Analyst follow-ups the script intentionally leaves open
 - **Lease-up rent & occupancy** — verify the flagged lease-ups with a HelloData pull.

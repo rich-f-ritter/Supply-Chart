@@ -78,6 +78,22 @@ class Locator:
         except Exception:
             self.cache = {}
         self.dirty = False
+        self.anchor = None        # (lat, lng) reference for sanity-checking hits
+        self.max_miles = None     # reject geocodes farther than this from anchor
+
+    def set_anchor(self, anchor, max_miles=8.0):
+        """Constrain hits to within max_miles of anchor (a 5-mile-radius dataset).
+
+        Relaxed query variants can match a same-named street in the wrong city;
+        anything well beyond the radius is a mis-geocode, so we reject it and fall
+        through to the next variant / the ZIP centroid."""
+        self.anchor = anchor
+        self.max_miles = max_miles
+
+    def _plausible(self, ll):
+        if not (self.anchor and self.max_miles):
+            return True
+        return haversine_miles(self.anchor, ll) <= self.max_miles
 
     def save(self):
         if self.dirty:
@@ -87,27 +103,46 @@ class Locator:
             except Exception:
                 pass
 
+    def _queries(self, address, city, state, zipcode):
+        """Candidate geocode strings, most specific first.
+
+        A wrong city (common in roster exports) makes Nominatim miss, so we also
+        try the address without the city — street + state (+ZIP) usually resolves.
+        """
+        al = address.lower()
+        z = str(zipcode) if zipcode else None
+
+        def build(extras):
+            parts = [address]
+            for e in extras:
+                if e and e.lower() not in al and e not in parts:
+                    parts.append(e)
+            return ", ".join(parts)
+
+        seen, out = set(), []
+        for extras in ([city, state, z], [state, z], [state]):
+            q = build(extras)
+            if q not in seen:
+                seen.add(q)
+                out.append(q)
+        return out
+
     def locate(self, name, address, city, state, zipcode):
         """Return ((lat, lng), approximate_bool) or (None, True)."""
         if self.use_geocoder and address:
-            al = address.lower()
-            parts = [address]
-            for extra in (city, state, str(zipcode) if zipcode else None):
-                if extra and extra.lower() not in al:
-                    parts.append(extra)
-            q = ", ".join(parts)
-            if q in self.cache:
-                v = self.cache[q]
-                if v:
-                    return (v[0], v[1]), False
-            else:
+            for q in self._queries(address, city, state, zipcode):
+                if q in self.cache:
+                    v = self.cache[q]
+                    if v and self._plausible((v[0], v[1])):
+                        return (v[0], v[1]), False
+                    continue                       # miss / implausible — next variant
                 try:
                     ll = geocode_nominatim(q)
                 except Exception:
                     ll = None
                 self.cache[q] = list(ll) if ll else None
                 self.dirty = True
-                if ll:
+                if ll and self._plausible(ll):
                     return ll, False
         c = zip_centroid(zipcode)
         if c:

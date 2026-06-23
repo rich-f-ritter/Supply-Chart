@@ -4,8 +4,8 @@ build_map.py — Companion map for the 5-mile competitive Supply Chart.
 
 Plots the subject property and the competitive new-construction roster (the same
 buckets the chart uses) on a map, colour-coded by lifecycle stage, with a 5-mile
-radius ring and per-property popups. Writes an interactive HTML map (with Terrain
-/ Streets / Satellite base layers) and a static PNG over a terrain basemap.
+radius ring and per-property popups. Writes an interactive HTML map (with
+Satellite / Terrain / Streets base layers; satellite default) and a matching PNG.
 
 Geocoding is street-level via OpenStreetMap Nominatim (cached + rate-limited),
 with an offline ZIP-centroid fallback per property. Use --no-geocode to force
@@ -36,10 +36,10 @@ MILE_M = 1609.34
 
 # Bucket -> (hex colour, short label), matching the chart's section colours.
 BUCKET_STYLE = {
-    "STABILIZED / STABILIZING": ("#2E75B6", "Stabilized"),
-    "LEASING UP":               ("#ED7D31", "Leasing Up"),
-    "UNDER CONSTRUCTION":       ("#375623", "Under Construction"),
-    "PROPOSED":                 ("#C00000", "Proposed"),
+    "STABILIZED / STABILIZING": ("#1E90FF", "Stabilized"),
+    "LEASING UP":               ("#FF8C00", "Leasing Up"),
+    "UNDER CONSTRUCTION":       ("#00E676", "Under Construction"),
+    "PROPOSED":                 ("#FF1744", "Proposed"),
 }
 
 TILES = {
@@ -71,6 +71,8 @@ def build_map(props, subject_name, subject_address, subject_latlng,
                              "'lat,lng' or an address with a ZIP.")
         slat, slng = ll
 
+    loc.set_anchor((slat, slng))       # reject comps mis-geocoded outside the radius
+
     # ---- locate comps once (shared by HTML + PNG) ----
     located, approx_any = [], subj_approx
     for p in sorted(props, key=lambda x: list(BUCKET_STYLE).index(x.bucket)):
@@ -94,8 +96,9 @@ def build_map(props, subject_name, subject_address, subject_latlng,
     for key in ([base] + [k for k in TILES if k != base]):
         url, nm, attr = TILES[key]
         folium.TileLayer(url, name=nm, attr=attr).add_to(m)
-    folium.Circle([slat, slng], radius=5 * MILE_M, color="#1F3864", weight=2,
-                  fill=True, fill_opacity=0.04, tooltip="5-mile radius").add_to(m)
+    folium.Circle([slat, slng], radius=5 * MILE_M, color="#FFD400", weight=3,
+                  fill=True, fill_color="#FFD400", fill_opacity=0.03,
+                  tooltip="5-mile radius").add_to(m)
     for p, plat, plng in located:
         color, blabel = BUCKET_STYLE.get(p.bucket, ("#888888", p.bucket))
         occ = f"{p.occupancy:.0%}" if p.occupancy is not None else "—"
@@ -106,13 +109,13 @@ def build_map(props, subject_name, subject_address, subject_latlng,
             f"<span style='color:#888'>{p.address or ''} {p.zipcode or ''}</span>"),
             max_width=260)
         folium.CircleMarker(
-            [plat, plng], radius=max(5, min(20, 4 + math.sqrt(p.units or 0) / 2)),
-            color=color, weight=1, fill=True, fill_color=color, fill_opacity=0.8,
-            popup=popup, tooltip=f"{p.name} ({blabel})").add_to(m)
+            [plat, plng], radius=max(6, min(21, 5 + math.sqrt(p.units or 0) / 2)),
+            color="#ffffff", weight=2, fill=True, fill_color=color, fill_opacity=1.0,
+            opacity=1.0, popup=popup, tooltip=f"{p.name} ({blabel})").add_to(m)
     for r, rlat, rlng in shadow_located:
         folium.CircleMarker(
-            [rlat, rlng], radius=9, color="#7030A0", weight=2, fill=True,
-            fill_color="#7030A0", fill_opacity=0.25, dash_array="4",
+            [rlat, rlng], radius=10, color="#ffffff", weight=2, fill=True,
+            fill_color="#B388FF", fill_opacity=0.55, dash_array="4",
             tooltip=f"SHADOW: {r.get('property')}",
             popup=folium.Popup(html=(
                 f"<b>Shadow supply</b><br>{r.get('property')}<br>"
@@ -133,7 +136,7 @@ def build_map(props, subject_name, subject_address, subject_latlng,
         f"({counts.get(b,0)})</div>" for b, (c, lab) in BUCKET_STYLE.items())
     if shadow_located:
         legend += ("<div><span style='display:inline-block;width:11px;height:11px;"
-                   "background:#7030A0;border-radius:50%;margin-right:6px'></span>"
+                   "background:#B388FF;border-radius:50%;margin-right:6px'></span>"
                    f"Shadow supply ({len(shadow_located)})</div>")
     note = ("&#9888; Some pins ZIP-approximate (geocode failed)."
             if approx_any else "")
@@ -161,7 +164,11 @@ def render_png(located, slat, slng, subject_name, counts, approx, base, png_path
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    import matplotlib.patheffects as pe
     import contextily as cx
+
+    # dark outline so white labels stay legible over satellite imagery
+    _OUTLINE = [pe.withStroke(linewidth=2, foreground="#000000")]
 
     coslat = math.cos(math.radians(slat))
     span_lat = 6.0 / 69.0
@@ -172,25 +179,26 @@ def render_png(located, slat, slng, subject_name, counts, approx, base, png_path
     ring = [(slng + (5 / (69.0 * coslat)) * math.sin(t),
              slat + (5 / 69.0) * math.cos(t))
             for t in [i * math.pi / 45 for i in range(91)]]
-    ax.plot([x for x, _ in ring], [y for _, y in ring], color="#1F3864",
-            lw=1.6, ls="--", zorder=4)
+    ax.plot([x for x, _ in ring], [y for _, y in ring], color="#FFD400",
+            lw=2.2, ls="--", zorder=4)
     for p, plat, plng in located:
         color, _ = BUCKET_STYLE.get(p.bucket, ("#888888", ""))
-        ax.scatter(plng, plat, s=max(45, min(420, (p.units or 0) * 1.1)), c=color,
-                   edgecolors="white", linewidths=0.7, alpha=0.9, zorder=5)
-        ax.annotate(p.name[:22], (plng, plat), fontsize=6, xytext=(0, 6),
-                    textcoords="offset points", ha="center", color="#222", zorder=6)
+        ax.scatter(plng, plat, s=max(60, min(460, (p.units or 0) * 1.2)), c=color,
+                   edgecolors="white", linewidths=1.4, alpha=1.0, zorder=5)
+        ax.annotate(p.name[:22], (plng, plat), fontsize=6, xytext=(0, 7),
+                    textcoords="offset points", ha="center", color="white", zorder=6,
+                    path_effects=_OUTLINE)
     for r, rlat, rlng in (shadow_located or []):
-        ax.scatter(rlng, rlat, marker="P", s=160, c="#7030A0", edgecolors="white",
-                   linewidths=0.6, alpha=0.9, zorder=5)
+        ax.scatter(rlng, rlat, marker="P", s=180, c="#B388FF", edgecolors="white",
+                   linewidths=1.2, alpha=1.0, zorder=5)
         ax.annotate((r.get("property") or "")[:20], (rlng, rlat), fontsize=6,
-                    xytext=(0, 6), textcoords="offset points", ha="center",
-                    color="#5a2d82", zorder=6)
-    ax.scatter(slng, slat, marker="*", s=560, c="black", edgecolors="white",
-               linewidths=0.9, zorder=7)
-    ax.annotate(f"SUBJECT: {subject_name}", (slng, slat), fontsize=8,
-                fontweight="bold", xytext=(0, -15), textcoords="offset points",
-                ha="center", zorder=7)
+                    xytext=(0, 7), textcoords="offset points", ha="center",
+                    color="white", zorder=6, path_effects=_OUTLINE)
+    ax.scatter(slng, slat, marker="*", s=640, c="#FFD400", edgecolors="black",
+               linewidths=1.2, zorder=7)
+    ax.annotate(f"SUBJECT: {subject_name}", (slng, slat), fontsize=8.5,
+                fontweight="bold", xytext=(0, -16), textcoords="offset points",
+                ha="center", color="white", zorder=7, path_effects=_OUTLINE)
     ax.set_xlim(slng - span_lng, slng + span_lng)
     ax.set_ylim(slat - span_lat, slat + span_lat)
     ax.set_aspect(1.0 / coslat)
@@ -206,7 +214,7 @@ def render_png(located, slat, slng, subject_name, counts, approx, base, png_path
                label=f"{lab} ({counts.get(b,0)})")
                for b, (c, lab) in BUCKET_STYLE.items()]
     if shadow_located:
-        handles.append(plt.Line2D([], [], marker="P", ls="", color="#7030A0",
+        handles.append(plt.Line2D([], [], marker="P", ls="", color="#B388FF",
                        label=f"Shadow supply ({len(shadow_located)})"))
     handles.append(plt.Line2D([], [], marker="*", ls="", color="black", label="Subject"))
     ax.legend(handles=handles, loc="upper left", fontsize=8, framealpha=0.92)
@@ -232,8 +240,8 @@ def main(argv=None):
     ap.add_argument("--out", required=True)
     ap.add_argument("--as-of", default=None)
     ap.add_argument("--target", type=float, default=bc.DEFAULT_STABILIZATION_TARGET)
-    ap.add_argument("--base", choices=list(TILES), default="terrain",
-                    help="Default base layer (terrain/streets/satellite).")
+    ap.add_argument("--base", choices=list(TILES), default="satellite",
+                    help="Default base layer (satellite/terrain/streets).")
     ap.add_argument("--no-geocode", action="store_true",
                     help="Skip street geocoding; use ZIP centroids only.")
     ap.add_argument("--diligence", default=None,

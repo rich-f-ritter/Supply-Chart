@@ -1613,6 +1613,7 @@ def compute_proximity(props, subject_name, subject_address, cache_path,
     if not subj_ll:
         loc.save()
         return
+    loc.set_anchor(subj_ll)            # reject comps mis-geocoded outside the radius
     for p in props:
         ll, _ = loc.locate(p.name, p.address, p.city, p.state, p.zipcode)
         if ll:
