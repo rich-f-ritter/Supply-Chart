@@ -320,16 +320,38 @@ def reconcile(costar: list[Prop], realpage: list[Prop]) -> list[Prop]:
     merged: dict[str, Prop] = {}
     by_name: dict[str, str] = {}
 
+    def same_property(a: Prop, b: Prop) -> bool:
+        """Guard against merging two distinct properties that share an address
+        (e.g. an existing asset and its planned redevelopment on the same site)."""
+        ta = {t for t in name_key(a.name).split() if len(t) >= 4}
+        tb = {t for t in name_key(b.name).split() if len(t) >= 4}
+        if ta & tb:
+            return True                       # share a real name token -> same
+        # no name overlap: an existing asset vs a pipeline deal = different
+        a_pipe = _proposed_signal(a) or _uc_signal(a)
+        b_pipe = _proposed_signal(b) or _uc_signal(b)
+        if (a_pipe and _existing_signal(b)) or (b_pipe and _existing_signal(a)):
+            return False
+        if a.year_built and b.year_built and abs(a.year_built - b.year_built) > 5:
+            return False
+        if a.units and b.units and abs(a.units - b.units) > 0.25 * max(a.units, b.units):
+            return False
+        return True
+
     def register(p: Prop):
-        k = addr_key(p.address) or ("name:" + name_key(p.name))
-        if k in merged:
-            return merge_into(merged[k], p)
-        # name fallback for missing/typo'd addresses
+        ak = addr_key(p.address)
+        if ak and ak in merged and same_property(merged[ak], p):
+            return merge_into(merged[ak], p)
         nk = name_key(p.name)
-        if nk in by_name and by_name[nk] in merged:
-            return merge_into(merged[by_name[nk]], p)
-        merged[k] = p
-        by_name[nk] = k
+        if nk in by_name:
+            cand = merged.get(by_name[nk])
+            if cand is not None and same_property(cand, p):
+                return merge_into(cand, p)
+        key = ak or ("name:" + nk)
+        if key in merged:                     # address taken by a different property
+            key = f"{key}|{nk}"
+        merged[key] = p
+        by_name.setdefault(nk, key)
         return p
 
     def merge_into(base: Prop, other: Prop):
@@ -821,18 +843,19 @@ def subject_annual_by_window(plan, as_idx, subj_monthly, subj_costar):
         def avg(recs, key):
             vals = [r[key] for r in recs if r.get(key) is not None]
             return sum(vals) / len(vals) if vals else None
+        qs = [(yy, qq) for yy in (ey, ey - 1) for qq in (1, 2, 3, 4)
+              if end_idx - 4 < quarter_index(yy, qq) <= end_idx]
+        def csavg(key):
+            vals = [subj_costar[q][key] for q in qs
+                    if q in subj_costar and subj_costar[q].get(key) is not None]
+            return (sum(vals) / len(vals)) if vals else None
         if len(hd) >= 10:
+            occ = avg(hd, "occ")
+            if occ is None:                      # fill financials gap from CoStar
+                occ = csavg("occ")
             out[label] = {"mkt": avg(hd, "mkt"), "eff": avg(hd, "eff"),
-                          "occ": avg(hd, "occ"), "conc": avg(hd, "conc"), "src": "HD"}
+                          "occ": occ, "conc": avg(hd, "conc"), "src": "HD"}
         else:
-            qs = [(yy, qq) for yy in (ey, ey - 1)
-                  for qq in (1, 2, 3, 4)
-                  if quarter_index(yy, qq) <= end_idx
-                  and quarter_index(yy, qq) > end_idx - 4]
-            def csavg(key):
-                vals = [subj_costar[q][key] for q in qs
-                        if q in subj_costar and subj_costar[q].get(key) is not None]
-                return (sum(vals) / len(vals)) if vals else None
             ask = [subj_costar[q]["ask"] for q in qs
                    if q in subj_costar and subj_costar[q].get("ask") is not None]
             eff = [subj_costar[q]["eff"] for q in qs

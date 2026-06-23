@@ -1,0 +1,5 @@
+property,est_delivery,units,bucket,costar_year,# Fill est_delivery as 'Q2 2028'. Re-run with --pipeline-dates.
+The League Future Phases,,400,PROPOSED,,
+Residences at Highland Center,,275,PROPOSED,,
+Avalon at Kemah II,,228,PROPOSED,,
+Avalon at Kemah I,,198,PROPOSED,,
