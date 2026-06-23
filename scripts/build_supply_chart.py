@@ -1130,7 +1130,10 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
                 ws.cell(rows["smkt"], ci, round(srec["mkt"]) if srec.get("mkt") else None)
                 ws.cell(rows["seff"], ci, round(srec["eff"]) if srec.get("eff") else None)
                 ws.cell(rows["socc"], ci, srec.get("occ"))
-                ws.cell(rows["sconc"], ci, srec.get("conc"))
+                # Concession % = (market - effective) / market, derived live
+                ws.cell(rows["sconc"], ci,
+                        f'=IFERROR(({col}{rows["smkt"]}-{col}{rows["seff"]})'
+                        f'/{col}{rows["smkt"]},"")')
             if j > 0:        # YoY growth vs prior year column
                 pcl = L(ci - 1)
                 ws.cell(rows["smkt_yoy"], ci,
