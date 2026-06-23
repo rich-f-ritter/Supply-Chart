@@ -335,9 +335,10 @@ def main(argv=None):
                     help="Default base layer (terrain/streets/satellite).")
     ap.add_argument("--no-geocode", action="store_true",
                     help="Skip street geocoding; use ZIP centroids only.")
-    ap.add_argument("--shadow-supply", default=None,
-                    help="Filled diligence CSV — its type=shadow rows are plotted "
-                         "as latent/untracked supply.")
+    ap.add_argument("--diligence", default=None,
+                    help="Filled diligence CSV — applies researched bucket/date "
+                         "corrections and plots its type=shadow rows as latent "
+                         "supply (keeps the map consistent with the chart).")
     args = ap.parse_args(argv)
 
     _, deliveries, latest_label, _, _ = bc.parse_costar_analytics(args.costar_analytics)
@@ -347,8 +348,9 @@ def main(argv=None):
         args.subject_name, args.subject_address, args.target)
 
     shadow_rows = None
-    if args.shadow_supply:
-        rows = bc.load_diligence(args.shadow_supply)
+    if args.diligence:
+        rows = bc.load_diligence(args.diligence)
+        bc.apply_diligence(props, rows)          # match the chart's corrected buckets
         shadow_rows = [r for r in rows if r.get("type") == "shadow"]
 
     placed, approx = build_map(props, args.subject_name, args.subject_address,

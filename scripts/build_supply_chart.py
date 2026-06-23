@@ -613,8 +613,17 @@ def apply_diligence(props: list[Prop], rows):
             p.est_delivery = fmt_quarter(*yq)
         if _int(r.get("units")):
             p.units = _int(r["units"])
-        if r.get("status"):
+        st = (r.get("status") or "").lower()
+        if st:
             p.note(f"Diligence: {r['status']}")
+            # researched status corrects the auto-classification
+            if any(k in st for k in ("under construction", "leasing", "delivered")) \
+                    and p.bucket == "PROPOSED":
+                p.bucket = "UNDER CONSTRUCTION"
+            elif any(k in st for k in ("proposed", "permitted", "planned",
+                                       "stall", "cancel", "entitle")) \
+                    and p.bucket == "UNDER CONSTRUCTION":
+                p.bucket = "PROPOSED"
 
 
 
