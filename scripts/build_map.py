@@ -154,7 +154,7 @@ def _subject_zip(address):
 # Map rendering
 # --------------------------------------------------------------------------- #
 def build_map(props, subject_name, subject_address, subject_latlng,
-              use_geocoder, base, out_path):
+              use_geocoder, base, out_path, shadow_rows=None):
     loc = Locator(use_geocoder,
                   os.path.join(os.path.dirname(out_path) or ".", ".geocode_cache.json"))
 
@@ -177,6 +177,14 @@ def build_map(props, subject_name, subject_address, subject_latlng,
         if ll:
             located.append((p, ll[0], ll[1]))
             approx_any = approx_any or approx
+
+    # ---- shadow-supply sites (latent / untracked) ----
+    shadow_located = []
+    for r in (shadow_rows or []):
+        q = r.get("property") or r.get("notes")
+        ll, _ = loc.locate(q, q, None, "TX", None)
+        if ll:
+            shadow_located.append((r, ll[0], ll[1]))
     loc.save()
 
     # ---- interactive HTML ----
@@ -200,6 +208,15 @@ def build_map(props, subject_name, subject_address, subject_latlng,
             [plat, plng], radius=max(5, min(20, 4 + math.sqrt(p.units or 0) / 2)),
             color=color, weight=1, fill=True, fill_color=color, fill_opacity=0.8,
             popup=popup, tooltip=f"{p.name} ({blabel})").add_to(m)
+    for r, rlat, rlng in shadow_located:
+        folium.CircleMarker(
+            [rlat, rlng], radius=9, color="#7030A0", weight=2, fill=True,
+            fill_color="#7030A0", fill_opacity=0.25, dash_array="4",
+            tooltip=f"SHADOW: {r.get('property')}",
+            popup=folium.Popup(html=(
+                f"<b>Shadow supply</b><br>{r.get('property')}<br>"
+                f"{r.get('units') or '?'} units &middot; {r.get('status') or ''}<br>"
+                f"{r.get('notes') or ''}"), max_width=260)).add_to(m)
     folium.Marker([slat, slng], tooltip=f"SUBJECT: {subject_name}",
                   popup=folium.Popup(f"<b>SUBJECT</b><br>{subject_name}<br>"
                                      f"{subject_address}", max_width=260),
@@ -213,6 +230,10 @@ def build_map(props, subject_name, subject_address, subject_latlng,
         f"<div><span style='display:inline-block;width:11px;height:11px;"
         f"background:{c};border-radius:50%;margin-right:6px'></span>{lab} "
         f"({counts.get(b,0)})</div>" for b, (c, lab) in BUCKET_STYLE.items())
+    if shadow_located:
+        legend += ("<div><span style='display:inline-block;width:11px;height:11px;"
+                   "background:#7030A0;border-radius:50%;margin-right:6px'></span>"
+                   f"Shadow supply ({len(shadow_located)})</div>")
     note = ("&#9888; Some pins ZIP-approximate (geocode failed)."
             if approx_any else "")
     m.get_root().html.add_child(folium.Element(f"""
@@ -230,11 +251,12 @@ def build_map(props, subject_name, subject_address, subject_latlng,
 
     if out_path.lower().endswith(".html"):
         render_png(located, slat, slng, subject_name, counts, approx_any, base,
-                   out_path[:-5] + ".png")
+                   out_path[:-5] + ".png", shadow_located)
     return len(located), approx_any
 
 
-def render_png(located, slat, slng, subject_name, counts, approx, base, png_path):
+def render_png(located, slat, slng, subject_name, counts, approx, base, png_path,
+               shadow_located=None):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -257,6 +279,12 @@ def render_png(located, slat, slng, subject_name, counts, approx, base, png_path
                    edgecolors="white", linewidths=0.7, alpha=0.9, zorder=5)
         ax.annotate(p.name[:22], (plng, plat), fontsize=6, xytext=(0, 6),
                     textcoords="offset points", ha="center", color="#222", zorder=6)
+    for r, rlat, rlng in (shadow_located or []):
+        ax.scatter(rlng, rlat, marker="P", s=160, c="#7030A0", edgecolors="white",
+                   linewidths=0.6, alpha=0.9, zorder=5)
+        ax.annotate((r.get("property") or "")[:20], (rlng, rlat), fontsize=6,
+                    xytext=(0, 6), textcoords="offset points", ha="center",
+                    color="#5a2d82", zorder=6)
     ax.scatter(slng, slat, marker="*", s=560, c="black", edgecolors="white",
                linewidths=0.9, zorder=7)
     ax.annotate(f"SUBJECT: {subject_name}", (slng, slat), fontsize=8,
@@ -276,6 +304,9 @@ def render_png(located, slat, slng, subject_name, counts, approx, base, png_path
     handles = [plt.Line2D([], [], marker="o", ls="", color=c,
                label=f"{lab} ({counts.get(b,0)})")
                for b, (c, lab) in BUCKET_STYLE.items()]
+    if shadow_located:
+        handles.append(plt.Line2D([], [], marker="P", ls="", color="#7030A0",
+                       label=f"Shadow supply ({len(shadow_located)})"))
     handles.append(plt.Line2D([], [], marker="*", ls="", color="black", label="Subject"))
     ax.legend(handles=handles, loc="upper left", fontsize=8, framealpha=0.92)
     title = f"{subject_name} — 5-Mile Competitive Supply"
@@ -304,6 +335,9 @@ def main(argv=None):
                     help="Default base layer (terrain/streets/satellite).")
     ap.add_argument("--no-geocode", action="store_true",
                     help="Skip street geocoding; use ZIP centroids only.")
+    ap.add_argument("--shadow-supply", default=None,
+                    help="Filled diligence CSV — its type=shadow rows are plotted "
+                         "as latent/untracked supply.")
     args = ap.parse_args(argv)
 
     _, deliveries, latest_label, _, _ = bc.parse_costar_analytics(args.costar_analytics)
@@ -312,9 +346,14 @@ def main(argv=None):
         args.costar_roster, args.realpage, deliveries, as_of,
         args.subject_name, args.subject_address, args.target)
 
+    shadow_rows = None
+    if args.shadow_supply:
+        rows = bc.load_diligence(args.shadow_supply)
+        shadow_rows = [r for r in rows if r.get("type") == "shadow"]
+
     placed, approx = build_map(props, args.subject_name, args.subject_address,
                                args.subject_latlng, not args.no_geocode,
-                               args.base, args.out)
+                               args.base, args.out, shadow_rows)
     print(f"Map written: {args.out}  ({placed} properties"
           f"{', some ZIP-approximate' if approx else ', street-geocoded'})")
 

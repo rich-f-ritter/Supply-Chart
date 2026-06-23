@@ -563,6 +563,61 @@ def emit_pipeline_template(props: list[Prop], path):
     return len(undated)
 
 
+DILIGENCE_COLS = ["type", "property", "units", "est_delivery", "status",
+                  "leasing_pace", "notes", "source"]
+
+
+def emit_diligence_template(props: list[Prop], path):
+    """Write a per-project research template (the SKILL.md research phase fills
+    it). Lists every lease-up / UC / proposed deal to verify, plus a blank row to
+    add shadow-supply sites (rezonings, entitled/vacant tracts, untracked deals)."""
+    import csv
+    targets = [p for p in props
+               if p.bucket in ("LEASING UP", "UNDER CONSTRUCTION", "PROPOSED")]
+    with open(path, "w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(DILIGENCE_COLS)
+        for p in sorted(targets, key=lambda x: (x.bucket, -(x.units or 0))):
+            w.writerow(["pipeline", p.name, p.units or "", p.est_delivery or "", "",
+                        "", f"(verify {p.bucket.lower()})", ""])
+        w.writerow(["shadow", "<latent site / rezoning / land sale>", "", "", "",
+                    "", "potential future supply not in CoStar/RealPage", ""])
+    return len(targets)
+
+
+def load_diligence(path):
+    """Read a filled diligence CSV (DILIGENCE_COLS). Returns list of dict rows."""
+    import csv
+    rows = []
+    with open(path, newline="", encoding="utf-8-sig") as fh:
+        for row in csv.DictReader(fh):
+            r = {(k or "").strip().lower(): (v or "").strip()
+                 for k, v in row.items()}
+            if r.get("property") and not r["property"].startswith("<"):
+                rows.append(r)
+    return rows
+
+
+def apply_diligence(props: list[Prop], rows):
+    """Fold researched delivery/unit corrections back into the pipeline props."""
+    by = {name_key(p.name): p for p in props}
+    for r in rows:
+        if r.get("type", "pipeline") != "pipeline":
+            continue
+        p = by.get(name_key(r["property"]))
+        if not p:
+            continue
+        yq = parse_quarter_label(r.get("est_delivery", ""))
+        if yq:
+            p.deliv_year, p.deliv_q = yq
+            p.est_delivery = fmt_quarter(*yq)
+        if _int(r.get("units")):
+            p.units = _int(r["units"])
+        if r.get("status"):
+            p.note(f"Diligence: {r['status']}")
+
+
+
 def _find_row(ws, needle, col=1, maxr=60):
     needle = needle.lower()
     for r in range(1, maxr + 1):
@@ -1309,7 +1364,8 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
 
 def write_workbook(props, subject_name, latest_inv, latest_label,
                    as_of, target, out_path, series=None, latest_uc=None,
-                   subj_monthly=None, subj_costar=None, subj_realpage=None):
+                   subj_monthly=None, subj_costar=None, subj_realpage=None,
+                   diligence_rows=None):
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Competitive Analysis"
@@ -1442,7 +1498,46 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
         # make "Supply & Absorption" the 2nd tab
         wb.move_sheet(sa, -(wb.index(sa) - 1))
 
+    if diligence_rows:
+        write_diligence_sheet(wb, diligence_rows)
+
     wb.save(out_path)
+
+
+def write_diligence_sheet(wb, rows):
+    """Render researched per-project diligence + a shadow-supply watch list."""
+    ws = wb.create_sheet("Diligence")
+    ws.sheet_view.showGridLines = False
+    headers = ["Property / Site", "Units", "Est. Delivery", "Status",
+               "Leasing Pace", "Notes", "Source"]
+    widths = [30, 8, 12, 16, 14, 50, 36]
+    for sect, kind in (("PIPELINE DILIGENCE", "pipeline"),
+                       ("SHADOW SUPPLY (latent / untracked — watch list)", "shadow")):
+        srows = [r for r in rows if r.get("type", "pipeline") == kind]
+        if not srows:
+            continue
+        r0 = (ws.max_row + 2) if ws.max_row > 1 else 2
+        ws.merge_cells(start_row=r0, start_column=2, end_row=r0, end_column=8)
+        sc = ws.cell(r0, 2, sect)
+        sc.fill = fill(NAVY); sc.font = font(bold=True, size=11, color=WHITE)
+        for j, h in enumerate(headers):
+            c = ws.cell(r0 + 1, 2 + j, h)
+            c.fill = fill(BLUE); c.font = font(bold=True, size=9, color=WHITE)
+            c.alignment = CENTER; c.border = BORDER
+        for i, r in enumerate(srows):
+            rr = r0 + 2 + i
+            vals = [r.get("property"), r.get("units"), r.get("est_delivery"),
+                    r.get("status"), r.get("leasing_pace"), r.get("notes"),
+                    r.get("source")]
+            for j, v in enumerate(vals):
+                c = ws.cell(rr, 2 + j, v or None)
+                c.font = font(size=9); c.border = BORDER
+                c.alignment = LEFT if j in (0, 3, 4, 5, 6) else CENTER
+    for j, w in enumerate(widths):
+        ws.column_dimensions[get_column_letter(2 + j)].width = w
+    ws.column_dimensions["A"].width = 2.5
+    return ws
+
 
 
 def p_qi(p):
@@ -1520,6 +1615,10 @@ def main(argv=None):
                     help="RealPage per-property 10-yr rent export (alternative "
                          "subject rent source; the better-tracking of CoStar/"
                          "RealPage vs HelloData is auto-selected).")
+    ap.add_argument("--diligence", default=None,
+                    help="Filled per-project research CSV (see the emitted "
+                         "…__diligence_TEMPLATE.csv) — adds a Diligence + shadow-"
+                         "supply sheet and folds researched delivery dates back in.")
     args = ap.parse_args(argv)
 
     latest_inv, deliveries, latest_label, series, latest_uc = parse_costar_analytics(args.costar_analytics)
@@ -1535,6 +1634,11 @@ def main(argv=None):
         applied = load_pipeline_dates(args.pipeline_dates)
         apply_pipeline_dates(props, applied)
 
+    diligence_rows = None
+    if args.diligence:
+        diligence_rows = load_diligence(args.diligence)
+        apply_diligence(props, diligence_rows)
+
     subj_monthly = parse_intake_subject(args.intake) if args.intake else {}
     subj_costar = (parse_costar_subject_rents(args.costar_subject_rents, args.subject_name)
                    if args.costar_subject_rents else {})
@@ -1544,12 +1648,13 @@ def main(argv=None):
     write_workbook(props, args.subject_name, latest_inv, latest_label,
                    as_of, args.target, args.out, series=series, latest_uc=latest_uc,
                    subj_monthly=subj_monthly, subj_costar=subj_costar,
-                   subj_realpage=subj_realpage)
+                   subj_realpage=subj_realpage, diligence_rows=diligence_rows)
 
-    # Emit a template listing pipeline deals still missing a delivery quarter.
+    # Emit templates: undated pipeline + a per-project research template.
     import os
-    tmpl = os.path.splitext(args.out)[0] + "__pipeline_dates_TEMPLATE.csv"
-    n_undated = emit_pipeline_template(props, tmpl)
+    base = os.path.splitext(args.out)[0]
+    n_undated = emit_pipeline_template(props, base + "__pipeline_dates_TEMPLATE.csv")
+    emit_diligence_template(props, base + "__diligence_TEMPLATE.csv")
 
     # Console reconciliation report
     print(f"\nSupply chart written: {args.out}")
@@ -1570,8 +1675,9 @@ def main(argv=None):
                   f"{('  | ' + '; '.join(p.notes)) if p.notes else ''}")
     if n_undated:
         print(f"\n  {n_undated} pipeline deal(s) have no delivery quarter and are "
-              f"NOT in the absorption forecast yet.\n  Fill {tmpl}\n"
-              f"  then re-run with --pipeline-dates to fold them in.")
+              f"NOT in the absorption forecast yet.\n"
+              f"  Fill {base}__pipeline_dates_TEMPLATE.csv (--pipeline-dates), or "
+              f"research them via {base}__diligence_TEMPLATE.csv (--diligence).")
     print()
 
 

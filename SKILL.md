@@ -194,10 +194,36 @@ collapsed detail group. Subject occupancy comes from the **T12 financial
 statements** (filled from CoStar where the financials have gaps). Forecast-year
 subject rents are deferred to the (later) market-rent-growth → effective step.
 
+## Research & diligence (opt-in)
+The mechanical build trusts whatever CoStar/RealPage report. When the user asks to
+**research the pipeline / verify the supply / do diligence** (or runs with
+`--diligence`), perform this phase — it is not run by default.
+
+Every build emits `…__diligence_TEMPLATE.csv` (cols: `type,property,units,
+est_delivery,status,leasing_pace,notes,source`) pre-listing the lease-up /
+under-construction / proposed deals. The research workflow:
+
+1. **Per-project diligence (Part A).** For each lease-up / UC / proposed deal,
+   web-research and confirm: actual construction status (proposed / permitted /
+   under construction / leasing / delivered / **stalled or cancelled**), expected
+   delivery quarter, developer/owner, unit count, any **affordable or
+   age-restricted** component, and leasing pace. **Cite a source URL.** Correct
+   the `status`, `est_delivery`, and `units` — these fold back into the buckets
+   and the absorption forecast (`type=pipeline`).
+2. **Shadow-supply scan (Part B).** Research the 5-mile radius for **latent supply
+   not in the vendor data**: multifamily **rezonings**, **entitled / under-contract**
+   apartment land, large vacant MF-zoned tracts, master-planned MF phases, and
+   newly announced developments. Add each as a `type=shadow` row with a source.
+3. Be skeptical — if a project can't be verified, say so in `notes` rather than
+   guessing. Then re-run with `--diligence filled.csv`: the workbook gains a
+   **Diligence** sheet (pipeline diligence + shadow-supply watch list) and the
+   researched delivery dates flow into the forecast. Pass the same CSV's
+   `type=shadow` rows to `build_map.py --shadow-supply` to plot them.
+
 ## Analyst follow-ups the script intentionally leaves open
 - **Proximity (miles)** — left blank; neither export carries distance-from-subject. Fill manually (or paste CoStar's "Distance" column if a future pull includes it).
 - **Lease-up rent & occupancy** — verify the flagged lease-ups with a HelloData pull.
-- **Pipeline timing** — undated Pre-Planned deals (`TBD`) are listed but not in the forecast; fill the emitted `…__pipeline_dates_TEMPLATE.csv` and re-run with `--pipeline-dates` to fold them in.
+- **Pipeline timing** — undated Pre-Planned deals (`TBD`) are listed but not in the forecast; fill the emitted `…__pipeline_dates_TEMPLATE.csv` and re-run with `--pipeline-dates`, or research them via the diligence phase above.
 
 ## Tunable thresholds
 Top of `scripts/build_supply_chart.py`: `DEFAULT_STABILIZATION_TARGET`,
