@@ -1,0 +1,9 @@
+{
+  "name": "supply-chart",
+  "description": "Automate TMG's 5-mile competitive Supply Chart: reconcile CoStar + RealPage radius exports into one roster, build the relative-year Supply & Absorption forecast (with the 3rd-party-forecast block and model-linked subject rows), export a companion satellite map, and graft the tabs into the underwriting model.",
+  "version": "1.0.0",
+  "author": {
+    "name": "TMG"
+  },
+  "repository": "https://github.com/rich-f-ritter/supply-chart"
+}
