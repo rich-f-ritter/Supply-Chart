@@ -1845,6 +1845,11 @@ def main(argv=None):
     ap.add_argument("--model-sheet", default="Cash Flow (Annual)",
                     help="Model tab the subject-row refs point to "
                          "(default: 'Cash Flow (Annual)').")
+    ap.add_argument("--no-map", action="store_true",
+                    help="Skip the companion map. By default the run also writes a "
+                         "<subject>__Map.html + .png alongside the chart.")
+    ap.add_argument("--map-base", choices=("satellite", "terrain", "streets"),
+                    default="satellite", help="Companion-map base layer (default: satellite).")
     args = ap.parse_args(argv)
 
     latest_inv, deliveries, latest_label, series, latest_uc = parse_costar_analytics(args.costar_analytics)
@@ -1913,6 +1918,24 @@ def main(argv=None):
               f"  Fill {base}__pipeline_dates_TEMPLATE.csv (--pipeline-dates), or "
               f"research them via {base}__diligence_TEMPLATE.csv (--diligence).")
     print()
+
+    # ---- Companion map (default on; degrades gracefully) ----
+    if not args.no_map:
+        map_out = (base[:-len("__Supply_Chart")] if base.endswith("__Supply_Chart")
+                   else base) + "__Map.html"
+        try:
+            import build_map
+            shadow = [r for r in (diligence_rows or []) if r.get("type") == "shadow"]
+            placed, approx = build_map.build_map(
+                props, args.subject_name, args.subject_address, None,
+                not args.no_geocode, args.map_base, map_out, shadow or None)
+            print(f"Companion map written: {map_out} (+ .png)  "
+                  f"({placed} properties{', some ZIP-approximate' if approx else ''})")
+        except Exception as e:
+            print(f"  (map skipped: {type(e).__name__}: {e}\n"
+                  f"   needs folium + matplotlib + contextily and network for geocoding; "
+                  f"install them or run scripts/build_map.py separately, "
+                  f"or pass --no-map.)")
 
 
 if __name__ == "__main__":

@@ -7,24 +7,34 @@ description: >-
   property by lifecycle stage, and writes a formatted workbook with a relative-
   year (TTM) Supply & Absorption forecast — new supply, absorption, and overall
   occupancy projected forward with editable demand scenarios and pipeline
-  toggles, plus subject rent/occupancy rows from the RR-T12 intake. Use when the
-  user asks to build, update, or automate a supply chart / competitive supply or
-  rent analysis, or provides CoStar + RealPage radius exports for a deal.
+  toggles, plus subject rent/occupancy rows from the RR-T12 intake. Each run
+  also exports a companion map. Use when the user asks to build, update, or
+  automate a supply chart / competitive supply or rent analysis, or provides
+  CoStar + RealPage radius exports for a deal.
 ---
 
 # Supply Chart
 
 ## What this produces
-A workbook (mirroring `reference/EXAMPLE_Seasons_Supply_Chart_v2.xlsx`) with:
+A single `build_supply_chart.py` run writes **two deliverables by default**:
+
+**A. The Supply-Chart workbook** (mirroring `reference/EXAMPLE_Seasons_Supply_Chart_v2.xlsx`):
 
 1. **Competitive Analysis** — the new-construction roster grouped into four
    lifecycle (colour-coded) buckets.
 2. **Supply & Absorption** — the relative-year (TTM) supply / absorption /
-   occupancy forecast, subject rent & occupancy rows, demand & rent-growth
-   scenarios, and the editable pipeline blocks (see §4). All editable inputs live
-   here (yellow cells), including the stabilization target.
+   occupancy forecast, subject rent & occupancy rows, the 3rd-party-forecast
+   block, demand & rent-growth scenarios, and the editable pipeline blocks
+   (see §4). Editable inputs use the model's blue-font convention.
 3. **Reconciliation Log** — every property with its merged values, sources, and
    any conflict notes, so the analyst can audit the automated decisions.
+4. **Diligence** (only with `--diligence`) — researched pipeline + shadow supply.
+
+**B. The companion map** — `<subject>__Map.html` (interactive, satellite) **and**
+`<subject>__Map.png` (static), plotting the subject + roster colour-coded by the
+same buckets. Skipped only with `--no-map`, or if `folium`/`matplotlib`/
+`contextily` (or network for geocoding) aren't available — in which case the
+workbook still writes and a note explains how to add the map.
 
 This supply layer is the input to the **rent-analysis** step: it sits on top of
 the historical overall occupancy / absorption / deliveries series (CoStar Data
@@ -85,10 +95,12 @@ Optional flags:
 - `--costar-subject-rents path.xlsx` and/or `--realpage-subject-rents path.xlsx` — per-property rent histories used to extend the subject rents before HelloData coverage; whichever tracks HelloData more closely in the overlap is auto-selected (varies by market)
 - `--no-geocode` — skip Nominatim and fill the **Proximity (mi)** column from offline ZIP centroids only (no network)
 - `--no-model-link` — by **default** the subject rows are wired to the underwriting model (see **Incorporating into the underwriting model** below) so the tab is carry-over-ready; pass this for a pure standalone chart with no model references. `--model-sheet "…"` overrides the target tab (default `Cash Flow (Annual)`)
+- `--no-map` — skip the companion map (it is produced by **default**). `--map-base satellite|terrain|streets` sets the base layer (default satellite)
 
-The script prints a reconciliation report to the console and writes the workbook.
-Always read the console report and the **Reconciliation Log** sheet, then review
-the workbook before handing it off.
+The script prints a reconciliation report to the console and writes **both the
+workbook and the companion map** (`<subject>__Map.html` + `.png`). Always read the
+console report and the **Reconciliation Log** sheet, then review the workbook
+before handing it off.
 
 ### Dating the pipeline
 Under-construction deals are auto-dated (from CoStar `Construction Begin` + ~24
@@ -99,12 +111,14 @@ that.csv`, or just edit the delivery quarter directly in the **Proposed Pipeline
 block on the Supply & Absorption tab. Whether a proposed deal adds supply is
 controlled by its **Built In** toggle (Bear only / Bear+Base / All / None).
 
-### Companion map (optional)
-`scripts/build_map.py` plots the subject + competitive roster on a **satellite**
-basemap (default; `--base terrain|streets` to switch), colour-coded by the same
-lifecycle buckets, with a yellow 5-mile ring and per-property popups. Markers use
-saturated colours and white halos so they read over imagery (Under Construction =
-spring green). It writes an interactive **HTML** map and a static **PNG**.
+### Companion map (produced by default)
+The main run already writes the map alongside the chart. It plots the subject +
+competitive roster on a **satellite** basemap (`--map-base terrain|streets` to
+switch), colour-coded by the same lifecycle buckets, with a yellow 5-mile ring
+and per-property popups; markers use saturated colours and white halos so they
+read over imagery (Under Construction = spring green). Interactive **HTML** + a
+static **PNG**. To regenerate the map alone (or customise it — `--subject-latlng`,
+`--diligence` shadow pins, a different base), run `scripts/build_map.py` directly:
 ```bash
 python scripts/build_map.py \
   --subject-name "Aura Beacon Island" \
