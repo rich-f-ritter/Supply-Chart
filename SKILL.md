@@ -223,13 +223,26 @@ the CoStar Data Analytics series + the supply pipeline, on **live Excel formulas
   **YoY %** rows. A collapsed ("+") detail group lists the source used per year
   (HelloData vs CoStar) and the UC-vs-CoStar reconciliation. Forward concession %
   is an editable assumption block.
+- **3rd-party forecast block** (model-linked): a compact table comparing
+  **TMG's own market-rent growth** (the focus — gold row, = the subject's
+  market-rent YoY) against **CoStar / RealPage / Yardi / GreenStreet** forecasts
+  and their **consensus**, with a per-row AVG column. Sources link to the model's
+  `Rent & Occ Data` rows 31–34 (resolve when the tab is in the model). The point
+  is to read OUR growth against the supply recovery above (primary) and the
+  external consensus (secondary). Distinct from the model's AGPR growth — this is
+  a pure asking-rent trend.
+- **Scenario inputs are collapsed** under a single summary header (click **+** to
+  expand): the **Implied 5-mi Occupancy** block (Bear/Base/Bull), the editable
+  **market-rent-growth / concession** blocks, and the derived **effective-rent-
+  growth** block. Keeps the tab focused on the supply/occupancy story and the
+  TMG-vs-forecast comparison; the scenario machinery is one click away.
 - **Demand** is a Bear/Base/Bull annual-absorption assumption (Base = trailing
-  CoStar average), with an **Implied 5-mi Occupancy** block (all three paths),
-  editable **market-rent-growth / concession** blocks, and a derived
-  **effective-rent-growth** block.
-- **Editable (yellow) cells**: stabilization target, close quarter, demand
-  scenario & the three absorption levels, each proposed deal's delivery quarter &
-  Built-In, and the rent-growth/concession assumptions.
+  CoStar average).
+- **Editable inputs** follow the model's convention — **blue font on a light
+  fill** (stabilization target, close quarter, demand scenario & the three
+  absorption levels, each proposed deal's delivery quarter & Built-In, and the
+  rent-growth/concession assumptions). Section headers use the model's navy
+  (`FF153D64`); the formatting is kept consistent with the TMG model throughout.
 - A **reconciliation note** compares the scheduled pipeline (Include=Y) against
   CoStar's current Under-Construction unit count so the pipeline ties out.
 

@@ -55,11 +55,14 @@ NEW_CONSTRUCTION_LOOKBACK_YEARS = 4
 # --------------------------------------------------------------------------- #
 # Styling (sampled from the reference template)
 # --------------------------------------------------------------------------- #
-NAVY = "FF1F3864"
+NAVY = "FF153D64"        # matches the TMG model's section-header navy
 BLUE = "FF2E75B6"
+STEEL = "FFD6E0F0"       # light steel band (sub-headers / consensus row)
+GOLD = "FFFFE699"        # accent for the TMG "our growth" row
 GRAY = "FFF2F2F2"
 WHITE = "FFFFFFFF"
 YELLOW = "FFFFFF00"
+INPUT_BLUE = "FF0000FF"  # model convention: blue font = editable input
 
 THIN = Side(style="thin", color="FFBFBFBF")
 BORDER = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
@@ -1022,7 +1025,8 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
                          latest_label=None, subj_monthly=None, subj_costar=None,
                          subj_realpage=None, subject_name="", hist_years=6,
                          fwd_years=6, model_link=True,
-                         model_sheet="Cash Flow (Annual)"):
+                         model_sheet="Cash Flow (Annual)",
+                         model_tp_sheet="Rent & Occ Data"):
     """Relative-year (trailing-12-month) supply / absorption / occupancy view.
 
     Columns are TTM windows: Y0 = the T12 ending at the as-of quarter, -Y1..-Yn
@@ -1086,7 +1090,9 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
     for i, (lab, val, fmt, editable) in enumerate(A, start=4):
         ws.cell(i, 2, lab).font = font(size=9, bold=True)
         c = ws.cell(i, 3, val)
-        c.font = font(size=9, bold=True); c.alignment = CENTER
+        c.alignment = CENTER
+        c.font = font(size=9, bold=True,
+                      color=INPUT_BLUE if editable else "FF000000")
         if fmt:
             c.number_format = fmt
         if editable:
@@ -1172,7 +1178,8 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
             if col == 18:
                 cc.font = font(size=9)
         for col in (20, 21):
-            ws.cell(rr, col).fill = EDIT
+            cc = ws.cell(rr, col)
+            cc.fill = EDIT; cc.font = font(size=9, color=INPUT_BLUE)
         builtin_dv.add(ws.cell(rr, 21))
         rr += 1
     ppf, ppl = pp_hdr + 1, max(pp_hdr + 1, rr - 1)
@@ -1313,11 +1320,71 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
             ws.cell(rows["seff_yoy"], ci,
                     f'=IFERROR({col}{rows["seff"]}/{pcl}{rows["seff"]}-1,"")')
 
-    # ----- scenario block: implied 5-mi occupancy (Bear/Base/Bull) -----
-    y0_occu = f"${L(3 + hist_years)}${rows['_occu']}"   # actual occupied at Y0
-    sb = rows["_occu"] + 2          # below the hidden inventory/occupied helpers
-    ws.cell(sb, 2, "IMPLIED 5-MI OCCUPANCY BY DEMAND SCENARIO").font = font(bold=True, size=9)
     fcst_cols = [3 + j for j, (_, kind, _) in enumerate(plan) if kind == "fcst"]
+    y0_occu = f"${L(3 + hist_years)}${rows['_occu']}"   # actual occupied at Y0
+    avg_ci = fcst_cols[-1] + 1                          # AVG column (one past Y6)
+    cursor = rows["_occu"] + 2          # below the hidden inventory/occupied helpers
+
+    # ----- 3rd-party market-rent-growth forecast vs TMG (model-linked) -----
+    # Each shop's forward market-rent growth, pulled from the model's
+    # 'Rent & Occ Data' tab (rows 31-34 = CoStar/RealPage/Yardi/GreenStreet,
+    # cols C..H = Y1..Y6); TMG row = our own market-rent YoY. Primary read: does
+    # OUR growth track the supply recovery above? Secondary: vs the consensus.
+    def band_row(rrow, color):                          # fill B..AVG as one band
+        for ci in range(2, avg_ci + 1):
+            ws.cell(rrow, ci).fill = fill(color)
+
+    if model_link:
+        tp = cursor
+        band_row(tp, NAVY)
+        ws.cell(tp, 2, "MARKET-RENT GROWTH — TMG vs 3RD-PARTY FORECAST"
+                ).font = font(bold=True, size=9, color=WHITE)
+        for k, ci in enumerate(fcst_cols, start=1):
+            hc = ws.cell(tp, ci, f"Y{k}"); hc.font = NAVYF; hc.alignment = CENTER
+        ws.cell(tp, avg_ci, "AVG").font = NAVYF
+        ws.cell(tp, avg_ci).alignment = CENTER
+
+        sources = [("CoStar", 31), ("RealPage", 32), ("Yardi", 33), ("GreenStreet", 34)]
+        src_first = tp + 1
+
+        def growth_row(rrow, label, cells, color, bold):
+            band_row(rrow, color)
+            lc = ws.cell(rrow, 2, "  " + label)
+            lc.font = font(size=9, bold=bold, color=NAVY if color == GOLD else "FF000000")
+            for ci in fcst_cols + [avg_ci]:
+                cc = ws.cell(rrow, ci, cells(ci))
+                cc.number_format = "0.0%"; cc.alignment = CENTER
+                cc.font = font(size=9, bold=bold); cc.border = BORDER
+
+        for s_off, (lab, mrow) in enumerate(sources):
+            def src_cell(ci, mrow=mrow):
+                if ci == avg_ci:
+                    return (f'=IFERROR(AVERAGE({L(fcst_cols[0])}{src_first+s_off}'
+                            f':{L(fcst_cols[-1])}{src_first+s_off}),"")')
+                return f"=IFERROR('{model_tp_sheet}'!${get_column_letter(3+fcst_cols.index(ci))}${mrow},\"\")"
+            growth_row(src_first + s_off, lab, src_cell, GRAY, False)
+        src_last = src_first + len(sources) - 1
+
+        cons = src_last + 1                            # 4-source consensus
+        growth_row(cons, "Consensus (4-source avg)",
+                   lambda ci: f'=IFERROR(AVERAGE({L(ci)}{src_first}:{L(ci)}{src_last}),"")',
+                   STEEL, True)
+
+        tmg = cons + 1                                 # OUR growth — the focus
+        myoy = rows["smkt_yoy"]
+        growth_row(tmg, "TMG — our market-rent growth  ◄",
+                   lambda ci: (f'=IFERROR(AVERAGE({L(fcst_cols[0])}{tmg}:{L(fcst_cols[-1])}{tmg}),"")'
+                               if ci == avg_ci else f'=IFERROR({L(ci)}{myoy},"")'),
+                   GOLD, True)
+        cursor = tmg + 2                               # gap before scenario group
+
+    # ----- collapsed group: Bear/Base/Bull scenario inputs -----
+    sc_hdr = cursor
+    ws.cell(sc_hdr, 2, "▸ SCENARIO INPUTS — Bear / Base / Bull  (implied occupancy, "
+            "rent-growth & concession assumptions — click + to expand)"
+            ).font = font(bold=True, size=8, color="FF595959")
+    sb = sc_hdr + 1
+    ws.cell(sb, 2, "IMPLIED 5-MI OCCUPANCY BY DEMAND SCENARIO").font = font(bold=True, size=9)
     for r_off, (sc_lab, abs_cell) in enumerate(
             [("Bear", "$C$8"), ("Base", "$C$9"), ("Bull", "$C$10")], start=1):
         rrow = sb + r_off
@@ -1328,7 +1395,6 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
                          f"=MIN({TARGET},({y0_occu}+{abs_cell}*{k})/{col}{rows['_inv']})")
             cc.number_format = "0.0%"; cc.alignment = CENTER; cc.font = font(size=9)
             cc.border = BORDER
-        # label the forecast year columns above
         if r_off == 1:
             for k, ci in enumerate(fcst_cols, start=1):
                 hc = ws.cell(sb, ci, f"Y{k}")
@@ -1349,7 +1415,8 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
         for k, ci in enumerate(fcst_cols):
             g = base_g[k] + (-0.0125 if sc == "Bear" else 0.01 if sc == "Bull" else 0)
             cc = ws.cell(rrow, ci, round(g, 4))
-            cc.number_format = "0.0%"; cc.alignment = CENTER; cc.font = font(size=9)
+            cc.number_format = "0.0%"; cc.alignment = CENTER
+            cc.font = font(size=9, color=INPUT_BLUE)
             cc.fill = EDIT; cc.border = BORDER
 
     cg = rg + 4
@@ -1363,7 +1430,8 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
             c = conc_b[k] + (0.03 if sc == "Bear" else -0.01 if sc == "Bull" else 0)
             c = max(c, 0)
             cc = ws.cell(rrow, ci, round(c, 4))
-            cc.number_format = "0.0%"; cc.alignment = CENTER; cc.font = font(size=9)
+            cc.number_format = "0.0%"; cc.alignment = CENTER
+            cc.font = font(size=9, color=INPUT_BLUE)
             cc.fill = EDIT; cc.border = BORDER
 
     eg = cg + 4
@@ -1383,6 +1451,11 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
             cc = ws.cell(rrow, ci, f)
             cc.number_format = "0.0%"; cc.alignment = CENTER; cc.font = font(size=9)
             cc.border = BORDER
+
+    # collapse the whole Bear/Base/Bull scenario block under its summary header
+    for grow in range(sb, eg + 4):
+        ws.row_dimensions[grow].outlineLevel = 1
+        ws.row_dimensions[grow].hidden = True
 
     # ----- collapsed: subject rent source by year + reconciliation -----
     sg = eg + 5
@@ -1419,6 +1492,7 @@ def build_forecast_sheet(wb, series, props, as_of, target, latest_uc=None,
     ws.column_dimensions["B"].width = 26
     for ci in range(3, last_col + 1):
         ws.column_dimensions[L(ci)].width = 9.5
+    ws.column_dimensions[L(last_col + 1)].width = 9.5   # AVG column (P)
     for cw, w in {"R": 28, "S": 7, "T": 11, "U": 9, "V": 8, "W": 7, "X": 6}.items():
         ws.column_dimensions[cw].width = w
     for rr2 in range(1, r + 2):
