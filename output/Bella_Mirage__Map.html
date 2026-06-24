@@ -1,0 +1,3736 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_b76bff56795b2fd1f8c63bca5d7070da {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+      <div style="position:fixed;top:10px;left:50px;z-index:9999;background:white;
+        padding:8px 12px;border:1px solid #999;border-radius:4px;font-family:Arial;
+        font-size:13px"><b>Bella Mirage — 5-Mile Competitive Supply</b><br>
+        <span style="font-size:11px">106 competitive properties &middot;
+        5-mile radius</span></div>
+      <div style="position:fixed;bottom:24px;left:12px;z-index:9999;background:white;
+        padding:8px 12px;border:1px solid #999;border-radius:4px;font-family:Arial;
+        font-size:12px"><b>Lifecycle</b><div><span style='display:inline-block;width:11px;height:11px;background:#1E90FF;border-radius:50%;margin-right:6px'></span>Stabilized (22)</div><div><span style='display:inline-block;width:11px;height:11px;background:#FF8C00;border-radius:50%;margin-right:6px'></span>Leasing Up (28)</div><div><span style='display:inline-block;width:11px;height:11px;background:#00E676;border-radius:50%;margin-right:6px'></span>Under Construction (11)</div><div><span style='display:inline-block;width:11px;height:11px;background:#FF1744;border-radius:50%;margin-right:6px'></span>Proposed (45)</div>
+        <div style="margin-top:4px">&#9733; Subject</div>
+        <div style="color:#b00;margin-top:4px">&#9888; Some pins ZIP-approximate (geocode failed).</div></div>
+    
+            <div class="folium-map" id="map_b76bff56795b2fd1f8c63bca5d7070da" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_b76bff56795b2fd1f8c63bca5d7070da = L.map(
+                "map_b76bff56795b2fd1f8c63bca5d7070da",
+                {
+                    center: [33.488631, -112.323722],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+
+            
+
+        
+    
+            var tile_layer_13e4955bb47389ae623eb05b4e11eefd = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Esri",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_13e4955bb47389ae623eb05b4e11eefd.addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+            var tile_layer_45cba19fb5e494591aafefbc16e917b0 = L.tileLayer(
+                "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Map data \u00a9 OpenStreetMap contributors, SRTM | \u00a9 OpenTopoMap (CC-BY-SA)",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_45cba19fb5e494591aafefbc16e917b0.addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+            var tile_layer_33def393a6bb276ca995f4813420ee0b = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_33def393a6bb276ca995f4813420ee0b.addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+            var circle_5729bf071da58aead94c3ee2b2eb3855 = L.circle(
+                [33.488631, -112.323722],
+                {"bubblingMouseEvents": true, "color": "#FFD400", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FFD400", "fillOpacity": 0.03, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8046.7, "stroke": true, "weight": 3}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+            circle_5729bf071da58aead94c3ee2b2eb3855.bindTooltip(
+                `<div>
+                     5-mile radius
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9cf75caaee8eb1673164cc6576491be2 = L.circleMarker(
+                [33.4755965, -112.2641845],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.363961030678928, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_6f5c50f763d09823464778309119d55d = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_827787a4c760e5997a948db5b032f3eb = $(`<div id="html_827787a4c760e5997a948db5b032f3eb" style="width: 100.0%; height: 100.0%;"><b>TerraLane at Park McDowell</b><br>Stabilized<br>162 units &middot; Q1 2023<br>Occ 85% &middot; Rent $1,576<br><span style='color:#888'>2250 N 95th Ave 85037</span></div>`)[0];
+                popup_6f5c50f763d09823464778309119d55d.setContent(html_827787a4c760e5997a948db5b032f3eb);
+            
+        
+
+        circle_marker_9cf75caaee8eb1673164cc6576491be2.bindPopup(popup_6f5c50f763d09823464778309119d55d)
+        ;
+
+        
+    
+    
+            circle_marker_9cf75caaee8eb1673164cc6576491be2.bindTooltip(
+                `<div>
+                     TerraLane at Park McDowell (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_804a0895f953659eb2cf5a22ebad8366 = L.circleMarker(
+                [33.5078945, -112.2705573],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.137833441248533, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_6cb26076378ffc246aa9067f82182cfb = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_b1becf71b5ba66f71c1663957ccadb71 = $(`<div id="html_b1becf71b5ba66f71c1663957ccadb71" style="width: 100.0%; height: 100.0%;"><b>Bungalows at Camelback</b><br>Stabilized<br>334 units &middot; Q1 2023<br>Occ 76% &middot; Rent $2,026<br><span style='color:#888'>4747 N 99th Ave 85037</span></div>`)[0];
+                popup_6cb26076378ffc246aa9067f82182cfb.setContent(html_b1becf71b5ba66f71c1663957ccadb71);
+            
+        
+
+        circle_marker_804a0895f953659eb2cf5a22ebad8366.bindPopup(popup_6cb26076378ffc246aa9067f82182cfb)
+        ;
+
+        
+    
+    
+            circle_marker_804a0895f953659eb2cf5a22ebad8366.bindTooltip(
+                `<div>
+                     Bungalows at Camelback (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6a54a9de5f0ecd665a48a971d2b3accd = L.circleMarker(
+                [33.5456183, -112.2748872],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.797958971132712, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_992e20ba4fb350fc2c5396a307f2549a = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_faaf84a03216558a1b32b64e9382e737 = $(`<div id="html_faaf84a03216558a1b32b64e9382e737" style="width: 100.0%; height: 100.0%;"><b>Prose Desert River</b><br>Stabilized<br>384 units &middot; Q1 2023<br>Occ 90% &middot; Rent $1,429<br><span style='color:#888'>7430 N 100th Ave 85305</span></div>`)[0];
+                popup_992e20ba4fb350fc2c5396a307f2549a.setContent(html_faaf84a03216558a1b32b64e9382e737);
+            
+        
+
+        circle_marker_6a54a9de5f0ecd665a48a971d2b3accd.bindPopup(popup_992e20ba4fb350fc2c5396a307f2549a)
+        ;
+
+        
+    
+    
+            circle_marker_6a54a9de5f0ecd665a48a971d2b3accd.bindTooltip(
+                `<div>
+                     Prose Desert River (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9000ce31e67d6b0981b9961b3fd551e0 = L.circleMarker(
+                [33.46252, -112.3121804],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.365459931328118, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_a6c68048c5e7ffdf57f31384c83fc256 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_cf21942a88ce72512e375c913374deba = $(`<div id="html_cf21942a88ce72512e375c913374deba" style="width: 100.0%; height: 100.0%;"><b>Christopher Todd Communities at McDowell</b><br>Stabilized<br>217 units &middot; Q1 2023<br>Occ 95% &middot; Rent $1,576<br><span style='color:#888'>1350 N 117th Ave 85392</span></div>`)[0];
+                popup_a6c68048c5e7ffdf57f31384c83fc256.setContent(html_cf21942a88ce72512e375c913374deba);
+            
+        
+
+        circle_marker_9000ce31e67d6b0981b9961b3fd551e0.bindPopup(popup_a6c68048c5e7ffdf57f31384c83fc256)
+        ;
+
+        
+    
+    
+            circle_marker_9000ce31e67d6b0981b9961b3fd551e0.bindTooltip(
+                `<div>
+                     Christopher Todd Communities at McDowell (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_38cf751ba59888a55f27d08aad7b7787 = L.circleMarker(
+                [33.468872, -112.3833626],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.455767262643882, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_5c8d8aeed8bf518b13801224cc246d24 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_2d95b21315c3e827b5fd6427dcf0811b = $(`<div id="html_2d95b21315c3e827b5fd6427dcf0811b" style="width: 100.0%; height: 100.0%;"><b>Sunset View Apartments</b><br>Stabilized<br>286 units &middot; Q2 2022<br>Occ 90% &middot; Rent $1,338<br><span style='color:#888'>2323 N 150th Dr 85395</span></div>`)[0];
+                popup_5c8d8aeed8bf518b13801224cc246d24.setContent(html_2d95b21315c3e827b5fd6427dcf0811b);
+            
+        
+
+        circle_marker_38cf751ba59888a55f27d08aad7b7787.bindPopup(popup_5c8d8aeed8bf518b13801224cc246d24)
+        ;
+
+        
+    
+    
+            circle_marker_38cf751ba59888a55f27d08aad7b7787.bindTooltip(
+                `<div>
+                     Sunset View Apartments (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_de47b8e93ab6c3f5734500f1ae500651 = L.circleMarker(
+                [33.4568411, -112.3901231],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.0, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_c855f1b7e9fd7bfe7a3dd6dd09139a23 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_43b3a23b4483287251497b9b82a45adc = $(`<div id="html_43b3a23b4483287251497b9b82a45adc" style="width: 100.0%; height: 100.0%;"><b>Cyrene at Estrella</b><br>Stabilized<br>64 units &middot; Q1 2022<br>Occ 98% &middot; Rent $2,442<br><span style='color:#888'>15430 W Baden St 85338</span></div>`)[0];
+                popup_c855f1b7e9fd7bfe7a3dd6dd09139a23.setContent(html_43b3a23b4483287251497b9b82a45adc);
+            
+        
+
+        circle_marker_de47b8e93ab6c3f5734500f1ae500651.bindPopup(popup_c855f1b7e9fd7bfe7a3dd6dd09139a23)
+        ;
+
+        
+    
+    
+            circle_marker_de47b8e93ab6c3f5734500f1ae500651.bindTooltip(
+                `<div>
+                     Cyrene at Estrella (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0a55e668c760da6917d7847ca4330f55 = L.circleMarker(
+                [33.5077077, -112.2992296],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.96419413859206, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_b1850bb0c5ed8bd95d17c98d3def832d = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_14a44696fcd4ebd532ae52e26c201d8b = $(`<div id="html_14a44696fcd4ebd532ae52e26c201d8b" style="width: 100.0%; height: 100.0%;"><b>Village Camelback Park</b><br>Stabilized<br>194 units &middot; Q1 2023<br>Occ 77% &middot; Rent $1,874<br><span style='color:#888'>11200 W Camelback Rd 85037</span></div>`)[0];
+                popup_b1850bb0c5ed8bd95d17c98d3def832d.setContent(html_14a44696fcd4ebd532ae52e26c201d8b);
+            
+        
+
+        circle_marker_0a55e668c760da6917d7847ca4330f55.bindPopup(popup_b1850bb0c5ed8bd95d17c98d3def832d)
+        ;
+
+        
+    
+    
+            circle_marker_0a55e668c760da6917d7847ca4330f55.bindTooltip(
+                `<div>
+                     Village Camelback Park (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8553ce188094cc3f84959476a249cd5b = L.circleMarker(
+                [33.4531925, -112.3087509],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.40744386111339, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_22b8fa8f16d3f391070810e85d9a4a0e = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_c10c86bca45204d0d955e5583093e143 = $(`<div id="html_c10c86bca45204d0d955e5583093e143" style="width: 100.0%; height: 100.0%;"><b>Avari Apartments</b><br>Stabilized<br>354 units &middot; Q3 2022<br>Occ 95% &middot; Rent $1,574<br><span style='color:#888'>11580 W Corporate Dr 85323</span></div>`)[0];
+                popup_22b8fa8f16d3f391070810e85d9a4a0e.setContent(html_c10c86bca45204d0d955e5583093e143);
+            
+        
+
+        circle_marker_8553ce188094cc3f84959476a249cd5b.bindPopup(popup_22b8fa8f16d3f391070810e85d9a4a0e)
+        ;
+
+        
+    
+    
+            circle_marker_8553ce188094cc3f84959476a249cd5b.bindTooltip(
+                `<div>
+                     Avari Apartments (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ea8286a25ab6c8801eb5074737b8893a = L.circleMarker(
+                [33.5370444, -112.2757851],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.54400374531753, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_fe0d7144221100966ff40e049daff816 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_691af2e73aa48da2db8f1124339bb9c1 = $(`<div id="html_691af2e73aa48da2db8f1124339bb9c1" style="width: 100.0%; height: 100.0%;"><b>Springs At Westgate</b><br>Stabilized<br>292 units &middot; Q1 2023<br>Occ 78% &middot; Rent $1,516<br><span style='color:#888'>10020 W Glendale Ave 85307</span></div>`)[0];
+                popup_fe0d7144221100966ff40e049daff816.setContent(html_691af2e73aa48da2db8f1124339bb9c1);
+            
+        
+
+        circle_marker_ea8286a25ab6c8801eb5074737b8893a.bindPopup(popup_fe0d7144221100966ff40e049daff816)
+        ;
+
+        
+    
+    
+            circle_marker_ea8286a25ab6c8801eb5074737b8893a.bindTooltip(
+                `<div>
+                     Springs At Westgate (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b57ea9e0e88a8148d03b460300b78a26 = L.circleMarker(
+                [33.47735298625601, -112.3097955869868],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.800735254367723, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_929883eef970507ce800ca166630afdd = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_8e7e9adafb0f68b48120a2e621f3f582 = $(`<div id="html_8e7e9adafb0f68b48120a2e621f3f582" style="width: 100.0%; height: 100.0%;"><b>Avery</b><br>Stabilized<br>185 units &middot; Q2 2024<br>Occ 92% &middot; Rent $1,750<br><span style='color:#888'>1700 N Harbor Shore Blvd 85392</span></div>`)[0];
+                popup_929883eef970507ce800ca166630afdd.setContent(html_8e7e9adafb0f68b48120a2e621f3f582);
+            
+        
+
+        circle_marker_b57ea9e0e88a8148d03b460300b78a26.bindPopup(popup_929883eef970507ce800ca166630afdd)
+        ;
+
+        
+    
+    
+            circle_marker_b57ea9e0e88a8148d03b460300b78a26.bindTooltip(
+                `<div>
+                     Avery (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_735c00edbfd7d66b2a8f8e40be6a54a0 = L.circleMarker(
+                [33.49435, -112.252449],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.84767985741633, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_00c7a55c76af41c69b80c82b62f04b38 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_a8c2ef4c37f06a26c8445350604d1042 = $(`<div id="html_a8c2ef4c37f06a26c8445350604d1042" style="width: 100.0%; height: 100.0%;"><b>Luna Bear 94</b><br>Stabilized<br>94 units &middot; Q1 2022<br>Occ 99% &middot; Rent $1,913<br><span style='color:#888'>9000 W Indian School Rd 85037</span></div>`)[0];
+                popup_00c7a55c76af41c69b80c82b62f04b38.setContent(html_a8c2ef4c37f06a26c8445350604d1042);
+            
+        
+
+        circle_marker_735c00edbfd7d66b2a8f8e40be6a54a0.bindPopup(popup_00c7a55c76af41c69b80c82b62f04b38)
+        ;
+
+        
+    
+    
+            circle_marker_735c00edbfd7d66b2a8f8e40be6a54a0.bindTooltip(
+                `<div>
+                     Luna Bear 94 (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d19f950945b2de804d53abb189a6105c = L.circleMarker(
+                [33.4649679, -112.2488884],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.031189202104505, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_1e1fcad8b21f4fd7975f45f6040b2d03 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_d65139c3357ccfe643ee37617ef557a5 = $(`<div id="html_d65139c3357ccfe643ee37617ef557a5" style="width: 100.0%; height: 100.0%;"><b>Parc Lofts</b><br>Stabilized<br>258 units &middot; Q1 2023<br>Occ 90% &middot; Rent $1,567<br><span style='color:#888'>8727 W McDowell Rd 85353</span></div>`)[0];
+                popup_1e1fcad8b21f4fd7975f45f6040b2d03.setContent(html_d65139c3357ccfe643ee37617ef557a5);
+            
+        
+
+        circle_marker_d19f950945b2de804d53abb189a6105c.bindPopup(popup_1e1fcad8b21f4fd7975f45f6040b2d03)
+        ;
+
+        
+    
+    
+            circle_marker_d19f950945b2de804d53abb189a6105c.bindTooltip(
+                `<div>
+                     Parc Lofts (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3b9cf80e5f0d75e4525e7bae7084e7ef = L.circleMarker(
+                [33.46535, -112.2366183],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.461423991660043, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_d2115d899aeec342faa03154675bf6e0 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_81761782d5e3a490a15ba9a4fbf98c38 = $(`<div id="html_81761782d5e3a490a15ba9a4fbf98c38" style="width: 100.0%; height: 100.0%;"><b>The Crofton at Sheely Farms</b><br>Stabilized<br>167 units &middot; Q1 2023<br>Occ 95% &middot; Rent $1,607<br><span style='color:#888'>9200 W McDowell Rd 85037</span></div>`)[0];
+                popup_d2115d899aeec342faa03154675bf6e0.setContent(html_81761782d5e3a490a15ba9a4fbf98c38);
+            
+        
+
+        circle_marker_3b9cf80e5f0d75e4525e7bae7084e7ef.bindPopup(popup_d2115d899aeec342faa03154675bf6e0)
+        ;
+
+        
+    
+    
+            circle_marker_3b9cf80e5f0d75e4525e7bae7084e7ef.bindTooltip(
+                `<div>
+                     The Crofton at Sheely Farms (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cc574d384355b902ede8a3ca114fc9b4 = L.circleMarker(
+                [33.4716721, -112.3897106],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.38083151964686, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_269c0402f5f7b33082a51b8f310d28a2 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_5f14bdb19e70ac5f2835967c108c56fa = $(`<div id="html_5f14bdb19e70ac5f2835967c108c56fa" style="width: 100.0%; height: 100.0%;"><b>District at Civic Square</b><br>Stabilized<br>352 units &middot; Q1 2023<br>Occ 92% &middot; Rent $1,526<br><span style='color:#888'>15400 W Monte Vista Rd 85395</span></div>`)[0];
+                popup_269c0402f5f7b33082a51b8f310d28a2.setContent(html_5f14bdb19e70ac5f2835967c108c56fa);
+            
+        
+
+        circle_marker_cc574d384355b902ede8a3ca114fc9b4.bindPopup(popup_269c0402f5f7b33082a51b8f310d28a2)
+        ;
+
+        
+    
+    
+            circle_marker_cc574d384355b902ede8a3ca114fc9b4.bindTooltip(
+                `<div>
+                     District at Civic Square (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_032a1c9036a40c124a40c41f61b394a1 = L.circleMarker(
+                [33.4720343, -112.384751],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.514693182963201, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_3f5ec82684692a13d0cee8b5fe283997 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_2bcb05890223849d1ccf0bd4c4a7ec62 = $(`<div id="html_2bcb05890223849d1ccf0bd4c4a7ec62" style="width: 100.0%; height: 100.0%;"><b>BB Living at Civic Square</b><br>Stabilized<br>290 units &middot; Q1 2023<br>Occ 93% &middot; Rent $2,812<br><span style='color:#888'>15125 W Oak St 85395</span></div>`)[0];
+                popup_3f5ec82684692a13d0cee8b5fe283997.setContent(html_2bcb05890223849d1ccf0bd4c4a7ec62);
+            
+        
+
+        circle_marker_032a1c9036a40c124a40c41f61b394a1.bindPopup(popup_3f5ec82684692a13d0cee8b5fe283997)
+        ;
+
+        
+    
+    
+            circle_marker_032a1c9036a40c124a40c41f61b394a1.bindTooltip(
+                `<div>
+                     BB Living at Civic Square (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8c1961f41c8639b0e530d4ceaeb9b12e = L.circleMarker(
+                [33.43516003028793, -112.34817017615629],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.837397165588673, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_654eb5d4ec7bf97a6b23c2584e179fe3 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_f3882a9052650ba80979859f50a673d0 = $(`<div id="html_f3882a9052650ba80979859f50a673d0" style="width: 100.0%; height: 100.0%;"><b>Village at the BLVD</b><br>Stabilized<br>187 units &middot; Q1 2023<br>Occ 94% &middot; Rent $1,964<br><span style='color:#888'>11175 W Roosevelt Rd 85323</span></div>`)[0];
+                popup_654eb5d4ec7bf97a6b23c2584e179fe3.setContent(html_f3882a9052650ba80979859f50a673d0);
+            
+        
+
+        circle_marker_8c1961f41c8639b0e530d4ceaeb9b12e.bindPopup(popup_654eb5d4ec7bf97a6b23c2584e179fe3)
+        ;
+
+        
+    
+    
+            circle_marker_8c1961f41c8639b0e530d4ceaeb9b12e.bindTooltip(
+                `<div>
+                     Village at the BLVD (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b036fc1b3a0039fbd82f62947cc99a09 = L.circleMarker(
+                [33.4568298, -112.4169225],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.38083151964686, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_65cb66261f0774441aac1e66cd3495d9 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_ef17720e7e10e60928812ebdfa3b7ebf = $(`<div id="html_ef17720e7e10e60928812ebdfa3b7ebf" style="width: 100.0%; height: 100.0%;"><b>Acero Roosevelt</b><br>Stabilized<br>352 units &middot; Q1 2023<br>Occ 89% &middot; Rent $1,632<br><span style='color:#888'>15400 W Roosevelt St 85338</span></div>`)[0];
+                popup_65cb66261f0774441aac1e66cd3495d9.setContent(html_ef17720e7e10e60928812ebdfa3b7ebf);
+            
+        
+
+        circle_marker_b036fc1b3a0039fbd82f62947cc99a09.bindPopup(popup_65cb66261f0774441aac1e66cd3495d9)
+        ;
+
+        
+    
+    
+            circle_marker_b036fc1b3a0039fbd82f62947cc99a09.bindTooltip(
+                `<div>
+                     Acero Roosevelt (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_641092af38d60f1a1bd98ab4c20a18ec = L.circleMarker(
+                [33.4503286, -112.2704625],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.246211251235321, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_7162bc8a657b13f51d2c62782282e874 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_45c414fbe216d5c84a77161405f05bfb = $(`<div id="html_45c414fbe216d5c84a77161405f05bfb" style="width: 100.0%; height: 100.0%;"><b>Village at Paseo de Luces</b><br>Stabilized<br>272 units &middot; Q1 2023<br>Occ 93% &middot; Rent $1,820<br><span style='color:#888'>9802 W Van Buren St 85353</span></div>`)[0];
+                popup_7162bc8a657b13f51d2c62782282e874.setContent(html_45c414fbe216d5c84a77161405f05bfb);
+            
+        
+
+        circle_marker_641092af38d60f1a1bd98ab4c20a18ec.bindPopup(popup_7162bc8a657b13f51d2c62782282e874)
+        ;
+
+        
+    
+    
+            circle_marker_641092af38d60f1a1bd98ab4c20a18ec.bindTooltip(
+                `<div>
+                     Village at Paseo de Luces (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_83effb6471b81d8ce9f3c2f8e63e1915 = L.circleMarker(
+                [33.4500321, -112.3773867],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.16515138991168, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_d08cc386e2cc47f6506d976a0b8ec4a9 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_3c2c9975ea5a86ec00dbd1d399373db5 = $(`<div id="html_3c2c9975ea5a86ec00dbd1d399373db5" style="width: 100.0%; height: 100.0%;"><b>Cabana Bullard</b><br>Stabilized<br>336 units &middot; Q1 2023<br>Occ 95% &middot; Rent $1,335<br><span style='color:#888'>14780 W Van Buren St 85338</span></div>`)[0];
+                popup_d08cc386e2cc47f6506d976a0b8ec4a9.setContent(html_3c2c9975ea5a86ec00dbd1d399373db5);
+            
+        
+
+        circle_marker_83effb6471b81d8ce9f3c2f8e63e1915.bindPopup(popup_d08cc386e2cc47f6506d976a0b8ec4a9)
+        ;
+
+        
+    
+    
+            circle_marker_83effb6471b81d8ce9f3c2f8e63e1915.bindTooltip(
+                `<div>
+                     Cabana Bullard (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_33ff54e846bd92a3fa7d44e477ee51fc = L.circleMarker(
+                [33.4764671, -112.334764],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.07444578254611, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_21895545857fa7254efe66c7eba344ba = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_fc7980e5f9c68ba17d5e9821d5144621 = $(`<div id="html_fc7980e5f9c68ba17d5e9821d5144621" style="width: 100.0%; height: 100.0%;"><b>Ironwood Homes at River Run</b><br>Stabilized<br>103 units &middot; Q1 2023<br>Occ 89% &middot; Rent $2,523<br><span style='color:#888'>11901 W Windsor Ave 85392</span></div>`)[0];
+                popup_21895545857fa7254efe66c7eba344ba.setContent(html_fc7980e5f9c68ba17d5e9821d5144621);
+            
+        
+
+        circle_marker_33ff54e846bd92a3fa7d44e477ee51fc.bindPopup(popup_21895545857fa7254efe66c7eba344ba)
+        ;
+
+        
+    
+    
+            circle_marker_33ff54e846bd92a3fa7d44e477ee51fc.bindTooltip(
+                `<div>
+                     Ironwood Homes at River Run (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4e83dfa00a197ebe4aa68bee4c46124c = L.circleMarker(
+                [33.5404232, -112.2551557],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.803408430829505, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_8caf23f3ac5f3b179bd3f1d0164da04e = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_87e7df06f6b0ddbda97f077566922687 = $(`<div id="html_87e7df06f6b0ddbda97f077566922687" style="width: 100.0%; height: 100.0%;"><b>Cuvee Apartments</b><br>Stabilized<br>310 units &middot; Q1 2023<br>Occ 93% &middot; Rent —<br><span style='color:#888'>7200 N 91st Ave 85305</span></div>`)[0];
+                popup_8caf23f3ac5f3b179bd3f1d0164da04e.setContent(html_87e7df06f6b0ddbda97f077566922687);
+            
+        
+
+        circle_marker_4e83dfa00a197ebe4aa68bee4c46124c.bindPopup(popup_8caf23f3ac5f3b179bd3f1d0164da04e)
+        ;
+
+        
+    
+    
+            circle_marker_4e83dfa00a197ebe4aa68bee4c46124c.bindTooltip(
+                `<div>
+                     Cuvee Apartments (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1304597eefedcd39cec9e0b1e9b4edb5 = L.circleMarker(
+                [33.4761708, -112.339719],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.07444578254611, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_8a6f33e685d51180f2a3cea9d07186e2 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_425b0f376c669b169c63561ac7d4bb2e = $(`<div id="html_425b0f376c669b169c63561ac7d4bb2e" style="width: 100.0%; height: 100.0%;"><b>Ironwood at River Run</b><br>Stabilized<br>103 units &middot; Q2 2024<br>Occ 96% &middot; Rent —<br><span style='color:#888'>11951 W Windsor Ave 85392</span></div>`)[0];
+                popup_8a6f33e685d51180f2a3cea9d07186e2.setContent(html_425b0f376c669b169c63561ac7d4bb2e);
+            
+        
+
+        circle_marker_1304597eefedcd39cec9e0b1e9b4edb5.bindPopup(popup_8a6f33e685d51180f2a3cea9d07186e2)
+        ;
+
+        
+    
+    
+            circle_marker_1304597eefedcd39cec9e0b1e9b4edb5.bindTooltip(
+                `<div>
+                     Ironwood at River Run (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_98d006685a2918b74ee05f1e435ada60 = L.circleMarker(
+                [33.4560037, -112.2680353],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.800735254367723, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_47a9a366e7a52d75b2a28825be1919e0 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_279597abd485a72471be8a6cd4394161 = $(`<div id="html_279597abd485a72471be8a6cd4394161" style="width: 100.0%; height: 100.0%;"><b>Moderne at Roosevelt</b><br>Leasing Up<br>185 units &middot; Q2 2024<br>Occ 89% &middot; Rent $1,900<br><span style='color:#888'>805 N 97th Ave 85353</span></div>`)[0];
+                popup_47a9a366e7a52d75b2a28825be1919e0.setContent(html_279597abd485a72471be8a6cd4394161);
+            
+        
+
+        circle_marker_98d006685a2918b74ee05f1e435ada60.bindPopup(popup_47a9a366e7a52d75b2a28825be1919e0)
+        ;
+
+        
+    
+    
+            circle_marker_98d006685a2918b74ee05f1e435ada60.bindTooltip(
+                `<div>
+                     Moderne at Roosevelt (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d22be199a988a75bf0d62ac2c6d6bf99 = L.circleMarker(
+                [33.482703, -112.2680341],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.98212002188447, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_d027bfb2208bdec2bae19856edcb6f77 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_8c0f8e97b76ee32bfe78bf23d00c9a00 = $(`<div id="html_8c0f8e97b76ee32bfe78bf23d00c9a00" style="width: 100.0%; height: 100.0%;"><b>Avilla Western Garden</b><br>Leasing Up<br>195 units &middot; Q2 2026<br>Occ 45% &middot; Rent $1,829<br><span style='color:#888'>4041 N 97th Ave 85037</span></div>`)[0];
+                popup_d027bfb2208bdec2bae19856edcb6f77.setContent(html_8c0f8e97b76ee32bfe78bf23d00c9a00);
+            
+        
+
+        circle_marker_d22be199a988a75bf0d62ac2c6d6bf99.bindPopup(popup_d027bfb2208bdec2bae19856edcb6f77)
+        ;
+
+        
+    
+    
+            circle_marker_d22be199a988a75bf0d62ac2c6d6bf99.bindTooltip(
+                `<div>
+                     Avilla Western Garden (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c6ff72957152afa78613b54e910ad140 = L.circleMarker(
+                [33.5056111, -112.2724941],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.038404810405297, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_189cda6a62d3258b2968667d56aa0111 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_3340a6e9c70a3b68de86ac85c2fcf337 = $(`<div id="html_3340a6e9c70a3b68de86ac85c2fcf337" style="width: 100.0%; height: 100.0%;"><b>Meritum Sheely Farms</b><br>Leasing Up<br>680 units &middot; Q4 2024<br>Occ 80% &middot; Rent $1,680<br><span style='color:#888'>2121 N 99th Ave 85037</span></div>`)[0];
+                popup_189cda6a62d3258b2968667d56aa0111.setContent(html_3340a6e9c70a3b68de86ac85c2fcf337);
+            
+        
+
+        circle_marker_c6ff72957152afa78613b54e910ad140.bindPopup(popup_189cda6a62d3258b2968667d56aa0111)
+        ;
+
+        
+    
+    
+            circle_marker_c6ff72957152afa78613b54e910ad140.bindTooltip(
+                `<div>
+                     Meritum Sheely Farms (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_47f5e146addbbf19e22b98694fb3e850 = L.circleMarker(
+                [33.4999314, -112.2718027],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15.024968827881711, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_9f2fd7451641197e298520763a97bee5 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_dc7dbb29a325883e3097a3f3eeca8835 = $(`<div id="html_dc7dbb29a325883e3097a3f3eeca8835" style="width: 100.0%; height: 100.0%;"><b>Alta 99th</b><br>Leasing Up<br>402 units &middot; Q1 2024<br>Occ 86% &middot; Rent $1,542<br><span style='color:#888'>4411 N 99th Ave 85037</span></div>`)[0];
+                popup_9f2fd7451641197e298520763a97bee5.setContent(html_dc7dbb29a325883e3097a3f3eeca8835);
+            
+        
+
+        circle_marker_47f5e146addbbf19e22b98694fb3e850.bindPopup(popup_9f2fd7451641197e298520763a97bee5)
+        ;
+
+        
+    
+    
+            circle_marker_47f5e146addbbf19e22b98694fb3e850.bindTooltip(
+                `<div>
+                     Alta 99th (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9607087b0d8aa6377ab1ec646a1cbc5b = L.circleMarker(
+                [33.4946065, -112.2850488],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.567764362830022, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_339095ccf0ad7b0260159a88c866d558 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_ad714c25d25f1bd85a75d43c5720ee34 = $(`<div id="html_ad714c25d25f1bd85a75d43c5720ee34" style="width: 100.0%; height: 100.0%;"><b>Canopy at the Trails</b><br>Leasing Up<br>124 units &middot; Q2 2024<br>Occ 88% &middot; Rent $2,183<br><span style='color:#888'>4141 N 104th Dr 85037</span></div>`)[0];
+                popup_339095ccf0ad7b0260159a88c866d558.setContent(html_ad714c25d25f1bd85a75d43c5720ee34);
+            
+        
+
+        circle_marker_9607087b0d8aa6377ab1ec646a1cbc5b.bindPopup(popup_339095ccf0ad7b0260159a88c866d558)
+        ;
+
+        
+    
+    
+            circle_marker_9607087b0d8aa6377ab1ec646a1cbc5b.bindTooltip(
+                `<div>
+                     Canopy at the Trails (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_19651a134b793595f520f7e06296dca7 = L.circleMarker(
+                [33.4581507, -112.3886526],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.1478150704935, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_73803d83a30f9e955bf65c01d1296a97 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_91eefdc676a2992d208e23968f1f283c = $(`<div id="html_91eefdc676a2992d208e23968f1f283c" style="width: 100.0%; height: 100.0%;"><b>Liberty at Estrella Falls</b><br>Leasing Up<br>106 units &middot; Q2 2026<br>Occ 6% &middot; Rent $2,966<br><span style='color:#888'>2505 N 153rd Dr 85395</span></div>`)[0];
+                popup_73803d83a30f9e955bf65c01d1296a97.setContent(html_91eefdc676a2992d208e23968f1f283c);
+            
+        
+
+        circle_marker_19651a134b793595f520f7e06296dca7.bindPopup(popup_73803d83a30f9e955bf65c01d1296a97)
+        ;
+
+        
+    
+    
+            circle_marker_19651a134b793595f520f7e06296dca7.bindTooltip(
+                `<div>
+                     Liberty at Estrella Falls (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_43bbad21076eb781c1625503c9c842c1 = L.circleMarker(
+                [33.5359483, -112.3302972],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.636809247747852, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_329491de6af1818d1e658acc14a68ab4 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_57d573316fea32e40f839d01a0079132 = $(`<div id="html_57d573316fea32e40f839d01a0079132" style="width: 100.0%; height: 100.0%;"><b>Pradera Estates</b><br>Leasing Up<br>86 units &middot; Q3 2025<br>Occ 90% &middot; Rent $2,474<br><span style='color:#888'>12616 W Adair Dr 85307</span></div>`)[0];
+                popup_329491de6af1818d1e658acc14a68ab4.setContent(html_57d573316fea32e40f839d01a0079132);
+            
+        
+
+        circle_marker_43bbad21076eb781c1625503c9c842c1.bindPopup(popup_329491de6af1818d1e658acc14a68ab4)
+        ;
+
+        
+    
+    
+            circle_marker_43bbad21076eb781c1625503c9c842c1.bindTooltip(
+                `<div>
+                     Pradera Estates (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_dbe2270a73190c26039d0052d3129284 = L.circleMarker(
+                [33.4695222, -112.3067125],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.582575694955839, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_bc829b339337ca8c3a462ca61aea717b = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_27ecea69a7bafc8299e594c898901701 = $(`<div id="html_27ecea69a7bafc8299e594c898901701" style="width: 100.0%; height: 100.0%;"><b>Rev3 Encanto West</b><br>Leasing Up<br>84 units &middot; Q3 2025<br>Occ 52% &middot; Rent $2,319<br><span style='color:#888'>2150 N Avondale Blvd 85392</span></div>`)[0];
+                popup_bc829b339337ca8c3a462ca61aea717b.setContent(html_27ecea69a7bafc8299e594c898901701);
+            
+        
+
+        circle_marker_dbe2270a73190c26039d0052d3129284.bindPopup(popup_bc829b339337ca8c3a462ca61aea717b)
+        ;
+
+        
+    
+    
+            circle_marker_dbe2270a73190c26039d0052d3129284.bindTooltip(
+                `<div>
+                     Rev3 Encanto West (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ca3f8cbd555c5a15c7dd9ba5638b8fb3 = L.circleMarker(
+                [33.5074214, -112.3352711],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.18465843842649, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_fe57fc12879991cd283856f15ec382ad = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_fb443dcb67f21b1a529741848b52cfac = $(`<div id="html_fb443dcb67f21b1a529741848b52cfac" style="width: 100.0%; height: 100.0%;"><b>Villas Litchfield Park</b><br>Leasing Up<br>153 units &middot; Q3 2025<br>Occ 81% &middot; Rent $1,913<br><span style='color:#888'>12730 W Camelback Rd 85340</span></div>`)[0];
+                popup_fe57fc12879991cd283856f15ec382ad.setContent(html_fb443dcb67f21b1a529741848b52cfac);
+            
+        
+
+        circle_marker_ca3f8cbd555c5a15c7dd9ba5638b8fb3.bindPopup(popup_fe57fc12879991cd283856f15ec382ad)
+        ;
+
+        
+    
+    
+            circle_marker_ca3f8cbd555c5a15c7dd9ba5638b8fb3.bindTooltip(
+                `<div>
+                     Villas Litchfield Park (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ef2f9cc97f68af88f3cb5a96a65b9bd0 = L.circleMarker(
+                [33.53811573508767, -112.31077512097355],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.0, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_23f0c7a7add5d4eb03a305ad338566f8 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_7428b4fd521b6409044214c348a38a7f = $(`<div id="html_7428b4fd521b6409044214c348a38a7f" style="width: 100.0%; height: 100.0%;"><b>Agave Ranch</b><br>Leasing Up<br>324 units &middot; Q2 2025<br>Occ 80% &middot; Rent $1,747<br><span style='color:#888'>10060 W Desert Blvd 85307</span></div>`)[0];
+                popup_23f0c7a7add5d4eb03a305ad338566f8.setContent(html_7428b4fd521b6409044214c348a38a7f);
+            
+        
+
+        circle_marker_ef2f9cc97f68af88f3cb5a96a65b9bd0.bindPopup(popup_23f0c7a7add5d4eb03a305ad338566f8)
+        ;
+
+        
+    
+    
+            circle_marker_ef2f9cc97f68af88f3cb5a96a65b9bd0.bindTooltip(
+                `<div>
+                     Agave Ranch (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fa1f880a4cf148b2d38285d37fea4d6a = L.circleMarker(
+                [33.4718604, -112.2740325],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15.087120500916008, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_c2173fe9063853f408e8ab87b9835500 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_9ad1990f502216ffea00689b5fba4bff = $(`<div id="html_9ad1990f502216ffea00689b5fba4bff" style="width: 100.0%; height: 100.0%;"><b>Radia Avondale Station</b><br>Leasing Up<br>407 units &middot; Q1 2024<br>Occ 62% &middot; Rent $1,743<br><span style='color:#888'>9975 W Encanto Blvd 85392</span></div>`)[0];
+                popup_c2173fe9063853f408e8ab87b9835500.setContent(html_9ad1990f502216ffea00689b5fba4bff);
+            
+        
+
+        circle_marker_fa1f880a4cf148b2d38285d37fea4d6a.bindPopup(popup_c2173fe9063853f408e8ab87b9835500)
+        ;
+
+        
+    
+    
+            circle_marker_fa1f880a4cf148b2d38285d37fea4d6a.bindTooltip(
+                `<div>
+                     Radia Avondale Station (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_24172145b574e9dbee0434c6e1b76083 = L.circleMarker(
+                [33.4720228, -112.2741541],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.408326913195985, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_16e2603ecd8ffd9267ad32d2c05957a8 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_7b2048bb97d14147684c79e3c125708f = $(`<div id="html_7b2048bb97d14147684c79e3c125708f" style="width: 100.0%; height: 100.0%;"><b>Rev3 at Avondale Station</b><br>Leasing Up<br>117 units &middot; Q2 2026<br>Occ 27% &middot; Rent $2,537<br><span style='color:#888'>9980 W Encanto Blvd 85392</span></div>`)[0];
+                popup_16e2603ecd8ffd9267ad32d2c05957a8.setContent(html_7b2048bb97d14147684c79e3c125708f);
+            
+        
+
+        circle_marker_24172145b574e9dbee0434c6e1b76083.bindPopup(popup_16e2603ecd8ffd9267ad32d2c05957a8)
+        ;
+
+        
+    
+    
+            circle_marker_24172145b574e9dbee0434c6e1b76083.bindTooltip(
+                `<div>
+                     Rev3 at Avondale Station (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7af5cbd4c8f2e0abb7585759f3d39380 = L.circleMarker(
+                [33.4728222, -112.3807113],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.246621004453464, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_3ae8cfd475ab1256a4a2d4c8f5564688 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_06f72e65893e8a19e9bcf7897a223a01 = $(`<div id="html_06f72e65893e8a19e9bcf7897a223a01" style="width: 100.0%; height: 100.0%;"><b>Alta Goodyear</b><br>Leasing Up<br>342 units &middot; Q2 2025<br>Occ 79% &middot; Rent $1,638<br><span style='color:#888'>14965 W Encanto Blvd 85395</span></div>`)[0];
+                popup_3ae8cfd475ab1256a4a2d4c8f5564688.setContent(html_06f72e65893e8a19e9bcf7897a223a01);
+            
+        
+
+        circle_marker_7af5cbd4c8f2e0abb7585759f3d39380.bindPopup(popup_3ae8cfd475ab1256a4a2d4c8f5564688)
+        ;
+
+        
+    
+    
+            circle_marker_7af5cbd4c8f2e0abb7585759f3d39380.bindTooltip(
+                `<div>
+                     Alta Goodyear (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4fbebc7dc852096ac080b834db616d2f = L.circleMarker(
+                [33.4518586, -112.2995625],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.486832980505138, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_9ccf3c1898e03f73fc600eec2daef338 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_6f8762ee95ca0151036f210d46fe9fd4 = $(`<div id="html_6f8762ee95ca0151036f210d46fe9fd4" style="width: 100.0%; height: 100.0%;"><b>Flatz 623</b><br>Leasing Up<br>360 units &middot; Q2 2026<br>Occ 13% &middot; Rent $1,411<br><span style='color:#888'>11850 W Fillmore St 85323</span></div>`)[0];
+                popup_9ccf3c1898e03f73fc600eec2daef338.setContent(html_6f8762ee95ca0151036f210d46fe9fd4);
+            
+        
+
+        circle_marker_4fbebc7dc852096ac080b834db616d2f.bindPopup(popup_9ccf3c1898e03f73fc600eec2daef338)
+        ;
+
+        
+    
+    
+            circle_marker_4fbebc7dc852096ac080b834db616d2f.bindTooltip(
+                `<div>
+                     Flatz 623 (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d346eb8e5025193ab3ebd1f4e0fc873c = L.circleMarker(
+                [33.5141194, -112.2530148],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.035623639735144, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_4c4df6187d1df961b1c3f7fc94831853 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_7fbd8f930ef88ad5a8683fca18b6b0bd = $(`<div id="html_7fbd8f930ef88ad5a8683fca18b6b0bd" style="width: 100.0%; height: 100.0%;"><b>Cardinal 95</b><br>Leasing Up<br>198 units &middot; Q2 2024<br>Occ 88% &middot; Rent $1,691<br><span style='color:#888'>9600 W Georgia Ave 85305</span></div>`)[0];
+                popup_4c4df6187d1df961b1c3f7fc94831853.setContent(html_7fbd8f930ef88ad5a8683fca18b6b0bd);
+            
+        
+
+        circle_marker_d346eb8e5025193ab3ebd1f4e0fc873c.bindPopup(popup_4c4df6187d1df961b1c3f7fc94831853)
+        ;
+
+        
+    
+    
+            circle_marker_d346eb8e5025193ab3ebd1f4e0fc873c.bindTooltip(
+                `<div>
+                     Cardinal 95 (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_744ad8dbbdda6e88eb0e0d3a19a7cf6d = L.circleMarker(
+                [33.5363798, -112.2933261],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.461423991660043, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_3e5549bd6e3934779b3ee46bc34757d9 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_a7745b5c4fe2dbd3d01e50d6353c5f5b = $(`<div id="html_a7745b5c4fe2dbd3d01e50d6353c5f5b" style="width: 100.0%; height: 100.0%;"><b>Village at Skyline Ranch</b><br>Leasing Up<br>167 units &middot; Q2 2025<br>Occ 40% &middot; Rent $1,773<br><span style='color:#888'>13215 W Glendale Ave 85307</span></div>`)[0];
+                popup_3e5549bd6e3934779b3ee46bc34757d9.setContent(html_a7745b5c4fe2dbd3d01e50d6353c5f5b);
+            
+        
+
+        circle_marker_744ad8dbbdda6e88eb0e0d3a19a7cf6d.bindPopup(popup_3e5549bd6e3934779b3ee46bc34757d9)
+        ;
+
+        
+    
+    
+            circle_marker_744ad8dbbdda6e88eb0e0d3a19a7cf6d.bindTooltip(
+                `<div>
+                     Village at Skyline Ranch (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ae858272120d67b7a10de825f34b2c7e = L.circleMarker(
+                [33.4932749, -112.3344777],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15.392304845413264, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_81ccf5cba74ab031e587cce3959a19f6 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_6718b21c33d381c28233fa7c589f9577 = $(`<div id="html_6718b21c33d381c28233fa7c589f9577" style="width: 100.0%; height: 100.0%;"><b>Broadstone Ascend</b><br>Leasing Up<br>432 units &middot; Q4 2025<br>Occ 88% &middot; Rent $1,506<br><span style='color:#888'>12905 W Indian School Rd 85392</span></div>`)[0];
+                popup_81ccf5cba74ab031e587cce3959a19f6.setContent(html_6718b21c33d381c28233fa7c589f9577);
+            
+        
+
+        circle_marker_ae858272120d67b7a10de825f34b2c7e.bindPopup(popup_81ccf5cba74ab031e587cce3959a19f6)
+        ;
+
+        
+    
+    
+            circle_marker_ae858272120d67b7a10de825f34b2c7e.bindTooltip(
+                `<div>
+                     Broadstone Ascend (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_41b80b2c555b7a6e9baf245a709acd66 = L.circleMarker(
+                [33.4641483, -112.3093986],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.0, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_af7c35d0843dc83b3c49b208646c1b8a = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_41b1432b84707efc0f69b217e02b2f44 = $(`<div id="html_41b1432b84707efc0f69b217e02b2f44" style="width: 100.0%; height: 100.0%;"><b>Avondale Commons</b><br>Leasing Up<br>324 units &middot; Q2 2025<br>Occ 37% &middot; Rent $1,632<br><span style='color:#888'>11650 W McDowell Rd 85392</span></div>`)[0];
+                popup_af7c35d0843dc83b3c49b208646c1b8a.setContent(html_41b1432b84707efc0f69b217e02b2f44);
+            
+        
+
+        circle_marker_41b80b2c555b7a6e9baf245a709acd66.bindPopup(popup_af7c35d0843dc83b3c49b208646c1b8a)
+        ;
+
+        
+    
+    
+            circle_marker_41b80b2c555b7a6e9baf245a709acd66.bindTooltip(
+                `<div>
+                     Avondale Commons (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1c39ce6a9603c1213c0825efd53b8e97 = L.circleMarker(
+                [33.5193469, -112.2741868],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.0156097709407, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_e58ec473b023bca4c99a1aaf0b18561b = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_9a6cd38079dc30cc94705b59f4336164 = $(`<div id="html_9a6cd38079dc30cc94705b59f4336164" style="width: 100.0%; height: 100.0%;"><b>Cabana Aldea</b><br>Leasing Up<br>257 units &middot; Q2 2025<br>Occ 74% &middot; Rent $1,330<br><span style='color:#888'>9910 W Montebello Ave 85307</span></div>`)[0];
+                popup_e58ec473b023bca4c99a1aaf0b18561b.setContent(html_9a6cd38079dc30cc94705b59f4336164);
+            
+        
+
+        circle_marker_1c39ce6a9603c1213c0825efd53b8e97.bindPopup(popup_e58ec473b023bca4c99a1aaf0b18561b)
+        ;
+
+        
+    
+    
+            circle_marker_1c39ce6a9603c1213c0825efd53b8e97.bindTooltip(
+                `<div>
+                     Cabana Aldea (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b71e9d4697f513cc26040614a94b87da = L.circleMarker(
+                [33.4523654, -112.3210205],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.888194417315589, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_b93463e4c3ef4587aeb3a3fa0891b891 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_189785c2ee9e56095f0a7662d2d3e10e = $(`<div id="html_189785c2ee9e56095f0a7662d2d3e10e" style="width: 100.0%; height: 100.0%;"><b>Livano Avondale</b><br>Leasing Up<br>316 units &middot; Q2 2024<br>Occ 83% &middot; Rent $1,663<br><span style='color:#888'>11575 W Roosevelt St 85323</span></div>`)[0];
+                popup_b93463e4c3ef4587aeb3a3fa0891b891.setContent(html_189785c2ee9e56095f0a7662d2d3e10e);
+            
+        
+
+        circle_marker_b71e9d4697f513cc26040614a94b87da.bindPopup(popup_b93463e4c3ef4587aeb3a3fa0891b891)
+        ;
+
+        
+    
+    
+            circle_marker_b71e9d4697f513cc26040614a94b87da.bindTooltip(
+                `<div>
+                     Livano Avondale (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_000c0184ad536d132f2812bf97837cf9 = L.circleMarker(
+                [33.4787027, -112.3389945],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.183300132670379, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_ff78bb90fbaf0bffd8b5c3f140b89a07 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_e5a137afc2db95792f85cabd6f5fbeb8 = $(`<div id="html_e5a137afc2db95792f85cabd6f5fbeb8" style="width: 100.0%; height: 100.0%;"><b>Avalon Townhomes</b><br>Leasing Up<br>70 units &middot; Q3 2025<br>Occ 86% &middot; Rent $2,325<br><span style='color:#888'>13025 W Thomas Rd 85392</span></div>`)[0];
+                popup_ff78bb90fbaf0bffd8b5c3f140b89a07.setContent(html_e5a137afc2db95792f85cabd6f5fbeb8);
+            
+        
+
+        circle_marker_000c0184ad536d132f2812bf97837cf9.bindPopup(popup_ff78bb90fbaf0bffd8b5c3f140b89a07)
+        ;
+
+        
+    
+    
+            circle_marker_000c0184ad536d132f2812bf97837cf9.bindTooltip(
+                `<div>
+                     Avalon Townhomes (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_67e165a94d07f7b751ad4140ab228ed4 = L.circleMarker(
+                [33.4501602, -112.2710378],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.9791303715507, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_169ba74e1ddfbd3ee6373019ecfb5dd2 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_5627d4aaa7edb2b7feed85ce1f344e47 = $(`<div id="html_5627d4aaa7edb2b7feed85ce1f344e47" style="width: 100.0%; height: 100.0%;"><b>Villas on Van Buren</b><br>Leasing Up<br>143 units &middot; Q3 2025<br>Occ 50% &middot; Rent $2,085<br><span style='color:#888'>9835 W Van Buren St 85353</span></div>`)[0];
+                popup_169ba74e1ddfbd3ee6373019ecfb5dd2.setContent(html_5627d4aaa7edb2b7feed85ce1f344e47);
+            
+        
+
+        circle_marker_67e165a94d07f7b751ad4140ab228ed4.bindPopup(popup_169ba74e1ddfbd3ee6373019ecfb5dd2)
+        ;
+
+        
+    
+    
+            circle_marker_67e165a94d07f7b751ad4140ab228ed4.bindTooltip(
+                `<div>
+                     Villas on Van Buren (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_48a06950f3d76425b0c110f693a34f42 = L.circleMarker(
+                [33.4496315, -112.30673],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.486832980505138, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_81952430572fa986a9268eada0fd20fd = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_dac759d2b5ed70a16fca0f2dff35e2d7 = $(`<div id="html_dac759d2b5ed70a16fca0f2dff35e2d7" style="width: 100.0%; height: 100.0%;"><b>Alta Avondale</b><br>Leasing Up<br>360 units &middot; Q2 2024<br>Occ 78% &middot; Rent $1,610<br><span style='color:#888'>11330 W Van Buren St 85323</span></div>`)[0];
+                popup_81952430572fa986a9268eada0fd20fd.setContent(html_dac759d2b5ed70a16fca0f2dff35e2d7);
+            
+        
+
+        circle_marker_48a06950f3d76425b0c110f693a34f42.bindPopup(popup_81952430572fa986a9268eada0fd20fd)
+        ;
+
+        
+    
+    
+            circle_marker_48a06950f3d76425b0c110f693a34f42.bindTooltip(
+                `<div>
+                     Alta Avondale (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b020dede1f46595c5be892f77562f4ed = L.circleMarker(
+                [33.4494743, -112.3260027],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.455767262643882, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_fafaf15b274d43bb6adf985cc66621db = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_2966ac195a611e5dfe56a0c08e279d42 = $(`<div id="html_2966ac195a611e5dfe56a0c08e279d42" style="width: 100.0%; height: 100.0%;"><b>Stately Avondale</b><br>Leasing Up<br>286 units &middot; Q2 2026<br>Occ 30% &middot; Rent $1,728<br><span style='color:#888'>12375 W Van Buren St 85323</span></div>`)[0];
+                popup_fafaf15b274d43bb6adf985cc66621db.setContent(html_2966ac195a611e5dfe56a0c08e279d42);
+            
+        
+
+        circle_marker_b020dede1f46595c5be892f77562f4ed.bindPopup(popup_fafaf15b274d43bb6adf985cc66621db)
+        ;
+
+        
+    
+    
+            circle_marker_b020dede1f46595c5be892f77562f4ed.bindTooltip(
+                `<div>
+                     Stately Avondale (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d8e881ef0a96480e7b866fbb04a5658b = L.circleMarker(
+                [33.4498661, -112.3770961],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.760707733967616, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_12a06ca8c5fda20b61f6a33aeecc7187 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_f504237712e0ba8a62c1d61da4621937 = $(`<div id="html_f504237712e0ba8a62c1d61da4621937" style="width: 100.0%; height: 100.0%;"><b>The Douglas</b><br>Leasing Up<br>307 units &middot; Q2 2025<br>Occ 58% &middot; Rent $2,076<br><span style='color:#888'>14935 W Van Buren St 85338</span></div>`)[0];
+                popup_12a06ca8c5fda20b61f6a33aeecc7187.setContent(html_f504237712e0ba8a62c1d61da4621937);
+            
+        
+
+        circle_marker_d8e881ef0a96480e7b866fbb04a5658b.bindPopup(popup_12a06ca8c5fda20b61f6a33aeecc7187)
+        ;
+
+        
+    
+    
+            circle_marker_d8e881ef0a96480e7b866fbb04a5658b.bindTooltip(
+                `<div>
+                     The Douglas (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_33a6e1ad9e61e3bcb213a9386cbf1a1a = L.circleMarker(
+                [33.532533, -112.2571831],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.774964387392123, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_56fa080fef5f5c431256c2ffb7a93cba = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_ceb4ba2a5dba3f8e956e6a5e54144373 = $(`<div id="html_ceb4ba2a5dba3f8e956e6a5e54144373" style="width: 100.0%; height: 100.0%;"><b>Broadstone Westgate</b><br>Leasing Up<br>308 units &middot; Q2 2025<br>Occ 89% &middot; Rent —<br><span style='color:#888'>6851 N 93RD Ave 85305</span></div>`)[0];
+                popup_56fa080fef5f5c431256c2ffb7a93cba.setContent(html_ceb4ba2a5dba3f8e956e6a5e54144373);
+            
+        
+
+        circle_marker_33a6e1ad9e61e3bcb213a9386cbf1a1a.bindPopup(popup_56fa080fef5f5c431256c2ffb7a93cba)
+        ;
+
+        
+    
+    
+            circle_marker_33a6e1ad9e61e3bcb213a9386cbf1a1a.bindTooltip(
+                `<div>
+                     Broadstone Westgate (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c009de578149b9ae66020b4004d86b16 = L.circleMarker(
+                [33.5486326, -112.2724296],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.648529270389178, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_54e9539673e0e995e539aecd3f764a38 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_eb119385642421fd390d1019cec59845 = $(`<div id="html_eb119385642421fd390d1019cec59845" style="width: 100.0%; height: 100.0%;"><b>Somerset Upscale Apartments</b><br>Leasing Up<br>234 units &middot; Q2 2025<br>Occ 26% &middot; Rent —<br><span style='color:#888'>7811 N 99th Ave 85305</span></div>`)[0];
+                popup_54e9539673e0e995e539aecd3f764a38.setContent(html_eb119385642421fd390d1019cec59845);
+            
+        
+
+        circle_marker_c009de578149b9ae66020b4004d86b16.bindPopup(popup_54e9539673e0e995e539aecd3f764a38)
+        ;
+
+        
+    
+    
+            circle_marker_c009de578149b9ae66020b4004d86b16.bindTooltip(
+                `<div>
+                     Somerset Upscale Apartments (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9a49fe055b7ccab0bc94c55471f17ca4 = L.circleMarker(
+                [33.533422, -112.2724323],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF8C00", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.396427811873332, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_b3d9a994836b0240d0182aa24e74320b = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_3c02f222c55f05727005fbeee89c63d8 = $(`<div id="html_3c02f222c55f05727005fbeee89c63d8" style="width: 100.0%; height: 100.0%;"><b>Streamliner Aldea</b><br>Leasing Up<br>282 units &middot; Q2 2025<br>Occ 84% &middot; Rent —<br><span style='color:#888'>5900 N 99th Ave 85307</span></div>`)[0];
+                popup_b3d9a994836b0240d0182aa24e74320b.setContent(html_3c02f222c55f05727005fbeee89c63d8);
+            
+        
+
+        circle_marker_9a49fe055b7ccab0bc94c55471f17ca4.bindPopup(popup_b3d9a994836b0240d0182aa24e74320b)
+        ;
+
+        
+    
+    
+            circle_marker_9a49fe055b7ccab0bc94c55471f17ca4.bindTooltip(
+                `<div>
+                     Streamliner Aldea (Leasing Up)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fbb21bbf38f6519de8b626844b6df328 = L.circleMarker(
+                [33.5232727, -112.2901397],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.958236433584458, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_31b45b8c015e1b5833fbc2c9d97911c3 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_513557b1bba2a992dcc9a70bf95e7bda = $(`<div id="html_513557b1bba2a992dcc9a70bf95e7bda" style="width: 100.0%; height: 100.0%;"><b>FUZE Ballpark</b><br>Under Construction<br>321 units &middot; Q3 2026<br>Occ — &middot; Rent —<br><span style='color:#888'>6255 N Ball Park Blvd 85307</span></div>`)[0];
+                popup_31b45b8c015e1b5833fbc2c9d97911c3.setContent(html_513557b1bba2a992dcc9a70bf95e7bda);
+            
+        
+
+        circle_marker_fbb21bbf38f6519de8b626844b6df328.bindPopup(popup_31b45b8c015e1b5833fbc2c9d97911c3)
+        ;
+
+        
+    
+    
+            circle_marker_fbb21bbf38f6519de8b626844b6df328.bindTooltip(
+                `<div>
+                     FUZE Ballpark (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_acc602d1c0633fe791308e2da24ee791 = L.circleMarker(
+                [33.4936404, -112.3418503],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.70087712549569, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_bfad1cb22dba27b1383cb61f5fa7a982 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_619f0bd4f225d69682f0cf18ab5178c0 = $(`<div id="html_619f0bd4f225d69682f0cf18ab5178c0" style="width: 100.0%; height: 100.0%;"><b>Zen @ Angelina</b><br>Under Construction<br>130 units &middot; Q2 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>956 Castillo Dr S 85340</span></div>`)[0];
+                popup_bfad1cb22dba27b1383cb61f5fa7a982.setContent(html_619f0bd4f225d69682f0cf18ab5178c0);
+            
+        
+
+        circle_marker_acc602d1c0633fe791308e2da24ee791.bindPopup(popup_bfad1cb22dba27b1383cb61f5fa7a982)
+        ;
+
+        
+    
+    
+            circle_marker_acc602d1c0633fe791308e2da24ee791.bindTooltip(
+                `<div>
+                     Zen @ Angelina (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a35f48e6629eb6fb41010c1d5d53301c = L.circleMarker(
+                [33.4941066, -112.2579272],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.093207028119323, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_04773b413055ff1a331c981d79828b6c = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_362ef04204148b00a38cd7aab3a147e3 = $(`<div id="html_362ef04204148b00a38cd7aab3a147e3" style="width: 100.0%; height: 100.0%;"><b>Yardly Algodon</b><br>Under Construction<br>262 units &middot; Q4 2027<br>Occ — &middot; Rent $1,781<br><span style='color:#888'>9225 W Indian School Rd 85037</span></div>`)[0];
+                popup_04773b413055ff1a331c981d79828b6c.setContent(html_362ef04204148b00a38cd7aab3a147e3);
+            
+        
+
+        circle_marker_a35f48e6629eb6fb41010c1d5d53301c.bindPopup(popup_04773b413055ff1a331c981d79828b6c)
+        ;
+
+        
+    
+    
+            circle_marker_a35f48e6629eb6fb41010c1d5d53301c.bindTooltip(
+                `<div>
+                     Yardly Algodon (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_745a74c1bb4ba35f3cc2bc37bbdd12f8 = L.circleMarker(
+                [33.4932088, -112.3349357],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.590169943749475, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_f96a351ec0015fca9e89a3400cab9edb = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_e41ffedc31713e7fec967b575789e33a = $(`<div id="html_e41ffedc31713e7fec967b575789e33a" style="width: 100.0%; height: 100.0%;"><b>HARMON Ascend</b><br>Under Construction<br>125 units &middot; Q1 2027<br>Occ — &middot; Rent $2,788<br><span style='color:#888'>12805 W Indian School Rd 85392</span></div>`)[0];
+                popup_f96a351ec0015fca9e89a3400cab9edb.setContent(html_e41ffedc31713e7fec967b575789e33a);
+            
+        
+
+        circle_marker_745a74c1bb4ba35f3cc2bc37bbdd12f8.bindPopup(popup_f96a351ec0015fca9e89a3400cab9edb)
+        ;
+
+        
+    
+    
+            circle_marker_745a74c1bb4ba35f3cc2bc37bbdd12f8.bindTooltip(
+                `<div>
+                     HARMON Ascend (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ffdd96e77049541426d89a0833cbed0e = L.circleMarker(
+                [33.4496427, -112.3180786],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.984359711335657, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_5c9ec3ea3f6d899e1a9568829bbffbb0 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_beda4937ceea67021082b3a0f8e6adba = $(`<div id="html_beda4937ceea67021082b3a0f8e6adba" style="width: 100.0%; height: 100.0%;"><b>Cerro Vista</b><br>Under Construction<br>255 units &middot; Q4 2027<br>Occ — &middot; Rent —<br><span style='color:#888'>12116 W Van Buren St 85323</span></div>`)[0];
+                popup_5c9ec3ea3f6d899e1a9568829bbffbb0.setContent(html_beda4937ceea67021082b3a0f8e6adba);
+            
+        
+
+        circle_marker_ffdd96e77049541426d89a0833cbed0e.bindPopup(popup_5c9ec3ea3f6d899e1a9568829bbffbb0)
+        ;
+
+        
+    
+    
+            circle_marker_ffdd96e77049541426d89a0833cbed0e.bindTooltip(
+                `<div>
+                     Cerro Vista (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1e137d13e9aaac93c4e95df1931e92ca = L.circleMarker(
+                [33.4357552, -112.2643393],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.48528137423857, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_c94b6b26265fba7c6095b6cc361135ec = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_2f441c3c49ff78b34b732099d75653cf = $(`<div id="html_2f441c3c49ff78b34b732099d75653cf" style="width: 100.0%; height: 100.0%;"><b>Pointe Grand Estrella at Phoenix</b><br>Under Construction<br>288 units &middot; Q2 2027<br>Occ — &middot; Rent $1,650<br><span style='color:#888'>10649 W Buckeye Rd 85353</span></div>`)[0];
+                popup_c94b6b26265fba7c6095b6cc361135ec.setContent(html_2f441c3c49ff78b34b732099d75653cf);
+            
+        
+
+        circle_marker_1e137d13e9aaac93c4e95df1931e92ca.bindPopup(popup_c94b6b26265fba7c6095b6cc361135ec)
+        ;
+
+        
+    
+    
+            circle_marker_1e137d13e9aaac93c4e95df1931e92ca.bindTooltip(
+                `<div>
+                     Pointe Grand Estrella at Phoenix (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f6c0f59bac933a390fae901478bca6d5 = L.circleMarker(
+                [33.4518586, -112.2995625],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.486832980505138, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_332a07b14bcf83529e1fe8c7aba6db49 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_53133ea8075a37c61cce9164ffe74805 = $(`<div id="html_53133ea8075a37c61cce9164ffe74805" style="width: 100.0%; height: 100.0%;"><b>Flatz623</b><br>Under Construction<br>360 units &middot; Q3 2026<br>Occ — &middot; Rent —<br><span style='color:#888'>11850 W Fillmore St 85323</span></div>`)[0];
+                popup_332a07b14bcf83529e1fe8c7aba6db49.setContent(html_53133ea8075a37c61cce9164ffe74805);
+            
+        
+
+        circle_marker_f6c0f59bac933a390fae901478bca6d5.bindPopup(popup_332a07b14bcf83529e1fe8c7aba6db49)
+        ;
+
+        
+    
+    
+            circle_marker_f6c0f59bac933a390fae901478bca6d5.bindTooltip(
+                `<div>
+                     Flatz623 (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fa99b8b5802d4a0e0c1b4f2a363b1252 = L.circleMarker(
+                [33.5462057, -112.3241442],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.0, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_22f89edb855d53de509fd8dc13e217d5 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_771b5177f1ad246883243f897f5bf691 = $(`<div id="html_771b5177f1ad246883243f897f5bf691" style="width: 100.0%; height: 100.0%;"><b>Marbella Ranch East I</b><br>Under Construction<br>144 units &middot; Q2 2027<br>Occ — &middot; Rent —<br><span style='color:#888'>7725 El Mirage Rd 85307</span></div>`)[0];
+                popup_22f89edb855d53de509fd8dc13e217d5.setContent(html_771b5177f1ad246883243f897f5bf691);
+            
+        
+
+        circle_marker_fa99b8b5802d4a0e0c1b4f2a363b1252.bindPopup(popup_22f89edb855d53de509fd8dc13e217d5)
+        ;
+
+        
+    
+    
+            circle_marker_fa99b8b5802d4a0e0c1b4f2a363b1252.bindTooltip(
+                `<div>
+                     Marbella Ranch East I (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_328d79938eda785b44aa6ab0861e6293 = L.circleMarker(
+                [33.5498327, -112.2898275],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.301162633521313, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_f902ff6c276d3db1e839c0b0735c8662 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_19a8cdd1486eef1d6ca35fa85a773aaf = $(`<div id="html_19a8cdd1486eef1d6ca35fa85a773aaf" style="width: 100.0%; height: 100.0%;"><b>Villages at Northern</b><br>Under Construction<br>74 units &middot; Q2 2027<br>Occ — &middot; Rent —<br><span style='color:#888'>7910 N 107th Ave 85307</span></div>`)[0];
+                popup_f902ff6c276d3db1e839c0b0735c8662.setContent(html_19a8cdd1486eef1d6ca35fa85a773aaf);
+            
+        
+
+        circle_marker_328d79938eda785b44aa6ab0861e6293.bindPopup(popup_f902ff6c276d3db1e839c0b0735c8662)
+        ;
+
+        
+    
+    
+            circle_marker_328d79938eda785b44aa6ab0861e6293.bindTooltip(
+                `<div>
+                     Villages at Northern (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_333c246f7facd06d41f1b8c525d34b9d = L.circleMarker(
+                [33.4500899, -112.4191587],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.427827300200523, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_c25ba4aed6af4e5d56ae04c21930b89c = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_755ea5b15f7ba3321a0d214cf7e3920e = $(`<div id="html_755ea5b15f7ba3321a0d214cf7e3920e" style="width: 100.0%; height: 100.0%;"><b>Prosper 47</b><br>Under Construction<br>47 units &middot; Q2 2027<br>Occ — &middot; Rent —<br><span style='color:#888'>13426 W Van Buren St 85338</span></div>`)[0];
+                popup_c25ba4aed6af4e5d56ae04c21930b89c.setContent(html_755ea5b15f7ba3321a0d214cf7e3920e);
+            
+        
+
+        circle_marker_333c246f7facd06d41f1b8c525d34b9d.bindPopup(popup_c25ba4aed6af4e5d56ae04c21930b89c)
+        ;
+
+        
+    
+    
+            circle_marker_333c246f7facd06d41f1b8c525d34b9d.bindTooltip(
+                `<div>
+                     Prosper 47 (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d526924753e802b17c1ca9fc1b5140d2 = L.circleMarker(
+                [33.5430135, -112.2567233],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.674675786448736, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_3852e8d7cac9d2fac5548bfc47a3683a = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_83965c1ae3344237eb041137d5d228a1 = $(`<div id="html_83965c1ae3344237eb041137d5d228a1" style="width: 100.0%; height: 100.0%;"><b>Zanjero III</b><br>Under Construction<br>301 units &middot; Q2 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>7151 N Zanjero Blvd 85305</span></div>`)[0];
+                popup_3852e8d7cac9d2fac5548bfc47a3683a.setContent(html_83965c1ae3344237eb041137d5d228a1);
+            
+        
+
+        circle_marker_d526924753e802b17c1ca9fc1b5140d2.bindPopup(popup_3852e8d7cac9d2fac5548bfc47a3683a)
+        ;
+
+        
+    
+    
+            circle_marker_d526924753e802b17c1ca9fc1b5140d2.bindTooltip(
+                `<div>
+                     Zanjero III (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f89df255e9b0aa1fb9ace6b927fb9160 = L.circleMarker(
+                [33.5471649, -112.2897947],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.301162633521313, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_049e33317246c7641cd83ea088f928fd = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_abd60f414a0d3bb693aa93c64c5126ef = $(`<div id="html_abd60f414a0d3bb693aa93c64c5126ef" style="width: 100.0%; height: 100.0%;"><b>Northern 107</b><br>Proposed<br>74 units &middot; Q4 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>N 107th Ave 85307</span></div>`)[0];
+                popup_049e33317246c7641cd83ea088f928fd.setContent(html_abd60f414a0d3bb693aa93c64c5126ef);
+            
+        
+
+        circle_marker_f89df255e9b0aa1fb9ace6b927fb9160.bindPopup(popup_049e33317246c7641cd83ea088f928fd)
+        ;
+
+        
+    
+    
+            circle_marker_f89df255e9b0aa1fb9ace6b927fb9160.bindTooltip(
+                `<div>
+                     Northern 107 (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_42177c4236fceba122a158d9772e42a6 = L.circleMarker(
+                [33.4438824, -112.2723124],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.986100377805714, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_28c0c2b89043fb9a195620601bbee105 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_9cc63ddd8a042b35607e5862df8f43e4 = $(`<div id="html_9cc63ddd8a042b35607e5862df8f43e4" style="width: 100.0%; height: 100.0%;"><b>The Waverly</b><br>Proposed<br>323 units &middot; Q3 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>391 S 99th Ave 85353</span></div>`)[0];
+                popup_28c0c2b89043fb9a195620601bbee105.setContent(html_9cc63ddd8a042b35607e5862df8f43e4);
+            
+        
+
+        circle_marker_42177c4236fceba122a158d9772e42a6.bindPopup(popup_28c0c2b89043fb9a195620601bbee105)
+        ;
+
+        
+    
+    
+            circle_marker_42177c4236fceba122a158d9772e42a6.bindTooltip(
+                `<div>
+                     The Waverly (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_322bf1b0bf5a3f7bb824299fff5b258f = L.circleMarker(
+                [33.4492237, -112.392618],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.426149773176359, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_b5fe539916755c0e1145dca8c40b4576 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_85e6cfe5bb601e54d949e410b2a55df1 = $(`<div id="html_85e6cfe5bb601e54d949e410b2a55df1" style="width: 100.0%; height: 100.0%;"><b>The Statler at Estrella Parkway</b><br>Proposed<br>284 units &middot; Q3 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>240 N Estrella Pky 85338</span></div>`)[0];
+                popup_b5fe539916755c0e1145dca8c40b4576.setContent(html_85e6cfe5bb601e54d949e410b2a55df1);
+            
+        
+
+        circle_marker_322bf1b0bf5a3f7bb824299fff5b258f.bindPopup(popup_b5fe539916755c0e1145dca8c40b4576)
+        ;
+
+        
+    
+    
+            circle_marker_322bf1b0bf5a3f7bb824299fff5b258f.bindTooltip(
+                `<div>
+                     The Statler at Estrella Parkway (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_04526291d0f26f5ba0508c514b0186f1 = L.circleMarker(
+                [33.4569516, -112.3051736],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.660254037844387, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_3de9fa9a9b3075f9ee46c44b13254a9d = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_be23287b68f30842be26f658c4b5b653 = $(`<div id="html_be23287b68f30842be26f658c4b5b653" style="width: 100.0%; height: 100.0%;"><b>Encore Avondale</b><br>Proposed<br>300 units &middot; Q3 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>11295 W Roosevelt St 85323</span></div>`)[0];
+                popup_3de9fa9a9b3075f9ee46c44b13254a9d.setContent(html_be23287b68f30842be26f658c4b5b653);
+            
+        
+
+        circle_marker_04526291d0f26f5ba0508c514b0186f1.bindPopup(popup_3de9fa9a9b3075f9ee46c44b13254a9d)
+        ;
+
+        
+    
+    
+            circle_marker_04526291d0f26f5ba0508c514b0186f1.bindTooltip(
+                `<div>
+                     Encore Avondale (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_286ac274478d54f1cd84a89a91d32d6d = L.circleMarker(
+                [33.4564352, -112.3963747],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.315072906367325, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_c30919fef3af5a48196b3584c1518458 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_4cab190f2ade4321fd7b45d64662bff5 = $(`<div id="html_4cab190f2ade4321fd7b45d64662bff5" style="width: 100.0%; height: 100.0%;"><b>Ascent Goodyear</b><br>Proposed<br>113 units &middot; Q3 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>15681 W Roosevelt St 85338</span></div>`)[0];
+                popup_c30919fef3af5a48196b3584c1518458.setContent(html_4cab190f2ade4321fd7b45d64662bff5);
+            
+        
+
+        circle_marker_286ac274478d54f1cd84a89a91d32d6d.bindPopup(popup_c30919fef3af5a48196b3584c1518458)
+        ;
+
+        
+    
+    
+            circle_marker_286ac274478d54f1cd84a89a91d32d6d.bindTooltip(
+                `<div>
+                     Ascent Goodyear (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fa512a66b4cc8e8f08333128242e9d8e = L.circleMarker(
+                [33.490637500040556, -112.24261713987757],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.557438524302, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_9a7200f93b8ffcec304f4e4423a551c1 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_ce925dc73224b54d0429db5df99913d5 = $(`<div id="html_ce925dc73224b54d0429db5df99913d5" style="width: 100.0%; height: 100.0%;"><b>District 99</b><br>Proposed<br>172 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>N 99th Ave & W McDowell Rd 85037</span></div>`)[0];
+                popup_9a7200f93b8ffcec304f4e4423a551c1.setContent(html_ce925dc73224b54d0429db5df99913d5);
+            
+        
+
+        circle_marker_fa512a66b4cc8e8f08333128242e9d8e.bindPopup(popup_9a7200f93b8ffcec304f4e4423a551c1)
+        ;
+
+        
+    
+    
+            circle_marker_fa512a66b4cc8e8f08333128242e9d8e.bindTooltip(
+                `<div>
+                     District 99 (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5f7d63753ceca307f961aabef36d3c3a = L.circleMarker(
+                [33.47953438226027, -112.30517990998602],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.12414379544733, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_69110f695da858c0af3fc1013d281959 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_da5ee3704c24951e4e2ad359b7cb6d4a = $(`<div id="html_da5ee3704c24951e4e2ad359b7cb6d4a" style="width: 100.0%; height: 100.0%;"><b>Liv Avondale</b><br>Proposed<br>333 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>W Indian School Rd & N 99th Ave 85392</span></div>`)[0];
+                popup_69110f695da858c0af3fc1013d281959.setContent(html_da5ee3704c24951e4e2ad359b7cb6d4a);
+            
+        
+
+        circle_marker_5f7d63753ceca307f961aabef36d3c3a.bindPopup(popup_69110f695da858c0af3fc1013d281959)
+        ;
+
+        
+    
+    
+            circle_marker_5f7d63753ceca307f961aabef36d3c3a.bindTooltip(
+                `<div>
+                     Liv Avondale (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c3f8ef60c086443c3d5fa2f5565e9737 = L.circleMarker(
+                [33.4481563, -112.3709228],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.703447592764606, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_64a654ca575d994074af10036ec5923c = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_3dd6ff64f9b1819b4736be941996de4e = $(`<div id="html_3dd6ff64f9b1819b4736be941996de4e" style="width: 100.0%; height: 100.0%;"><b>Sanctuair at Centerscape</b><br>Proposed<br>303 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>1450 N 145th Ave 85395</span></div>`)[0];
+                popup_64a654ca575d994074af10036ec5923c.setContent(html_3dd6ff64f9b1819b4736be941996de4e);
+            
+        
+
+        circle_marker_c3f8ef60c086443c3d5fa2f5565e9737.bindPopup(popup_64a654ca575d994074af10036ec5923c)
+        ;
+
+        
+    
+    
+            circle_marker_c3f8ef60c086443c3d5fa2f5565e9737.bindTooltip(
+                `<div>
+                     Sanctuair at Centerscape (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_52106f37ed0c39b388dd13793f43572a = L.circleMarker(
+                [33.513586966833614, -112.4123422080493],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.280109889280517, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_a75c972c80f0fef8794b0fd9e0230f2f = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_3a6cd60dcad5bbe9eeae61616afa0c57 = $(`<div id="html_3a6cd60dcad5bbe9eeae61616afa0c57" style="width: 100.0%; height: 100.0%;"><b>Cornerstone at the Wigwam</b><br>Proposed<br>212 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>Litchfield Rd & Wigwam Blvd 85340</span></div>`)[0];
+                popup_a75c972c80f0fef8794b0fd9e0230f2f.setContent(html_3a6cd60dcad5bbe9eeae61616afa0c57);
+            
+        
+
+        circle_marker_52106f37ed0c39b388dd13793f43572a.bindPopup(popup_a75c972c80f0fef8794b0fd9e0230f2f)
+        ;
+
+        
+    
+    
+            circle_marker_52106f37ed0c39b388dd13793f43572a.bindTooltip(
+                `<div>
+                     Cornerstone at the Wigwam (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_560f432223c5419455e5d5e96516248e = L.circleMarker(
+                [33.43296606155922, -112.34755132474942],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_b245998bd51137b67c11639a975f48c2 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_741fd076c281b6132869e57d7918a484 = $(`<div id="html_741fd076c281b6132869e57d7918a484" style="width: 100.0%; height: 100.0%;"><b>The BLVD Residential District</b><br>Proposed<br>0 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>W Roosevelt St & W Hilton Way 85323</span></div>`)[0];
+                popup_b245998bd51137b67c11639a975f48c2.setContent(html_741fd076c281b6132869e57d7918a484);
+            
+        
+
+        circle_marker_560f432223c5419455e5d5e96516248e.bindPopup(popup_b245998bd51137b67c11639a975f48c2)
+        ;
+
+        
+    
+    
+            circle_marker_560f432223c5419455e5d5e96516248e.bindTooltip(
+                `<div>
+                     The BLVD Residential District (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f69e0742b03149be1d656d407bcf1a69 = L.circleMarker(
+                [33.4470365, -112.3469607],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.06225774829855, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_9fa3a894ee6f85c835d1dff66bd3fd96 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_2aec0335f8668ab7074989785828b469 = $(`<div id="html_2aec0335f8668ab7074989785828b469" style="width: 100.0%; height: 100.0%;"><b>Crystal Cove</b><br>Proposed<br>260 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>290 E La Canada Blvd 85323</span></div>`)[0];
+                popup_9fa3a894ee6f85c835d1dff66bd3fd96.setContent(html_2aec0335f8668ab7074989785828b469);
+            
+        
+
+        circle_marker_f69e0742b03149be1d656d407bcf1a69.bindPopup(popup_9fa3a894ee6f85c835d1dff66bd3fd96)
+        ;
+
+        
+    
+    
+            circle_marker_f69e0742b03149be1d656d407bcf1a69.bindTooltip(
+                `<div>
+                     Crystal Cove (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b25253b623a0b8e8d7c270898fe583e1 = L.circleMarker(
+                [33.432960769888645, -112.34361703771208],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_24408e8b45b1267d3a9c99204b63ce34 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_9631c415ca9f8f4e8945a98164f780cc = $(`<div id="html_9631c415ca9f8f4e8945a98164f780cc" style="width: 100.0%; height: 100.0%;"><b>The BLVD Park Avenue District</b><br>Proposed<br>0 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>N Avondale Blvd & W Van Buren St 85323</span></div>`)[0];
+                popup_24408e8b45b1267d3a9c99204b63ce34.setContent(html_9631c415ca9f8f4e8945a98164f780cc);
+            
+        
+
+        circle_marker_b25253b623a0b8e8d7c270898fe583e1.bindPopup(popup_24408e8b45b1267d3a9c99204b63ce34)
+        ;
+
+        
+    
+    
+            circle_marker_b25253b623a0b8e8d7c270898fe583e1.bindTooltip(
+                `<div>
+                     The BLVD Park Avenue District (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9b7abb073754541b2e85aa494a4a0046 = L.circleMarker(
+                [33.4960162, -112.2724726],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.860022573334675, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_5293aebcc62486688482c9dce38e0ce1 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_682b3f3bd5118adbfa4c25ac9c20fd49 = $(`<div id="html_682b3f3bd5118adbfa4c25ac9c20fd49" style="width: 100.0%; height: 100.0%;"><b>Western Garden II</b><br>Proposed<br>314 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>3301 N 99th Ave 85037</span></div>`)[0];
+                popup_5293aebcc62486688482c9dce38e0ce1.setContent(html_682b3f3bd5118adbfa4c25ac9c20fd49);
+            
+        
+
+        circle_marker_9b7abb073754541b2e85aa494a4a0046.bindPopup(popup_5293aebcc62486688482c9dce38e0ce1)
+        ;
+
+        
+    
+    
+            circle_marker_9b7abb073754541b2e85aa494a4a0046.bindTooltip(
+                `<div>
+                     Western Garden II (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9511e95443c7fa26f17cb56108d09e80 = L.circleMarker(
+                [33.435464, -112.3029726],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.154753215150045, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_8e6e272875697481ea724f5a95e4e896 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_b0209af3ae611703cf4c4f0801983bf3 = $(`<div id="html_b0209af3ae611703cf4c4f0801983bf3" style="width: 100.0%; height: 100.0%;"><b>Tavalo at Avondale</b><br>Proposed<br>266 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>12451 W Buckeye Rd 85323</span></div>`)[0];
+                popup_8e6e272875697481ea724f5a95e4e896.setContent(html_b0209af3ae611703cf4c4f0801983bf3);
+            
+        
+
+        circle_marker_9511e95443c7fa26f17cb56108d09e80.bindPopup(popup_8e6e272875697481ea724f5a95e4e896)
+        ;
+
+        
+    
+    
+            circle_marker_9511e95443c7fa26f17cb56108d09e80.bindTooltip(
+                `<div>
+                     Tavalo at Avondale (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e4c43834362b090983a3435d90971ba6 = L.circleMarker(
+                [33.477438678045715, -112.39898969681389],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_a4650cbbee935b42b68dfe36841a5c35 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_1b4236000d76a432af4e3eb5bc09ef9a = $(`<div id="html_1b4236000d76a432af4e3eb5bc09ef9a" style="width: 100.0%; height: 100.0%;"><b>Globe Land Investors Development</b><br>Proposed<br>0 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>N Bullard Ave & W McDowell Rd 85395</span></div>`)[0];
+                popup_a4650cbbee935b42b68dfe36841a5c35.setContent(html_1b4236000d76a432af4e3eb5bc09ef9a);
+            
+        
+
+        circle_marker_e4c43834362b090983a3435d90971ba6.bindPopup(popup_a4650cbbee935b42b68dfe36841a5c35)
+        ;
+
+        
+    
+    
+            circle_marker_e4c43834362b090983a3435d90971ba6.bindTooltip(
+                `<div>
+                     Globe Land Investors Development (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_dc7629154dd64336377df3935cc3c052 = L.circleMarker(
+                [33.529317, -112.2724999],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_110346864c2ec8d93a800ad5537b2049 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_b4b17fe3e73f52d400ab365c1b074925 = $(`<div id="html_b4b17fe3e73f52d400ab365c1b074925" style="width: 100.0%; height: 100.0%;"><b>Ball Park</b><br>Proposed<br>0 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>6450 N 99th Ave 85305</span></div>`)[0];
+                popup_110346864c2ec8d93a800ad5537b2049.setContent(html_b4b17fe3e73f52d400ab365c1b074925);
+            
+        
+
+        circle_marker_dc7629154dd64336377df3935cc3c052.bindPopup(popup_110346864c2ec8d93a800ad5537b2049)
+        ;
+
+        
+    
+    
+            circle_marker_dc7629154dd64336377df3935cc3c052.bindTooltip(
+                `<div>
+                     Ball Park (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_348f784f0525f9e737a871ea9d3bde8c = L.circleMarker(
+                [33.52959231105754, -112.25017455180297],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15.931605554537724, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_0102148eef05c411d5062aa34a7fe404 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_0f6c9fae1b4933a067cf13540f1a9f14 = $(`<div id="html_0f6c9fae1b4933a067cf13540f1a9f14" style="width: 100.0%; height: 100.0%;"><b>Urban 95 Parcel B</b><br>Proposed<br>478 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>N 95th Ave & W Georgia Ave 85305</span></div>`)[0];
+                popup_0102148eef05c411d5062aa34a7fe404.setContent(html_0f6c9fae1b4933a067cf13540f1a9f14);
+            
+        
+
+        circle_marker_348f784f0525f9e737a871ea9d3bde8c.bindPopup(popup_0102148eef05c411d5062aa34a7fe404)
+        ;
+
+        
+    
+    
+            circle_marker_348f784f0525f9e737a871ea9d3bde8c.bindTooltip(
+                `<div>
+                     Urban 95 Parcel B (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_04156daf0088de4cf2a255375cc64414 = L.circleMarker(
+                [33.5347744, -112.254971],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.797958971132712, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_e754ff850a4a1afc895c137335f2b119 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_7cd34ed26f000188c9f0930e5a59e514 = $(`<div id="html_7cd34ed26f000188c9f0930e5a59e514" style="width: 100.0%; height: 100.0%;"><b>The District at Westgate</b><br>Proposed<br>384 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>6801 N 91st Ave 85305</span></div>`)[0];
+                popup_e754ff850a4a1afc895c137335f2b119.setContent(html_7cd34ed26f000188c9f0930e5a59e514);
+            
+        
+
+        circle_marker_04156daf0088de4cf2a255375cc64414.bindPopup(popup_e754ff850a4a1afc895c137335f2b119)
+        ;
+
+        
+    
+    
+            circle_marker_04156daf0088de4cf2a255375cc64414.bindTooltip(
+                `<div>
+                     The District at Westgate (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_11824b188f64c861ca8a093a7ce17e9a = L.circleMarker(
+                [33.5150727, -112.2718535],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_821be09a4976340f98bf374d2f025686 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_ac1809cd3425fd31d2bd38a90722f4b6 = $(`<div id="html_ac1809cd3425fd31d2bd38a90722f4b6" style="width: 100.0%; height: 100.0%;"><b>Vision 2 Parcel A</b><br>Proposed<br>0 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>W Glendale Ave & N 99th Ave 85305</span></div>`)[0];
+                popup_821be09a4976340f98bf374d2f025686.setContent(html_ac1809cd3425fd31d2bd38a90722f4b6);
+            
+        
+
+        circle_marker_11824b188f64c861ca8a093a7ce17e9a.bindPopup(popup_821be09a4976340f98bf374d2f025686)
+        ;
+
+        
+    
+    
+            circle_marker_11824b188f64c861ca8a093a7ce17e9a.bindTooltip(
+                `<div>
+                     Vision 2 Parcel A (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_51705a247a52fc5ae78cd740d5e5ca28 = L.circleMarker(
+                [33.5066807, -112.2724986],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.94427190999916, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_69b882b600879ea4092374265319d23a = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_2f166ead2df800c6b6f5ac58b58cbf7b = $(`<div id="html_2f166ead2df800c6b6f5ac58b58cbf7b" style="width: 100.0%; height: 100.0%;"><b>Anton Glendale</b><br>Proposed<br>320 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>5149 & 5205 N 99th Ave 85305</span></div>`)[0];
+                popup_69b882b600879ea4092374265319d23a.setContent(html_2f166ead2df800c6b6f5ac58b58cbf7b);
+            
+        
+
+        circle_marker_51705a247a52fc5ae78cd740d5e5ca28.bindPopup(popup_69b882b600879ea4092374265319d23a)
+        ;
+
+        
+    
+    
+            circle_marker_51705a247a52fc5ae78cd740d5e5ca28.bindTooltip(
+                `<div>
+                     Anton Glendale (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_892692d2834e7de68b17dcca3e227c57 = L.circleMarker(
+                [33.4290551946406, -112.33928589041744],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.602325267042627, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_e8bb56e1deafb7914ac5755c50b4720c = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_b9570a1a4fc520252e9d01c2cc5058f0 = $(`<div id="html_b9570a1a4fc520252e9d01c2cc5058f0" style="width: 100.0%; height: 100.0%;"><b>Banyan Avondale</b><br>Proposed<br>296 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>Dysart Rd & E Madison St 85323</span></div>`)[0];
+                popup_e8bb56e1deafb7914ac5755c50b4720c.setContent(html_b9570a1a4fc520252e9d01c2cc5058f0);
+            
+        
+
+        circle_marker_892692d2834e7de68b17dcca3e227c57.bindPopup(popup_e8bb56e1deafb7914ac5755c50b4720c)
+        ;
+
+        
+    
+    
+            circle_marker_892692d2834e7de68b17dcca3e227c57.bindTooltip(
+                `<div>
+                     Banyan Avondale (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d3cc607625a3234080d73bedebe9839f = L.circleMarker(
+                [33.4304434, -112.3583471],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15.124228365658293, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_e8b10afd4230024fc718574777551314 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_925a2844618ed8cf5f455a5175326ea7 = $(`<div id="html_925a2844618ed8cf5f455a5175326ea7" style="width: 100.0%; height: 100.0%;"><b>Celebration Plaza Parcel B</b><br>Proposed<br>410 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>844 Litchfield Rd 85338</span></div>`)[0];
+                popup_e8b10afd4230024fc718574777551314.setContent(html_925a2844618ed8cf5f455a5175326ea7);
+            
+        
+
+        circle_marker_d3cc607625a3234080d73bedebe9839f.bindPopup(popup_e8b10afd4230024fc718574777551314)
+        ;
+
+        
+    
+    
+            circle_marker_d3cc607625a3234080d73bedebe9839f.bindTooltip(
+                `<div>
+                     Celebration Plaza Parcel B (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e3f3249ab493e859a56d7769ce6a876a = L.circleMarker(
+                [33.533386825748735, -112.250675],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.0, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_40faf5a3949834386f6340929e65367d = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_6bd51313db5d6b073a9c3b3434ed3c18 = $(`<div id="html_6bd51313db5d6b073a9c3b3434ed3c18" style="width: 100.0%; height: 100.0%;"><b>Urban 95 Parcel A</b><br>Proposed<br>324 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>W Georgia Ave & N 95th Ave 85305</span></div>`)[0];
+                popup_40faf5a3949834386f6340929e65367d.setContent(html_6bd51313db5d6b073a9c3b3434ed3c18);
+            
+        
+
+        circle_marker_e3f3249ab493e859a56d7769ce6a876a.bindPopup(popup_40faf5a3949834386f6340929e65367d)
+        ;
+
+        
+    
+    
+            circle_marker_e3f3249ab493e859a56d7769ce6a876a.bindTooltip(
+                `<div>
+                     Urban 95 Parcel A (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ffc04e80f085dd28339af30226e3fcc2 = L.circleMarker(
+                [33.52869497786448, -112.24837192169653],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 16.18033988749895, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_9f7ac2d0b1b504b61e9766dc934c5118 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_c324b654376463350ea494ee85267ef9 = $(`<div id="html_c324b654376463350ea494ee85267ef9" style="width: 100.0%; height: 100.0%;"><b>Urban 95 Parcel C</b><br>Proposed<br>500 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>W Georgia Ave & N 95th Ave 85305</span></div>`)[0];
+                popup_9f7ac2d0b1b504b61e9766dc934c5118.setContent(html_c324b654376463350ea494ee85267ef9);
+            
+        
+
+        circle_marker_ffc04e80f085dd28339af30226e3fcc2.bindPopup(popup_9f7ac2d0b1b504b61e9766dc934c5118)
+        ;
+
+        
+    
+    
+            circle_marker_ffc04e80f085dd28339af30226e3fcc2.bindTooltip(
+                `<div>
+                     Urban 95 Parcel C (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1b63659cd2e1233cd58e5d1702d02258 = L.circleMarker(
+                [33.4502748, -112.2592993],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_f16daa14ba2d51712a3df56028fe5066 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_082887bce09c1592dc3b12e5f801d468 = $(`<div id="html_082887bce09c1592dc3b12e5f801d468" style="width: 100.0%; height: 100.0%;"><b>Firststreet Verde</b><br>Proposed<br>0 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>9275 W Van Buren St 85353</span></div>`)[0];
+                popup_f16daa14ba2d51712a3df56028fe5066.setContent(html_082887bce09c1592dc3b12e5f801d468);
+            
+        
+
+        circle_marker_1b63659cd2e1233cd58e5d1702d02258.bindPopup(popup_f16daa14ba2d51712a3df56028fe5066)
+        ;
+
+        
+    
+    
+            circle_marker_1b63659cd2e1233cd58e5d1702d02258.bindTooltip(
+                `<div>
+                     Firststreet Verde (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_239d986660a42389131f43442a3af8d3 = L.circleMarker(
+                [33.48149967233584, -112.30784144244534],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.280109889280517, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_53ec4c7a6666c0d77b68c09937b0b0f6 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_49f79aa4a495f5a2f58cadc84f356c46 = $(`<div id="html_49f79aa4a495f5a2f58cadc84f356c46" style="width: 100.0%; height: 100.0%;"><b>Radia Avondale Station III</b><br>Proposed<br>212 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>W Encanto Blvd & N 99th Ave 85392</span></div>`)[0];
+                popup_53ec4c7a6666c0d77b68c09937b0b0f6.setContent(html_49f79aa4a495f5a2f58cadc84f356c46);
+            
+        
+
+        circle_marker_239d986660a42389131f43442a3af8d3.bindPopup(popup_53ec4c7a6666c0d77b68c09937b0b0f6)
+        ;
+
+        
+    
+    
+            circle_marker_239d986660a42389131f43442a3af8d3.bindTooltip(
+                `<div>
+                     Radia Avondale Station III (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b9d7281b29f028fa35b988893650c625 = L.circleMarker(
+                [33.42871635883029, -112.34282975650753],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.52936105461599, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_ce0efee4d61ec25e63623845129f5e23 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_75ddb269951b75afb5fc224491028d55 = $(`<div id="html_75ddb269951b75afb5fc224491028d55" style="width: 100.0%; height: 100.0%;"><b>Rosilian Villas</b><br>Proposed<br>291 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>N Dysart Rd & E Van Buren St 85323</span></div>`)[0];
+                popup_ce0efee4d61ec25e63623845129f5e23.setContent(html_75ddb269951b75afb5fc224491028d55);
+            
+        
+
+        circle_marker_b9d7281b29f028fa35b988893650c625.bindPopup(popup_ce0efee4d61ec25e63623845129f5e23)
+        ;
+
+        
+    
+    
+            circle_marker_b9d7281b29f028fa35b988893650c625.bindTooltip(
+                `<div>
+                     Rosilian Villas (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_38b3f7024f061087804c7f1ee0dce00b = L.circleMarker(
+                [33.47697507085011, -112.39260312448201],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_2d89fa8c0128428325f36de9a66b76c8 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_a608899448ca582c42db28651533e8e5 = $(`<div id="html_a608899448ca582c42db28651533e8e5" style="width: 100.0%; height: 100.0%;"><b>Goodyear Civic Square at Estrella Falls</b><br>Proposed<br>0 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>W Monte Vista & N 150th Dr 85395</span></div>`)[0];
+                popup_2d89fa8c0128428325f36de9a66b76c8.setContent(html_a608899448ca582c42db28651533e8e5);
+            
+        
+
+        circle_marker_38b3f7024f061087804c7f1ee0dce00b.bindPopup(popup_2d89fa8c0128428325f36de9a66b76c8)
+        ;
+
+        
+    
+    
+            circle_marker_38b3f7024f061087804c7f1ee0dce00b.bindTooltip(
+                `<div>
+                     Goodyear Civic Square at Estrella Falls (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d52b6dfdcc05401b83ebf6b9606eafcb = L.circleMarker(
+                [33.435748430142404, -112.2790144408433],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_6b1d605399b398af09232d53a9a77708 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_c16c3d28fedcfdb00e560b46571f9f7d = $(`<div id="html_c16c3d28fedcfdb00e560b46571f9f7d" style="width: 100.0%; height: 100.0%;"><b>I-10 Innovation Center II</b><br>Proposed<br>0 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>N 91st Ave & W Roosevelt St 85353</span></div>`)[0];
+                popup_6b1d605399b398af09232d53a9a77708.setContent(html_c16c3d28fedcfdb00e560b46571f9f7d);
+            
+        
+
+        circle_marker_d52b6dfdcc05401b83ebf6b9606eafcb.bindPopup(popup_6b1d605399b398af09232d53a9a77708)
+        ;
+
+        
+    
+    
+            circle_marker_d52b6dfdcc05401b83ebf6b9606eafcb.bindTooltip(
+                `<div>
+                     I-10 Innovation Center II (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_01a38870c6c26496fd22339e18b735fc = L.circleMarker(
+                [33.47426776757057, -112.31048181240067],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.18535277187245, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_bb7dfd1ade14442c36682c79fa65ff97 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_e31841ebcfb66989488a0c7aa35b1e48 = $(`<div id="html_e31841ebcfb66989488a0c7aa35b1e48" style="width: 100.0%; height: 100.0%;"><b>Orion Avondale</b><br>Proposed<br>268 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>W McDowell Rd & Avondale Blvd 85392</span></div>`)[0];
+                popup_bb7dfd1ade14442c36682c79fa65ff97.setContent(html_e31841ebcfb66989488a0c7aa35b1e48);
+            
+        
+
+        circle_marker_01a38870c6c26496fd22339e18b735fc.bindPopup(popup_bb7dfd1ade14442c36682c79fa65ff97)
+        ;
+
+        
+    
+    
+            circle_marker_01a38870c6c26496fd22339e18b735fc.bindTooltip(
+                `<div>
+                     Orion Avondale (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_08dd935e29deb9e4e941315dcdd8e051 = L.circleMarker(
+                [33.43659878270821, -112.38531445464858],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.726812023536855, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_38c7dd129d0e46a3ad84ec66a69bf285 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_3115eb437f9686d9956dda4a2a65bb4a = $(`<div id="html_3115eb437f9686d9956dda4a2a65bb4a" style="width: 100.0%; height: 100.0%;"><b>Celebration Plaza Parcel A</b><br>Proposed<br>181 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>Celebrate Life Way & N Litchfield Rd 85338</span></div>`)[0];
+                popup_38c7dd129d0e46a3ad84ec66a69bf285.setContent(html_3115eb437f9686d9956dda4a2a65bb4a);
+            
+        
+
+        circle_marker_08dd935e29deb9e4e941315dcdd8e051.bindPopup(popup_38c7dd129d0e46a3ad84ec66a69bf285)
+        ;
+
+        
+    
+    
+            circle_marker_08dd935e29deb9e4e941315dcdd8e051.bindTooltip(
+                `<div>
+                     Celebration Plaza Parcel A (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_401e58ea888d2f7fd9f34b1a762d875b = L.circleMarker(
+                [33.4377375174774, -112.38469038210603],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_7ddd26a4c00d7220d1b79ef389059eba = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_c4432f86b71a485aabc105f4abeb9d1c = $(`<div id="html_c4432f86b71a485aabc105f4abeb9d1c" style="width: 100.0%; height: 100.0%;"><b>Celebration Plaza Parcel D</b><br>Proposed<br>0 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>Celebrate Life Way & N Litchfield Rd 85338</span></div>`)[0];
+                popup_7ddd26a4c00d7220d1b79ef389059eba.setContent(html_c4432f86b71a485aabc105f4abeb9d1c);
+            
+        
+
+        circle_marker_401e58ea888d2f7fd9f34b1a762d875b.bindPopup(popup_7ddd26a4c00d7220d1b79ef389059eba)
+        ;
+
+        
+    
+    
+            circle_marker_401e58ea888d2f7fd9f34b1a762d875b.bindTooltip(
+                `<div>
+                     Celebration Plaza Parcel D (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_20d321f7344fdb8d01c26d27b062f7de = L.circleMarker(
+                [33.5000295, -112.2724825],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.200378782444083, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_70b5726154769efaa7c7d0781e65fa68 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_252f16bb2f31adf4321b8ea3f4f6eed3 = $(`<div id="html_252f16bb2f31adf4321b8ea3f4f6eed3" style="width: 100.0%; height: 100.0%;"><b>Sheely Center Future Phase</b><br>Proposed<br>697 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>2215 N 99th Ave 85037</span></div>`)[0];
+                popup_70b5726154769efaa7c7d0781e65fa68.setContent(html_252f16bb2f31adf4321b8ea3f4f6eed3);
+            
+        
+
+        circle_marker_20d321f7344fdb8d01c26d27b062f7de.bindPopup(popup_70b5726154769efaa7c7d0781e65fa68)
+        ;
+
+        
+    
+    
+            circle_marker_20d321f7344fdb8d01c26d27b062f7de.bindTooltip(
+                `<div>
+                     Sheely Center Future Phase (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a23aff6911635d626f281c80d2c61f67 = L.circleMarker(
+                [33.511303420182706, -112.41204816400574],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.809475019311126, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_b2372d20320395db177a4d68ec4de12e = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_24ded7b7060f651734bb7c70798bb1ab = $(`<div id="html_24ded7b7060f651734bb7c70798bb1ab" style="width: 100.0%; height: 100.0%;"><b>Porter Kyle Development</b><br>Proposed<br>135 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>W Camelback Rd & S Denny Blvd 85340</span></div>`)[0];
+                popup_b2372d20320395db177a4d68ec4de12e.setContent(html_24ded7b7060f651734bb7c70798bb1ab);
+            
+        
+
+        circle_marker_a23aff6911635d626f281c80d2c61f67.bindPopup(popup_b2372d20320395db177a4d68ec4de12e)
+        ;
+
+        
+    
+    
+            circle_marker_a23aff6911635d626f281c80d2c61f67.bindTooltip(
+                `<div>
+                     Porter Kyle Development (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4487b4f06a0e75d92ec84fe61916ad16 = L.circleMarker(
+                [33.4639364, -112.3118544],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.403124237432849, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_1756a4f15bb380e835678ae4e68992e9 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_24e76b9a4d0e1451ab18945fd452181d = $(`<div id="html_24e76b9a4d0e1451ab18945fd452181d" style="width: 100.0%; height: 100.0%;"><b>McDowell Villas</b><br>Proposed<br>164 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>11791 W McDowell Rd 85392</span></div>`)[0];
+                popup_1756a4f15bb380e835678ae4e68992e9.setContent(html_24e76b9a4d0e1451ab18945fd452181d);
+            
+        
+
+        circle_marker_4487b4f06a0e75d92ec84fe61916ad16.bindPopup(popup_1756a4f15bb380e835678ae4e68992e9)
+        ;
+
+        
+    
+    
+            circle_marker_4487b4f06a0e75d92ec84fe61916ad16.bindTooltip(
+                `<div>
+                     McDowell Villas (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4a3405c80bedf3f4757bfd7c0daf8d49 = L.circleMarker(
+                [33.5150727, -112.2718535],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_dee69e6371536e6a87fc676f643f2fe1 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_1a85a5bdab5e6f24f6e1ec6630e2b46a = $(`<div id="html_1a85a5bdab5e6f24f6e1ec6630e2b46a" style="width: 100.0%; height: 100.0%;"><b>SimonMed Development II</b><br>Proposed<br>0 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>W Glendale Ave & N 99th Ave 85305</span></div>`)[0];
+                popup_dee69e6371536e6a87fc676f643f2fe1.setContent(html_1a85a5bdab5e6f24f6e1ec6630e2b46a);
+            
+        
+
+        circle_marker_4a3405c80bedf3f4757bfd7c0daf8d49.bindPopup(popup_dee69e6371536e6a87fc676f643f2fe1)
+        ;
+
+        
+    
+    
+            circle_marker_4a3405c80bedf3f4757bfd7c0daf8d49.bindTooltip(
+                `<div>
+                     SimonMed Development II (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_43c7182543689b9f14513a26f3ef942e = L.circleMarker(
+                [33.5370444, -112.2757851],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.729812416870153, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_fe0435e102007f42f2187340519c2156 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_c7346ab8c44e43f124796418a259ff7f = $(`<div id="html_c7346ab8c44e43f124796418a259ff7f" style="width: 100.0%; height: 100.0%;"><b>SimonMed Development I</b><br>Proposed<br>239 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>10020 W Glendale Ave 85307</span></div>`)[0];
+                popup_fe0435e102007f42f2187340519c2156.setContent(html_c7346ab8c44e43f124796418a259ff7f);
+            
+        
+
+        circle_marker_43c7182543689b9f14513a26f3ef942e.bindPopup(popup_fe0435e102007f42f2187340519c2156)
+        ;
+
+        
+    
+    
+            circle_marker_43c7182543689b9f14513a26f3ef942e.bindTooltip(
+                `<div>
+                     SimonMed Development I (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fca32f7709468a57016522a263bac410 = L.circleMarker(
+                [33.4456417, -112.2638827],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_1e9f8e6f130a98056bbe82154dd925d5 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_86db4c174647cdbafe3cc3d162a5b57d = $(`<div id="html_86db4c174647cdbafe3cc3d162a5b57d" style="width: 100.0%; height: 100.0%;"><b>182 South 95th Avenue</b><br>Proposed<br>0 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>182 S 95th Ave 85353</span></div>`)[0];
+                popup_1e9f8e6f130a98056bbe82154dd925d5.setContent(html_86db4c174647cdbafe3cc3d162a5b57d);
+            
+        
+
+        circle_marker_fca32f7709468a57016522a263bac410.bindPopup(popup_1e9f8e6f130a98056bbe82154dd925d5)
+        ;
+
+        
+    
+    
+            circle_marker_fca32f7709468a57016522a263bac410.bindTooltip(
+                `<div>
+                     182 South 95th Avenue (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3cf5809ab439bd80f4ba34bd2800b733 = L.circleMarker(
+                [33.4711873, -112.3925475],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.785192895390463, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_04b785c623a795c7a94b16336c761204 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_b243116a0448dc3c1df2a0665f91977e = $(`<div id="html_b243116a0448dc3c1df2a0665f91977e" style="width: 100.0%; height: 100.0%;"><b>Picerne at Palm Valley</b><br>Proposed<br>383 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>2128 Pebble Creek Pkwy 85395</span></div>`)[0];
+                popup_04b785c623a795c7a94b16336c761204.setContent(html_b243116a0448dc3c1df2a0665f91977e);
+            
+        
+
+        circle_marker_3cf5809ab439bd80f4ba34bd2800b733.bindPopup(popup_04b785c623a795c7a94b16336c761204)
+        ;
+
+        
+    
+    
+            circle_marker_3cf5809ab439bd80f4ba34bd2800b733.bindTooltip(
+                `<div>
+                     Picerne at Palm Valley (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b5ce70b396e6e7b0e8fcb94ddb23d46b = L.circleMarker(
+                [33.430420902781115, -112.34350392985708],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.244997998398398, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_628ceda4aecaad4e2139a233ff5dcb4e = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_416bc286765aca8deeb80d4556c0fdf9 = $(`<div id="html_416bc286765aca8deeb80d4556c0fdf9" style="width: 100.0%; height: 100.0%;"><b>Avondale</b><br>Proposed<br>156 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>1498 Historic US-80 85323</span></div>`)[0];
+                popup_628ceda4aecaad4e2139a233ff5dcb4e.setContent(html_416bc286765aca8deeb80d4556c0fdf9);
+            
+        
+
+        circle_marker_b5ce70b396e6e7b0e8fcb94ddb23d46b.bindPopup(popup_628ceda4aecaad4e2139a233ff5dcb4e)
+        ;
+
+        
+    
+    
+            circle_marker_b5ce70b396e6e7b0e8fcb94ddb23d46b.bindTooltip(
+                `<div>
+                     Avondale (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5df20b2d8291d7302f0b22408f85427f = L.circleMarker(
+                [33.4531925, -112.3087509],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.958236433584458, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_bf11e3cf65edab1ed567f83caecd0dab = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_48d3e11bfe8ea21ab07279ee8a541639 = $(`<div id="html_48d3e11bfe8ea21ab07279ee8a541639" style="width: 100.0%; height: 100.0%;"><b>Fuze 623</b><br>Proposed<br>321 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>11745 W Corporate Dr 85323</span></div>`)[0];
+                popup_bf11e3cf65edab1ed567f83caecd0dab.setContent(html_48d3e11bfe8ea21ab07279ee8a541639);
+            
+        
+
+        circle_marker_5df20b2d8291d7302f0b22408f85427f.bindPopup(popup_bf11e3cf65edab1ed567f83caecd0dab)
+        ;
+
+        
+    
+    
+            circle_marker_5df20b2d8291d7302f0b22408f85427f.bindTooltip(
+                `<div>
+                     Fuze 623 (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fdfd64655a4d8c2f7d4a7355f65f1853 = L.circleMarker(
+                [33.43376618220023, -112.34464896223452],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.70820393249937, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_9f0443f543841a35180dba225cba59d7 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_8a4f06559cc88705d34957d4c0b008ec = $(`<div id="html_8a4f06559cc88705d34957d4c0b008ec" style="width: 100.0%; height: 100.0%;"><b>Villages at River Grove</b><br>Proposed<br>180 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>W Buckeye Rd & S El Mirage Rd 85323</span></div>`)[0];
+                popup_9f0443f543841a35180dba225cba59d7.setContent(html_8a4f06559cc88705d34957d4c0b008ec);
+            
+        
+
+        circle_marker_fdfd64655a4d8c2f7d4a7355f65f1853.bindPopup(popup_9f0443f543841a35180dba225cba59d7)
+        ;
+
+        
+    
+    
+            circle_marker_fdfd64655a4d8c2f7d4a7355f65f1853.bindTooltip(
+                `<div>
+                     Villages at River Grove (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0f18d7f49fb17762e48a7207cbb4b902 = L.circleMarker(
+                [33.59232534629486, -112.32881965161047],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.06201920231798, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_a01ba20f647ec4b02def54fc8c9160d2 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_0469d51f14d8cfb040e6a7e50d117c1e = $(`<div id="html_0469d51f14d8cfb040e6a7e50d117c1e" style="width: 100.0%; height: 100.0%;"><b>Zenn @ Sierra Verde</b><br>Proposed<br>66 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>W Olive Ave & N El Mirage Rd 85335</span></div>`)[0];
+                popup_a01ba20f647ec4b02def54fc8c9160d2.setContent(html_0469d51f14d8cfb040e6a7e50d117c1e);
+            
+        
+
+        circle_marker_0f18d7f49fb17762e48a7207cbb4b902.bindPopup(popup_a01ba20f647ec4b02def54fc8c9160d2)
+        ;
+
+        
+    
+    
+            circle_marker_0f18d7f49fb17762e48a7207cbb4b902.bindTooltip(
+                `<div>
+                     Zenn @ Sierra Verde (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f230102991a79acdc18d177ca3d82ba6 = L.circleMarker(
+                [33.534219685915396, -112.24748047506803],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_9e05b157e98818b96f0d9b3ceeb51913 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_444c3bef0cc8f8be1759e0d5083bf8a9 = $(`<div id="html_444c3bef0cc8f8be1759e0d5083bf8a9" style="width: 100.0%; height: 100.0%;"><b>Envision Encore</b><br>Proposed<br>0 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>N Ball Park Blvd & N 99th Ave 85305</span></div>`)[0];
+                popup_9e05b157e98818b96f0d9b3ceeb51913.setContent(html_444c3bef0cc8f8be1759e0d5083bf8a9);
+            
+        
+
+        circle_marker_f230102991a79acdc18d177ca3d82ba6.bindPopup(popup_9e05b157e98818b96f0d9b3ceeb51913)
+        ;
+
+        
+    
+    
+            circle_marker_f230102991a79acdc18d177ca3d82ba6.bindTooltip(
+                `<div>
+                     Envision Encore (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_38b587547dde1411102eb22ad61677d7 = L.circleMarker(
+                [33.541007922720134, -112.31381900728375],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.154753215150045, "stroke": true, "weight": 2}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+        var popup_b2ccae366cfb17c31d8fc86f86584b52 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_4b9af79033805d71f571137ff506f0b3 = $(`<div id="html_4b9af79033805d71f571137ff506f0b3" style="width: 100.0%; height: 100.0%;"><b>Marbella Ranch East Future Phase</b><br>Proposed<br>266 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>W Northern Ave & N El Mirage Rd 85307</span></div>`)[0];
+                popup_b2ccae366cfb17c31d8fc86f86584b52.setContent(html_4b9af79033805d71f571137ff506f0b3);
+            
+        
+
+        circle_marker_38b587547dde1411102eb22ad61677d7.bindPopup(popup_b2ccae366cfb17c31d8fc86f86584b52)
+        ;
+
+        
+    
+    
+            circle_marker_38b587547dde1411102eb22ad61677d7.bindTooltip(
+                `<div>
+                     Marbella Ranch East Future Phase (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_30914086d824db55d12835d4bdbf7e20 = L.marker(
+                [33.488631, -112.323722],
+                {
+}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+        
+    
+            var icon_afd30ffa77e3b2660a22050efd036b67 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "black",
+  "iconColor": "white",
+  "icon": "star",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_086d1ae2d79fe5f236cf9eb3d599c8eb = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_28cca632492e7d5800b27d616a4c2c02 = $(`<div id="html_28cca632492e7d5800b27d616a4c2c02" style="width: 100.0%; height: 100.0%;"><b>SUBJECT</b><br>Bella Mirage<br>3800 N El Mirage Rd, Avondale, AZ 85392</div>`)[0];
+                popup_086d1ae2d79fe5f236cf9eb3d599c8eb.setContent(html_28cca632492e7d5800b27d616a4c2c02);
+            
+        
+
+        marker_30914086d824db55d12835d4bdbf7e20.bindPopup(popup_086d1ae2d79fe5f236cf9eb3d599c8eb)
+        ;
+
+        
+    
+    
+            marker_30914086d824db55d12835d4bdbf7e20.bindTooltip(
+                `<div>
+                     SUBJECT: Bella Mirage
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_30914086d824db55d12835d4bdbf7e20.setIcon(icon_afd30ffa77e3b2660a22050efd036b67);
+            
+    
+            var layer_control_b7025a362c43f2cbea40a179d09bbc4f_layers = {
+                base_layers : {
+                    "Satellite" : tile_layer_13e4955bb47389ae623eb05b4e11eefd,
+                    "Terrain" : tile_layer_45cba19fb5e494591aafefbc16e917b0,
+                    "Streets" : tile_layer_33def393a6bb276ca995f4813420ee0b,
+                },
+                overlays :  {
+                },
+            };
+            let layer_control_b7025a362c43f2cbea40a179d09bbc4f = L.control.layers(
+                layer_control_b7025a362c43f2cbea40a179d09bbc4f_layers.base_layers,
+                layer_control_b7025a362c43f2cbea40a179d09bbc4f_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_b76bff56795b2fd1f8c63bca5d7070da);
+
+        
+</script>
+</html>

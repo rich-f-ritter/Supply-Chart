@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_93032fa790670409e38850f2e6a9fd18 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+      <div style="position:fixed;top:10px;left:50px;z-index:9999;background:white;
+        padding:8px 12px;border:1px solid #999;border-radius:4px;font-family:Arial;
+        font-size:13px"><b>Aura Beacon Island — 5-Mile Competitive Supply</b><br>
+        <span style="font-size:11px">15 competitive properties &middot;
+        5-mile radius</span></div>
+      <div style="position:fixed;bottom:24px;left:12px;z-index:9999;background:white;
+        padding:8px 12px;border:1px solid #999;border-radius:4px;font-family:Arial;
+        font-size:12px"><b>Lifecycle</b><div><span style='display:inline-block;width:11px;height:11px;background:#1E90FF;border-radius:50%;margin-right:6px'></span>Stabilized (5)</div><div><span style='display:inline-block;width:11px;height:11px;background:#FF8C00;border-radius:50%;margin-right:6px'></span>Leasing Up (0)</div><div><span style='display:inline-block;width:11px;height:11px;background:#00E676;border-radius:50%;margin-right:6px'></span>Under Construction (3)</div><div><span style='display:inline-block;width:11px;height:11px;background:#FF1744;border-radius:50%;margin-right:6px'></span>Proposed (7)</div>
+        <div style="margin-top:4px">&#9733; Subject</div>
+        <div style="color:#b00;margin-top:4px">&#9888; Some pins ZIP-approximate (geocode failed).</div></div>
+    
+            <div class="folium-map" id="map_93032fa790670409e38850f2e6a9fd18" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_93032fa790670409e38850f2e6a9fd18 = L.map(
+                "map_93032fa790670409e38850f2e6a9fd18",
+                {
+                    center: [29.543511, -95.070054],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_93032fa790670409e38850f2e6a9fd18);
+
+            
+
+        
+    
+            var tile_layer_ec0cb96b707eb986cda91db033c03b48 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Esri",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_ec0cb96b707eb986cda91db033c03b48.addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+            var tile_layer_6c158781f0f21c8ac278afbd0a4c79a4 = L.tileLayer(
+                "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Map data \u00a9 OpenStreetMap contributors, SRTM | \u00a9 OpenTopoMap (CC-BY-SA)",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_6c158781f0f21c8ac278afbd0a4c79a4.addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+            var tile_layer_611b28ce433c702618a432825a777ae8 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_611b28ce433c702618a432825a777ae8.addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+            var circle_60f75d960ee70fb4eb472a616fb54729 = L.circle(
+                [29.543511, -95.070054],
+                {"bubblingMouseEvents": true, "color": "#FFD400", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FFD400", "fillOpacity": 0.03, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8046.7, "stroke": true, "weight": 3}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+            circle_60f75d960ee70fb4eb472a616fb54729.bindTooltip(
+                `<div>
+                     5-mile radius
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_931fe92442609f80caa1fd1c39ad3ee8 = L.circleMarker(
+                [29.5455057, -95.1430185],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.746794344808963, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_aa43eb7d5dfb727099a50227464deec2 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_d41cfcfbfb191ce422f5e4a24b86ff60 = $(`<div id="html_d41cfcfbfb191ce422f5e4a24b86ff60" style="width: 100.0%; height: 100.0%;"><b>Broadstone Baybrook</b><br>Stabilized<br>380 units &middot; Q3 2024<br>Occ 93% &middot; Rent $1,795<br><span style='color:#888'>19101 Town Ridge Ln 77598</span></div>`)[0];
+                popup_aa43eb7d5dfb727099a50227464deec2.setContent(html_d41cfcfbfb191ce422f5e4a24b86ff60);
+            
+        
+
+        circle_marker_931fe92442609f80caa1fd1c39ad3ee8.bindPopup(popup_aa43eb7d5dfb727099a50227464deec2)
+        ;
+
+        
+    
+    
+            circle_marker_931fe92442609f80caa1fd1c39ad3ee8.bindTooltip(
+                `<div>
+                     Broadstone Baybrook (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_abc173f20e0844c1591932a2dd188917 = L.circleMarker(
+                [29.524949737377238, -95.02786236236865],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.486832980505138, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_13d4d5e80c61ab4d46dd2bb51d9713b3 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_a85e4051e86738325b34aaad1557c66c = $(`<div id="html_a85e4051e86738325b34aaad1557c66c" style="width: 100.0%; height: 100.0%;"><b>The Kippford at Kemah Crossing</b><br>Stabilized<br>360 units &middot; Q3 2023<br>Occ 90% &middot; Rent $1,765<br><span style='color:#888'>2201 Evergreen Memorial Pky 77565</span></div>`)[0];
+                popup_13d4d5e80c61ab4d46dd2bb51d9713b3.setContent(html_a85e4051e86738325b34aaad1557c66c);
+            
+        
+
+        circle_marker_abc173f20e0844c1591932a2dd188917.bindPopup(popup_13d4d5e80c61ab4d46dd2bb51d9713b3)
+        ;
+
+        
+    
+    
+            circle_marker_abc173f20e0844c1591932a2dd188917.bindTooltip(
+                `<div>
+                     The Kippford at Kemah Crossing (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_da734c6fcc3a3a59957dfe461969300e = L.circleMarker(
+                [29.555817254588714, -95.14430985123144],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.874119674649425, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_39924e31aa0a67e0a4e345e3c9253f54 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_5632e0455764336ebc0137a565b42418 = $(`<div id="html_5632e0455764336ebc0137a565b42418" style="width: 100.0%; height: 100.0%;"><b>Lenox Bayside</b><br>Stabilized<br>315 units &middot; Q2 2023<br>Occ 88% &middot; Rent $1,836<br><span style='color:#888'>250 N Village Dr 77598</span></div>`)[0];
+                popup_39924e31aa0a67e0a4e345e3c9253f54.setContent(html_5632e0455764336ebc0137a565b42418);
+            
+        
+
+        circle_marker_da734c6fcc3a3a59957dfe461969300e.bindPopup(popup_39924e31aa0a67e0a4e345e3c9253f54)
+        ;
+
+        
+    
+    
+            circle_marker_da734c6fcc3a3a59957dfe461969300e.bindTooltip(
+                `<div>
+                     Lenox Bayside (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0608e9053928abb333dbe562f7c42978 = L.circleMarker(
+                [29.5427297, -95.0204837],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.013878188659973, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_48dc6735f148e8b67abe3d3f749e46eb = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_360fc04a9aca1068ad12630b6ad3b97f = $(`<div id="html_360fc04a9aca1068ad12630b6ad3b97f" style="width: 100.0%; height: 100.0%;"><b>Livano Kemah</b><br>Stabilized<br>325 units &middot; Q3 2022<br>Occ 92% &middot; Rent $1,861<br><span style='color:#888'>800 FM 518 Rd E 77565</span></div>`)[0];
+                popup_48dc6735f148e8b67abe3d3f749e46eb.setContent(html_360fc04a9aca1068ad12630b6ad3b97f);
+            
+        
+
+        circle_marker_0608e9053928abb333dbe562f7c42978.bindPopup(popup_48dc6735f148e8b67abe3d3f749e46eb)
+        ;
+
+        
+    
+    
+            circle_marker_0608e9053928abb333dbe562f7c42978.bindTooltip(
+                `<div>
+                     Livano Kemah (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_04b94d2802ca1449a4386b33dd712cbe = L.circleMarker(
+                [29.5479629, -95.1601323],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.52936105461599, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_788e691d47c75c684071d318a1c4bcaa = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_9982a801582f03a621b85d04a635a4e0 = $(`<div id="html_9982a801582f03a621b85d04a635a4e0" style="width: 100.0%; height: 100.0%;"><b>The Reserve at Baybrook</b><br>Stabilized<br>291 units &middot; Q3 2022<br>Occ 95% &middot; Rent $1,897<br><span style='color:#888'>19302 Glenwest Dr 77546</span></div>`)[0];
+                popup_788e691d47c75c684071d318a1c4bcaa.setContent(html_9982a801582f03a621b85d04a635a4e0);
+            
+        
+
+        circle_marker_04b94d2802ca1449a4386b33dd712cbe.bindPopup(popup_788e691d47c75c684071d318a1c4bcaa)
+        ;
+
+        
+    
+    
+            circle_marker_04b94d2802ca1449a4386b33dd712cbe.bindTooltip(
+                `<div>
+                     The Reserve at Baybrook (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_809795704f5d923c9a07f858a67f6e81 = L.circleMarker(
+                [29.5562939, -95.135551],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.16515138991168, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_3892ca8353d5fb42b43f53cced6108ce = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_0abc4ee8d38f04cfbdc81083b60271e9 = $(`<div id="html_0abc4ee8d38f04cfbdc81083b60271e9" style="width: 100.0%; height: 100.0%;"><b>Lenox Clear Creek</b><br>Under Construction<br>336 units &middot; Q3 2027<br>Occ — &middot; Rent —<br><span style='color:#888'>16200 State Highway 3 77598</span></div>`)[0];
+                popup_3892ca8353d5fb42b43f53cced6108ce.setContent(html_0abc4ee8d38f04cfbdc81083b60271e9);
+            
+        
+
+        circle_marker_809795704f5d923c9a07f858a67f6e81.bindPopup(popup_3892ca8353d5fb42b43f53cced6108ce)
+        ;
+
+        
+    
+    
+            circle_marker_809795704f5d923c9a07f858a67f6e81.bindTooltip(
+                `<div>
+                     Lenox Clear Creek (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e28da0aec431f1d30afc25448e348e28 = L.circleMarker(
+                [29.5792311, -95.0295657],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.94427190999916, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_b32ab10a601960cbd68a58641c9764dd = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_4d5f5e032bb3f8ad07c0e598b3be88ef = $(`<div id="html_4d5f5e032bb3f8ad07c0e598b3be88ef" style="width: 100.0%; height: 100.0%;"><b>The Edge at Seabrook Town Centre</b><br>Under Construction<br>320 units &middot; Q2 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>2101 Humble Dr 77586</span></div>`)[0];
+                popup_b32ab10a601960cbd68a58641c9764dd.setContent(html_4d5f5e032bb3f8ad07c0e598b3be88ef);
+            
+        
+
+        circle_marker_e28da0aec431f1d30afc25448e348e28.bindPopup(popup_b32ab10a601960cbd68a58641c9764dd)
+        ;
+
+        
+    
+    
+            circle_marker_e28da0aec431f1d30afc25448e348e28.bindTooltip(
+                `<div>
+                     The Edge at Seabrook Town Centre (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9b5180c090236814487e646f1f59b733 = L.circleMarker(
+                [29.517036, -95.028768],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#00E676", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.56637297521078, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_5c98325d8412e6010edf6da989506139 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_b5af110532033888c445d64f3440e9c3 = $(`<div id="html_b5af110532033888c445d64f3440e9c3" style="width: 100.0%; height: 100.0%;"><b>Dakota at Kemah</b><br>Under Construction<br>229 units &middot; Q1 2027<br>Occ — &middot; Rent —<br><span style='color:#888'>2801 Lawrence Rd 77565</span></div>`)[0];
+                popup_5c98325d8412e6010edf6da989506139.setContent(html_b5af110532033888c445d64f3440e9c3);
+            
+        
+
+        circle_marker_9b5180c090236814487e646f1f59b733.bindPopup(popup_5c98325d8412e6010edf6da989506139)
+        ;
+
+        
+    
+    
+            circle_marker_9b5180c090236814487e646f1f59b733.bindTooltip(
+                `<div>
+                     Dakota at Kemah (Under Construction)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e9e15f0f01037027a14da6adf7f34fa1 = L.circleMarker(
+                [29.5068651, -95.1152828],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.631338250816034, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_ec245d56b1937949ab2d99e4615504d5 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_2ee7f07e93244845039c19983a0cbbc9 = $(`<div id="html_2ee7f07e93244845039c19983a0cbbc9" style="width: 100.0%; height: 100.0%;"><b>Riverview at Clear Creek</b><br>Proposed<br>298 units &middot; Q2 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>301 N Wesley Dr 77573</span></div>`)[0];
+                popup_ec245d56b1937949ab2d99e4615504d5.setContent(html_2ee7f07e93244845039c19983a0cbbc9);
+            
+        
+
+        circle_marker_e9e15f0f01037027a14da6adf7f34fa1.bindPopup(popup_ec245d56b1937949ab2d99e4615504d5)
+        ;
+
+        
+    
+    
+            circle_marker_e9e15f0f01037027a14da6adf7f34fa1.bindTooltip(
+                `<div>
+                     Riverview at Clear Creek (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2bb52e3c0b2fe36c0b1457e6dd3bf0f4 = L.circleMarker(
+                [29.5606933, -95.0406868],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.06225774829855, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_7051c88af4c016b9a459ccdec23ed917 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_825bb5ac1ceb91f35ae1e1f78ef38e2a = $(`<div id="html_825bb5ac1ceb91f35ae1e1f78ef38e2a" style="width: 100.0%; height: 100.0%;"><b>Seabrook Plaza</b><br>Proposed<br>260 units &middot; Q3 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>3101 Nasa Pky 77586</span></div>`)[0];
+                popup_7051c88af4c016b9a459ccdec23ed917.setContent(html_825bb5ac1ceb91f35ae1e1f78ef38e2a);
+            
+        
+
+        circle_marker_2bb52e3c0b2fe36c0b1457e6dd3bf0f4.bindPopup(popup_7051c88af4c016b9a459ccdec23ed917)
+        ;
+
+        
+    
+    
+            circle_marker_2bb52e3c0b2fe36c0b1457e6dd3bf0f4.bindTooltip(
+                `<div>
+                     Seabrook Plaza (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2b2d97b3256624dcff4fc2a79080dc60 = L.circleMarker(
+                [29.518965601599678, -95.09117380537717],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.717797887081348, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_920735c277f9baad0b10d40fb77c82a6 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_5a6a26bcb504235d87af78325d9ac67b = $(`<div id="html_5a6a26bcb504235d87af78325d9ac67b" style="width: 100.0%; height: 100.0%;"><b>The League I</b><br>Proposed<br>304 units &middot; Q3 2026<br>Occ — &middot; Rent —<br><span style='color:#888'>E FM 518 & Main St 77573</span></div>`)[0];
+                popup_920735c277f9baad0b10d40fb77c82a6.setContent(html_5a6a26bcb504235d87af78325d9ac67b);
+            
+        
+
+        circle_marker_2b2d97b3256624dcff4fc2a79080dc60.bindPopup(popup_920735c277f9baad0b10d40fb77c82a6)
+        ;
+
+        
+    
+    
+            circle_marker_2b2d97b3256624dcff4fc2a79080dc60.bindTooltip(
+                `<div>
+                     The League I (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_15e60cae3eec96f3ca85beacd5519981 = L.circleMarker(
+                [29.5427297, -95.0204837],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.035623639735144, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_741faf19ae2c419df01d0abbb32733e2 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_14e45217c67dc960e0d56efcf73e0a24 = $(`<div id="html_14e45217c67dc960e0d56efcf73e0a24" style="width: 100.0%; height: 100.0%;"><b>Avalon at Kemah I</b><br>Proposed<br>198 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>Bel Rd & N Hwy 146 77565</span></div>`)[0];
+                popup_741faf19ae2c419df01d0abbb32733e2.setContent(html_14e45217c67dc960e0d56efcf73e0a24);
+            
+        
+
+        circle_marker_15e60cae3eec96f3ca85beacd5519981.bindPopup(popup_741faf19ae2c419df01d0abbb32733e2)
+        ;
+
+        
+    
+    
+            circle_marker_15e60cae3eec96f3ca85beacd5519981.bindTooltip(
+                `<div>
+                     Avalon at Kemah I (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0b7387a63a72e43153967e38ba20752e = L.circleMarker(
+                [29.516443986113718, -95.09570061262401],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15.0, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_608a4e6c6b48d74a88e2c7650af82b94 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_bc9933e15d1efd9bb94bd6ebc74a6c65 = $(`<div id="html_bc9933e15d1efd9bb94bd6ebc74a6c65" style="width: 100.0%; height: 100.0%;"><b>The League Future Phases</b><br>Proposed<br>400 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>E FM 518 & Main St 77573</span></div>`)[0];
+                popup_608a4e6c6b48d74a88e2c7650af82b94.setContent(html_bc9933e15d1efd9bb94bd6ebc74a6c65);
+            
+        
+
+        circle_marker_0b7387a63a72e43153967e38ba20752e.bindPopup(popup_608a4e6c6b48d74a88e2c7650af82b94)
+        ;
+
+        
+    
+    
+            circle_marker_0b7387a63a72e43153967e38ba20752e.bindTooltip(
+                `<div>
+                     The League Future Phases (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ad9a8937865e54f3ff0195fa4fcc3d16 = L.circleMarker(
+                [29.583799267459657, -95.03582387138808],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.2915619758885, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_72a9b6c8e0afff75ef6b3f3c72231c28 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_6119f95134d7c8b4f3e30390075b6ead = $(`<div id="html_6119f95134d7c8b4f3e30390075b6ead" style="width: 100.0%; height: 100.0%;"><b>Residences at Highland Center</b><br>Proposed<br>275 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>3805 & 3813 NASA Rd 1 77586</span></div>`)[0];
+                popup_72a9b6c8e0afff75ef6b3f3c72231c28.setContent(html_6119f95134d7c8b4f3e30390075b6ead);
+            
+        
+
+        circle_marker_ad9a8937865e54f3ff0195fa4fcc3d16.bindPopup(popup_72a9b6c8e0afff75ef6b3f3c72231c28)
+        ;
+
+        
+    
+    
+            circle_marker_ad9a8937865e54f3ff0195fa4fcc3d16.bindTooltip(
+                `<div>
+                     Residences at Highland Center (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5bbde9501b1a32bd74b412788a7e5df4 = L.circleMarker(
+                [29.5427297, -95.0204837],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.54983443527075, "stroke": true, "weight": 2}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+        var popup_ff7afb683b1857ab74b9284a334ce4f1 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_7b70a9b9182763c47a13654642389b00 = $(`<div id="html_7b70a9b9182763c47a13654642389b00" style="width: 100.0%; height: 100.0%;"><b>Avalon at Kemah II</b><br>Proposed<br>228 units &middot; TBD<br>Occ — &middot; Rent —<br><span style='color:#888'>Bel Rd & N Hwy 146 77565</span></div>`)[0];
+                popup_ff7afb683b1857ab74b9284a334ce4f1.setContent(html_7b70a9b9182763c47a13654642389b00);
+            
+        
+
+        circle_marker_5bbde9501b1a32bd74b412788a7e5df4.bindPopup(popup_ff7afb683b1857ab74b9284a334ce4f1)
+        ;
+
+        
+    
+    
+            circle_marker_5bbde9501b1a32bd74b412788a7e5df4.bindTooltip(
+                `<div>
+                     Avalon at Kemah II (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_e70fbae616034e8e680f64891b39cd31 = L.marker(
+                [29.543511, -95.070054],
+                {
+}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+        
+    
+            var icon_f61b2b3684702fe2bd5097f84d5a4863 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "black",
+  "iconColor": "white",
+  "icon": "star",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c7f1b280826e687b93a751e981f3236c = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_d163a71b7ab61e8816f2249af6b958b6 = $(`<div id="html_d163a71b7ab61e8816f2249af6b958b6" style="width: 100.0%; height: 100.0%;"><b>SUBJECT</b><br>Aura Beacon Island<br>2200 Beacon Cir, League City, TX 77573</div>`)[0];
+                popup_c7f1b280826e687b93a751e981f3236c.setContent(html_d163a71b7ab61e8816f2249af6b958b6);
+            
+        
+
+        marker_e70fbae616034e8e680f64891b39cd31.bindPopup(popup_c7f1b280826e687b93a751e981f3236c)
+        ;
+
+        
+    
+    
+            marker_e70fbae616034e8e680f64891b39cd31.bindTooltip(
+                `<div>
+                     SUBJECT: Aura Beacon Island
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e70fbae616034e8e680f64891b39cd31.setIcon(icon_f61b2b3684702fe2bd5097f84d5a4863);
+            
+    
+            var layer_control_858d9e73d2b170db49d4725e4317ceec_layers = {
+                base_layers : {
+                    "Satellite" : tile_layer_ec0cb96b707eb986cda91db033c03b48,
+                    "Terrain" : tile_layer_6c158781f0f21c8ac278afbd0a4c79a4,
+                    "Streets" : tile_layer_611b28ce433c702618a432825a777ae8,
+                },
+                overlays :  {
+                },
+            };
+            let layer_control_858d9e73d2b170db49d4725e4317ceec = L.control.layers(
+                layer_control_858d9e73d2b170db49d4725e4317ceec_layers.base_layers,
+                layer_control_858d9e73d2b170db49d4725e4317ceec_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_93032fa790670409e38850f2e6a9fd18);
+
+        
+</script>
+</html>

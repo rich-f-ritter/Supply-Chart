@@ -1,0 +1,12 @@
+type,property,units,est_delivery,status,leasing_pace,notes,source
+pipeline,The League Future Phases,400,,,,(verify proposed),
+pipeline,The League I,304,Q3 2026,,,(verify proposed),
+pipeline,Riverview at Clear Creek,298,Q2 2028,,,(verify proposed),
+pipeline,Residences at Highland Center,275,,,,(verify proposed),
+pipeline,Seabrook Plaza,260,Q3 2028,,,(verify proposed),
+pipeline,Avalon at Kemah II,228,,,,(verify proposed),
+pipeline,Avalon at Kemah I,198,,,,(verify proposed),
+pipeline,Lenox Clear Creek,336,Q3 2027,,,(verify under construction),
+pipeline,The Edge at Seabrook Town Centre,320,Q2 2028,,,(verify under construction),
+pipeline,Dakota at Kemah,229,Q1 2027,,,(verify under construction),
+shadow,<latent site / rezoning / land sale>,,,,,potential future supply not in CoStar/RealPage,

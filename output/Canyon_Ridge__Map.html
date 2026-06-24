@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_3f7103ae7d933919c8a1d4d80300a9ce {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+      <div style="position:fixed;top:10px;left:50px;z-index:9999;background:white;
+        padding:8px 12px;border:1px solid #999;border-radius:4px;font-family:Arial;
+        font-size:13px"><b>Canyon Ridge — 5-Mile Competitive Supply</b><br>
+        <span style="font-size:11px">9 competitive properties &middot;
+        5-mile radius</span></div>
+      <div style="position:fixed;bottom:24px;left:12px;z-index:9999;background:white;
+        padding:8px 12px;border:1px solid #999;border-radius:4px;font-family:Arial;
+        font-size:12px"><b>Lifecycle</b><div><span style='display:inline-block;width:11px;height:11px;background:#1E90FF;border-radius:50%;margin-right:6px'></span>Stabilized (3)</div><div><span style='display:inline-block;width:11px;height:11px;background:#FF8C00;border-radius:50%;margin-right:6px'></span>Leasing Up (0)</div><div><span style='display:inline-block;width:11px;height:11px;background:#00E676;border-radius:50%;margin-right:6px'></span>Under Construction (0)</div><div><span style='display:inline-block;width:11px;height:11px;background:#FF1744;border-radius:50%;margin-right:6px'></span>Proposed (6)</div>
+        <div style="margin-top:4px">&#9733; Subject</div>
+        <div style="color:#b00;margin-top:4px"></div></div>
+    
+            <div class="folium-map" id="map_3f7103ae7d933919c8a1d4d80300a9ce" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_3f7103ae7d933919c8a1d4d80300a9ce = L.map(
+                "map_3f7103ae7d933919c8a1d4d80300a9ce",
+                {
+                    center: [43.5417345, -116.1511979],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+
+            
+
+        
+    
+            var tile_layer_37f2830769c001f95e61bcbc26c62ac5 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Esri",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_37f2830769c001f95e61bcbc26c62ac5.addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+            var tile_layer_67e768079d89e5e867857af22bff5318 = L.tileLayer(
+                "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Map data \u00a9 OpenStreetMap contributors, SRTM | \u00a9 OpenTopoMap (CC-BY-SA)",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_67e768079d89e5e867857af22bff5318.addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+            var tile_layer_a9b26af6fb7e7384a03ec26047619e72 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_a9b26af6fb7e7384a03ec26047619e72.addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+            var circle_eb3b31d83381c7a8c9452219c9721e5e = L.circle(
+                [43.5417345, -116.1511979],
+                {"bubblingMouseEvents": true, "color": "#FFD400", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FFD400", "fillOpacity": 0.03, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8046.7, "stroke": true, "weight": 3}
+            ).addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+            circle_eb3b31d83381c7a8c9452219c9721e5e.bindTooltip(
+                `<div>
+                     5-mile radius
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5647958633b1a29e7b4f8231d1a1e60b = L.circleMarker(
+                [43.5978156, -116.1874892],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.590169943749475, "stroke": true, "weight": 2}
+            ).addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+        var popup_2068e7953d289843f984239b6a085fcc = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_b73f0a3d9cee491e0e1f743b9df34285 = $(`<div id="html_b73f0a3d9cee491e0e1f743b9df34285" style="width: 100.0%; height: 100.0%;"><b>The Mill at Loggers Creek</b><br>Stabilized<br>125 units &middot; Q2 2024<br>Occ 92% &middot; Rent $2,104<br><span style='color:#888'>1250 S Division Ave 83706</span></div>`)[0];
+                popup_2068e7953d289843f984239b6a085fcc.setContent(html_b73f0a3d9cee491e0e1f743b9df34285);
+            
+        
+
+        circle_marker_5647958633b1a29e7b4f8231d1a1e60b.bindPopup(popup_2068e7953d289843f984239b6a085fcc)
+        ;
+
+        
+    
+    
+            circle_marker_5647958633b1a29e7b4f8231d1a1e60b.bindTooltip(
+                `<div>
+                     The Mill at Loggers Creek (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_daa5f61242e93526654819fabed78d5a = L.circleMarker(
+                [43.5740382, -116.1339694],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.276472678623424, "stroke": true, "weight": 2}
+            ).addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+        var popup_2b912441e1e6f2b37df9d56ea4b1a659 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_384d2788c9b8088170f91ccb5b3f1264 = $(`<div id="html_384d2788c9b8088170f91ccb5b3f1264" style="width: 100.0%; height: 100.0%;"><b>The Timbers at Harris Ranch</b><br>Stabilized<br>274 units &middot; Q2 2023<br>Occ 97% &middot; Rent $2,196<br><span style='color:#888'>3469 S Old Hickory Way 83716</span></div>`)[0];
+                popup_2b912441e1e6f2b37df9d56ea4b1a659.setContent(html_384d2788c9b8088170f91ccb5b3f1264);
+            
+        
+
+        circle_marker_daa5f61242e93526654819fabed78d5a.bindPopup(popup_2b912441e1e6f2b37df9d56ea4b1a659)
+        ;
+
+        
+    
+    
+            circle_marker_daa5f61242e93526654819fabed78d5a.bindTooltip(
+                `<div>
+                     The Timbers at Harris Ranch (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5e44fb7a29b2a2311c59e6373c1e66dd = L.circleMarker(
+                [43.5827486, -116.2131506],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E90FF", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.391164991562635, "stroke": true, "weight": 2}
+            ).addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+        var popup_0a290c541aadb450b134d3b64ba84d80 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_7987d25ed1593a710db986f8e992de4e = $(`<div id="html_7987d25ed1593a710db986f8e992de4e" style="width: 100.0%; height: 100.0%;"><b>The Betty</b><br>Stabilized<br>46 units &middot; Q4 2023<br>Occ 96% &middot; Rent —<br><span style='color:#888'>2550 W Targee St 83705</span></div>`)[0];
+                popup_0a290c541aadb450b134d3b64ba84d80.setContent(html_7987d25ed1593a710db986f8e992de4e);
+            
+        
+
+        circle_marker_5e44fb7a29b2a2311c59e6373c1e66dd.bindPopup(popup_0a290c541aadb450b134d3b64ba84d80)
+        ;
+
+        
+    
+    
+            circle_marker_5e44fb7a29b2a2311c59e6373c1e66dd.bindTooltip(
+                `<div>
+                     The Betty (Stabilized)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8b6852cbd40cd47ee3ec1ef9b71467dd = L.circleMarker(
+                [43.5944803, -116.2109355],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.582575694955839, "stroke": true, "weight": 2}
+            ).addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+        var popup_1981ca1fa6064369b468b955fe418443 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_7e64bf0b50d98f92a2c1ec33af686e8a = $(`<div id="html_7e64bf0b50d98f92a2c1ec33af686e8a" style="width: 100.0%; height: 100.0%;"><b>Station Village</b><br>Proposed<br>84 units &middot; Q2 2027<br>Occ — &middot; Rent —<br><span style='color:#888'>2350 W Kootenai St 83706</span></div>`)[0];
+                popup_1981ca1fa6064369b468b955fe418443.setContent(html_7e64bf0b50d98f92a2c1ec33af686e8a);
+            
+        
+
+        circle_marker_8b6852cbd40cd47ee3ec1ef9b71467dd.bindPopup(popup_1981ca1fa6064369b468b955fe418443)
+        ;
+
+        
+    
+    
+            circle_marker_8b6852cbd40cd47ee3ec1ef9b71467dd.bindTooltip(
+                `<div>
+                     Station Village (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5d5341feb28cbb21034be84581d64e8b = L.circleMarker(
+                [43.5751954, -116.2123463],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.460443964212251, "stroke": true, "weight": 2}
+            ).addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+        var popup_e990435df216040b60c8326dec7ed440 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_eed2e0836a77f75ad46c36a131984b36 = $(`<div id="html_eed2e0836a77f75ad46c36a131984b36" style="width: 100.0%; height: 100.0%;"><b>Seasons on the Bench</b><br>Proposed<br>358 units &middot; Q4 2027<br>Occ — &middot; Rent —<br><span style='color:#888'>2521 W Victory Rd 83705</span></div>`)[0];
+                popup_e990435df216040b60c8326dec7ed440.setContent(html_eed2e0836a77f75ad46c36a131984b36);
+            
+        
+
+        circle_marker_5d5341feb28cbb21034be84581d64e8b.bindPopup(popup_e990435df216040b60c8326dec7ed440)
+        ;
+
+        
+    
+    
+            circle_marker_5d5341feb28cbb21034be84581d64e8b.bindTooltip(
+                `<div>
+                     Seasons on the Bench (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_22b4fee5e79a0889d9bd16f2bfa2ebed = L.circleMarker(
+                [43.5751117, -116.2070635],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 19.941552797483936, "stroke": true, "weight": 2}
+            ).addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+        var popup_0e6128b1e67125c0c93f4b9b7bd2f544 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_529ef74fb05cd3d9559ee010b9a9e5ec = $(`<div id="html_529ef74fb05cd3d9559ee010b9a9e5ec" style="width: 100.0%; height: 100.0%;"><b>Vista Point</b><br>Proposed<br>893 units &middot; Q2 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>2017 W Victory Rd 83705</span></div>`)[0];
+                popup_0e6128b1e67125c0c93f4b9b7bd2f544.setContent(html_529ef74fb05cd3d9559ee010b9a9e5ec);
+            
+        
+
+        circle_marker_22b4fee5e79a0889d9bd16f2bfa2ebed.bindPopup(popup_0e6128b1e67125c0c93f4b9b7bd2f544)
+        ;
+
+        
+    
+    
+            circle_marker_22b4fee5e79a0889d9bd16f2bfa2ebed.bindTooltip(
+                `<div>
+                     Vista Point (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1c64e436ac692c5d4770f0e20dac3eb0 = L.circleMarker(
+                [43.5724697, -116.2136359],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.70820393249937, "stroke": true, "weight": 2}
+            ).addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+        var popup_bc2c1823c5d99dab3d28fa7051b342b1 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_6eb151172d9ee5599e3718b911b82e2c = $(`<div id="html_6eb151172d9ee5599e3718b911b82e2c" style="width: 100.0%; height: 100.0%;"><b>3300 South Vista Avenue</b><br>Proposed<br>180 units &middot; Q1 2028<br>Occ — &middot; Rent —<br><span style='color:#888'>3300 S Vista Ave 83705</span></div>`)[0];
+                popup_bc2c1823c5d99dab3d28fa7051b342b1.setContent(html_6eb151172d9ee5599e3718b911b82e2c);
+            
+        
+
+        circle_marker_1c64e436ac692c5d4770f0e20dac3eb0.bindPopup(popup_bc2c1823c5d99dab3d28fa7051b342b1)
+        ;
+
+        
+    
+    
+            circle_marker_1c64e436ac692c5d4770f0e20dac3eb0.bindTooltip(
+                `<div>
+                     3300 South Vista Avenue (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a894478181b1234d80a6293f79c61c31 = L.circleMarker(
+                [43.5720876, -116.1140146],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.840572873934304, "stroke": true, "weight": 2}
+            ).addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+        var popup_11a45f934f59f4efa838c8bed11aa2ff = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_3ab5e68501d9ce9dd3411755b872637a = $(`<div id="html_3ab5e68501d9ce9dd3411755b872637a" style="width: 100.0%; height: 100.0%;"><b>Harris Ranch East</b><br>Proposed<br>59 units &middot; Q4 2026<br>Occ — &middot; Rent —<br><span style='color:#888'>3201 S Council Spring Rd 83716</span></div>`)[0];
+                popup_11a45f934f59f4efa838c8bed11aa2ff.setContent(html_3ab5e68501d9ce9dd3411755b872637a);
+            
+        
+
+        circle_marker_a894478181b1234d80a6293f79c61c31.bindPopup(popup_11a45f934f59f4efa838c8bed11aa2ff)
+        ;
+
+        
+    
+    
+            circle_marker_a894478181b1234d80a6293f79c61c31.bindTooltip(
+                `<div>
+                     Harris Ranch East (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b27a1f86c95a69684a30a1e7fc5bb6f4 = L.circleMarker(
+                [43.5936943, -116.1852219],
+                {"bubblingMouseEvents": true, "color": "#ffffff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF1744", "fillOpacity": 1.0, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.87386354243376, "stroke": true, "weight": 2}
+            ).addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+        var popup_afd71b4f530bb2c4884acb2bdf9cc60c = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_0b821139e31fc35c09aaab717f7d0a3e = $(`<div id="html_0b821139e31fc35c09aaab717f7d0a3e" style="width: 100.0%; height: 100.0%;"><b>1519 South Londoner Avenue</b><br>Proposed<br>189 units &middot; Q3 2027<br>Occ — &middot; Rent —<br><span style='color:#888'>1519 S Londoner Ave 83706</span></div>`)[0];
+                popup_afd71b4f530bb2c4884acb2bdf9cc60c.setContent(html_0b821139e31fc35c09aaab717f7d0a3e);
+            
+        
+
+        circle_marker_b27a1f86c95a69684a30a1e7fc5bb6f4.bindPopup(popup_afd71b4f530bb2c4884acb2bdf9cc60c)
+        ;
+
+        
+    
+    
+            circle_marker_b27a1f86c95a69684a30a1e7fc5bb6f4.bindTooltip(
+                `<div>
+                     1519 South Londoner Avenue (Proposed)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_ef19c77d3ba5b0125f72870aa5747f94 = L.marker(
+                [43.5417345, -116.1511979],
+                {
+}
+            ).addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+        
+    
+            var icon_0dcdfa3ea2ad328a7ff5fdd08a35209e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "black",
+  "iconColor": "white",
+  "icon": "star",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ee1c04fddc429443b50e73e388c6a998 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_adf75a12dc4190a80bb917442f7893ad = $(`<div id="html_adf75a12dc4190a80bb917442f7893ad" style="width: 100.0%; height: 100.0%;"><b>SUBJECT</b><br>Canyon Ridge<br>2552 E Gowen Rd, Boise, ID 83716</div>`)[0];
+                popup_ee1c04fddc429443b50e73e388c6a998.setContent(html_adf75a12dc4190a80bb917442f7893ad);
+            
+        
+
+        marker_ef19c77d3ba5b0125f72870aa5747f94.bindPopup(popup_ee1c04fddc429443b50e73e388c6a998)
+        ;
+
+        
+    
+    
+            marker_ef19c77d3ba5b0125f72870aa5747f94.bindTooltip(
+                `<div>
+                     SUBJECT: Canyon Ridge
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ef19c77d3ba5b0125f72870aa5747f94.setIcon(icon_0dcdfa3ea2ad328a7ff5fdd08a35209e);
+            
+    
+            var layer_control_1a4ee2c100b9fea44e7bb4626ce84fcb_layers = {
+                base_layers : {
+                    "Satellite" : tile_layer_37f2830769c001f95e61bcbc26c62ac5,
+                    "Terrain" : tile_layer_67e768079d89e5e867857af22bff5318,
+                    "Streets" : tile_layer_a9b26af6fb7e7384a03ec26047619e72,
+                },
+                overlays :  {
+                },
+            };
+            let layer_control_1a4ee2c100b9fea44e7bb4626ce84fcb = L.control.layers(
+                layer_control_1a4ee2c100b9fea44e7bb4626ce84fcb_layers.base_layers,
+                layer_control_1a4ee2c100b9fea44e7bb4626ce84fcb_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_3f7103ae7d933919c8a1d4d80300a9ce);
+
+        
+</script>
+</html>

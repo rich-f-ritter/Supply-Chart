@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.DS_Store
+~$*.xlsx
+.~lock.*#
+/tmp/
+.geocode_cache.json
