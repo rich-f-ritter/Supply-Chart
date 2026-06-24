@@ -111,9 +111,11 @@ class Prop:
     costar_rent: Optional[float] = None     # CoStar asking rent / unit
     rp_occ: Optional[float] = None
     rp_rent: Optional[float] = None         # RealPage effective rent / unit
+    rp_asking: Optional[float] = None       # RealPage asking rent / unit (if exported)
     # Resolved primary values (chosen by source priority) used on the chart.
     occupancy: Optional[float] = None
     eff_rent: Optional[float] = None
+    asking_rent: Optional[float] = None     # market/asking rent shown on the roster
     owner: Optional[str] = None
     stories: Optional[int] = None
     style: Optional[str] = None        # RealPage property style
@@ -247,6 +249,15 @@ def parse_realpage(path) -> list[Prop]:
         j = h.get(key)
         return row[j - 1] if j else None
 
+    def col_any(row, keys):
+        for k in keys:
+            v = col(row, k)
+            if v is not None:
+                return v
+        return None
+
+    # RealPage exports effective rent; some pulls also carry an asking/market
+    # rent column. Capture it if present (never use effective rent as "asking").
     out = []
     for row in ws.iter_rows(min_row=2, values_only=True):
         name = col(row, "Name")
@@ -264,6 +275,8 @@ def parse_realpage(path) -> list[Prop]:
             rp_status=str(col(row, "Property Status") or "").strip(),
             rp_occ=_float(col(row, "Occupancy")),
             rp_rent=_float(col(row, "Effective Rent")),
+            rp_asking=_float(col_any(row, ("Asking Rent", "Market Rent",
+                                           "Asking Rent / Unit", "Avg Asking Rent"))),
             owner=(str(col(row, "Property Owner")).strip()
                    if col(row, "Property Owner") else None),
             stories=_int(col(row, "Stories")),
@@ -378,6 +391,7 @@ def reconcile(costar: list[Prop], realpage: list[Prop]) -> list[Prop]:
         base.costar_rent = base.costar_rent if base.costar_rent is not None else other.costar_rent
         base.rp_occ = base.rp_occ if base.rp_occ is not None else other.rp_occ
         base.rp_rent = base.rp_rent if base.rp_rent is not None else other.rp_rent
+        base.rp_asking = base.rp_asking if base.rp_asking is not None else other.rp_asking
         # Style / stories / owner / location backfill
         base.style = base.style or other.style
         base.stories = base.stories or other.stories
@@ -418,8 +432,20 @@ def resolve_occ_rent(p: Prop, occ_source: str, rent_source: str,
     """
     prio = {"costar": (p.costar_occ, p.rp_occ), "realpage": (p.rp_occ, p.costar_occ)}
     p.occupancy = next((v for v in prio[occ_source] if v is not None), None)
-    rprio = {"costar": (p.costar_rent, p.rp_rent), "realpage": (p.rp_rent, p.costar_rent)}
-    p.eff_rent = next((v for v in rprio[rent_source] if v is not None), None)
+
+    # Roster "Avg Mkt Rent" is an ASKING/market figure. CoStar asking is the
+    # primary source; RealPage's only rent is *effective* (not asking), so it is
+    # never used here — RealPage contributes only when its export carries an
+    # asking column (p.rp_asking). 'average' blends the available asking values.
+    co, rp = p.costar_rent, p.rp_asking
+    if rent_source == "realpage":
+        p.asking_rent = rp if rp is not None else co
+    elif rent_source == "average":
+        vals = [v for v in (co, rp) if v is not None]
+        p.asking_rent = sum(vals) / len(vals) if vals else None
+    else:  # costar (default)
+        p.asking_rent = co if co is not None else rp
+    p.eff_rent = p.rp_rent          # effective rent retained for the Recon log
 
     if not flag_divergence:
         return
@@ -1473,7 +1499,7 @@ def write_workbook(props, subject_name, latest_inv, latest_label,
                 "D": p.units,
                 "E": p.est_delivery or "TBD",
                 "F": p.occupancy,
-                "G": p.eff_rent if p.eff_rent else "—",
+                "G": p.asking_rent if p.asking_rent else "—",
                 "H": p.owner or "—",
                 "I": (round(p.proximity_mi, 1)
                       if p.proximity_mi is not None else None),
@@ -1706,8 +1732,13 @@ def main(argv=None):
     ap.add_argument("--target", type=float, default=DEFAULT_STABILIZATION_TARGET)
     ap.add_argument("--occ-source", choices=("costar", "realpage"), default="costar",
                     help="Which source's occupancy to display (default: costar)")
-    ap.add_argument("--rent-source", choices=("costar", "realpage"), default="costar",
-                    help="Which source's rent to display (default: costar asking)")
+    ap.add_argument("--rent-source", choices=("costar", "realpage", "average"),
+                    default="costar",
+                    help="Source for the roster's Avg Mkt Rent (asking/market): "
+                         "costar = CoStar asking (default); realpage = RealPage "
+                         "asking IF its export carries one (else CoStar); average = "
+                         "blend the available asking values. RealPage *effective* "
+                         "rent is never used for this column.")
     ap.add_argument("--pipeline-dates", default=None,
                     help="CSV (property,est_delivery[,units]) of analyst-supplied "
                          "delivery quarters for pipeline deals, so they flow into "

@@ -128,9 +128,14 @@ share one geocode cache (`output/.geocode_cache.json`) via `scripts/geo.py`.
   a **name fallback** for missing/typo'd addresses.
 - **Unit counts:** keep CoStar's; flag a note when the two sources differ by ≥3
   units (±2 is treated as noise).
-- **Occupancy & rent:** both sources' values are kept side-by-side; the displayed
-  value follows `--occ-source` / `--rent-source` (default CoStar), and material
-  divergence (≥2 pts occ, ≥5% rent) is flagged in Notes.
+- **Occupancy:** both sources kept side-by-side; the displayed value follows
+  `--occ-source` (default CoStar); a ≥2-pt gap is flagged in Notes.
+- **Rent:** the roster's **Avg Mkt Rent** is an **asking/market** figure. CoStar
+  asking is the source (`--rent-source costar`, default). RealPage exports only
+  *effective* rent, which is **never** shown in this column — it contributes only
+  if a given pull also carries an asking column (`--rent-source realpage`, else
+  CoStar), and `average` blends the available asking values. CoStar-asking-vs-
+  RealPage-effective gaps (≥5%) are still surfaced in Notes/Reconciliation Log.
 - **Status:** a forward-looking status (Pre-Planned / Under Construction) from
   either source wins, so pipeline deals are never mislabeled as existing.
 - The **subject property** is dropped from the competitive roster.

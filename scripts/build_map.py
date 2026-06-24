@@ -102,7 +102,7 @@ def build_map(props, subject_name, subject_address, subject_latlng,
     for p, plat, plng in located:
         color, blabel = BUCKET_STYLE.get(p.bucket, ("#888888", p.bucket))
         occ = f"{p.occupancy:.0%}" if p.occupancy is not None else "—"
-        rent = f"${p.eff_rent:,.0f}" if p.eff_rent else "—"
+        rent = f"${p.asking_rent:,.0f}" if p.asking_rent else "—"
         popup = folium.Popup(html=(
             f"<b>{p.name}</b><br>{blabel}<br>{(p.units or 0):,} units &middot; "
             f"{p.est_delivery or 'TBD'}<br>Occ {occ} &middot; Rent {rent}<br>"
