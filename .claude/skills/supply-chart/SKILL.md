@@ -48,8 +48,8 @@ skill only builds the supply chart.)
 2. **Let the user refine** — delivery quarters, demand scenarios, source selection,
    diligence corrections. Re-run with their edits.
 3. **Make it jive with every input you were given** before calling it done:
-   - the **RR-T12 intake** (from the RR-T12-Processor skill) drives the subject
-     market/effective-rent and occupancy rows — confirm those reconcile;
+   - the **RR-T12 intake workbook** (if supplied via `--intake`) drives the
+     subject market/effective-rent and occupancy rows — confirm those reconcile;
    - the delivered roster ties to CoStar's deliveries series (the completeness
      check, §3a);
    - diligence corrections (if run) are reflected in the buckets and pipeline.
