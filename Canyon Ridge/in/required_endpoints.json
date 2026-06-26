@@ -1,0 +1,38 @@
+[
+  {
+    "host": "services2.arcgis.com",
+    "purpose": "Parcels - Ada County Assessor Parcels (AdaCountyGIS)",
+    "url": "https://services2.arcgis.com/dgGjZc6xAH5m5JyP/arcgis/rest/services/Parcels/FeatureServer/5/query",
+    "group": "BUILD-TIME - Python data pulls (MUST be allowlisted in the run sandbox)"
+  },
+  {
+    "host": "services2.arcgis.com",
+    "purpose": "Zoning - Ada County/Boise",
+    "url": "https://services2.arcgis.com/dgGjZc6xAH5m5JyP/arcgis/rest/services/Zoning/FeatureServer/22/query",
+    "group": "BUILD-TIME - Python data pulls (MUST be allowlisted in the run sandbox)"
+  },
+  {
+    "host": "geocoding.geo.census.gov",
+    "purpose": "Subject geocoding (US Census, no key)",
+    "url": null,
+    "group": "SUBJECT GEOCODING - only if you resolve the point via Python (else N/A)"
+  },
+  {
+    "host": "geocode.arcgis.com",
+    "purpose": "Subject geocoding fallback (ArcGIS World Geocoder)",
+    "url": null,
+    "group": "SUBJECT GEOCODING - only if you resolve the point via Python (else N/A)"
+  },
+  {
+    "host": "unpkg.com",
+    "purpose": "Viewer: Leaflet + leaflet-image JS/CSS (loads when the HTML opens)",
+    "url": null,
+    "group": "VIEW-TIME - loaded by the HTML viewer in the browser"
+  },
+  {
+    "host": "server.arcgisonline.com",
+    "purpose": "Viewer: Esri satellite + street basemap tiles",
+    "url": null,
+    "group": "VIEW-TIME - loaded by the HTML viewer in the browser"
+  }
+]

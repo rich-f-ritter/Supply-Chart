@@ -1,0 +1,122 @@
+{
+  "subject": {
+    "name": "Canyon Ridge",
+    "address": "2552 E Gowen Rd, Boise, ID 83716",
+    "lat": 43.541734,
+    "lon": -116.151198,
+    "location_note": "Point from ArcGIS World Geocoder (PointAddress, score 100) for 2552 E Gowen Rd. Canyon Ridge is a 287-unit, 4-story apartment community completed 2024 on the south/southeast side of the Boise Airport (Gowen Field), inside the broad Airport Influence Area along E Gowen Rd.",
+    "mailing_geocode": {"source": "ArcGIS World GeocodeServer", "lat": 43.541734485674, "lon": -116.151197979297}
+  },
+
+  "analysis_area": {
+    "mode": "radius",
+    "radius_mi": 5.0,
+    "note": "5-mile geodesic radius around the Canyon Ridge apartments at 2552 E Gowen Rd. Covers SE Boise: the Boise Airport / Gowen Field, Micron HQ and expansion (Columbia Bench), the Gowen Rd / Federal Way / Eisenman industrial corridor, Columbia Village, Barber Valley/Harris Ranch edge, and the unincorporated Ada County rural-urban frontier south and east."
+  },
+
+  "parcel_sources": [
+    {
+      "name": "Ada County Assessor Parcels (AdaCountyGIS)",
+      "county": "Ada",
+      "url": "https://services2.arcgis.com/dgGjZc6xAH5m5JyP/arcgis/rest/services/Parcels/FeatureServer/5/query",
+      "fields": {
+        "account": "PARCEL",
+        "situs": "ADDRESS",
+        "landuse_code": "PROPCODE",
+        "legal": "LEGAL1",
+        "total_value": "TOTALVALUE"
+      },
+      "dedupe_field": "PARCEL",
+      "data_confidence": "full",
+      "verify_ssl": true,
+      "note": "Owner names are NOT published in Ada County GIS (Idaho Public Records Act). PROPCODE is the single-letter Ada County property class (R/C/F/L/M). ZONING is also carried on the parcel but we join zoning from the dedicated Zoning layer for clean base-zone codes."
+    }
+  ],
+
+  "zoning_sources": [
+    {
+      "jurisdiction": "Ada County/Boise",
+      "url": "https://services2.arcgis.com/dgGjZc6xAH5m5JyP/arcgis/rest/services/Zoning/FeatureServer/22/query",
+      "code_field": "BASEZONE",
+      "desc_field": "ZONING",
+      "verify_ssl": true
+    }
+  ],
+
+  "landuse_scheme": {
+    "name": "Ada County Assessor Property Code (PROPCODE: R/C/F/L/M)",
+    "vacant_buckets": ["Vacant Land", "Agricultural / Rural"],
+    "vacant_note": "Ada County PROPCODE 'L' = Land (vacant lots + HOA/condo common-area land, many at $0 value) and 'F' = Farm (agricultural acreage). Both are treated as undeveloped 'vacant' for the supply-threat screen; HOA commons, floodplain, foothills-preservation (RP) and airport land are then reasoned out. PROPCODE definitions: R=Residential, C=Commercial, F=Farm, L=Land, M=Manufactured (Ada County Assessor GIS User Guide).",
+    "default_bucket": "Other / Unclassified",
+    "public_owner_regex": "\\b(CITY OF|AIRPORT|STATE OF|UNITED STATES|COUNTY OF|DEPT OF|DEPARTMENT OF|HIGHWAY|CEMETERY|SCHOOL DIST)\\b",
+    "codes": {
+      "R": ["Single Family Residential", "Residential (improved homes, condos, townhomes) - Ada PROPCODE R"],
+      "M": ["Single Family Residential", "Manufactured / mobile home - Ada PROPCODE M"],
+      "C": ["Commercial", "Commercial property (retail/office/commercial condo) - Ada PROPCODE C"],
+      "F": ["Agricultural / Rural", "Farm / agricultural land (ag-exempt acreage) - Ada PROPCODE F"],
+      "L": ["Vacant Land", "Land (vacant lots + HOA/condo common-area land) - Ada PROPCODE L"],
+      "": ["Other / Unclassified", "No property code on record"]
+    }
+  },
+
+  "zoning_crosswalk": {
+    "Ada County/Boise": {
+      "R-1A": ["Single-Family Residential", "Low"],
+      "R-1B": ["Single-Family Residential", "Low"],
+      "R-1C": ["Single-Family Residential", "Low"],
+      "R-2": ["Two-Family / Low-Density Residential", "Medium"],
+      "R-3": ["Multifamily Residential", "High"],
+      "MX-1": ["Mixed Use", "Medium"],
+      "MX-2": ["Mixed Use", "High"],
+      "MX-3": ["Mixed Use", "High"],
+      "MX-U": ["Mixed Use", "High"],
+      "MX-5": ["Mixed Use", "High"],
+      "C2": ["Commercial", "Low"],
+      "I-1": ["Industrial / Business Park", "Low"],
+      "I-2": ["Industrial / Business Park", "Low"],
+      "I-3": ["Industrial / Business Park", "Low"],
+      "A-1": ["Agricultural / Rural", "Low"],
+      "A-2": ["Agricultural / Rural", "Low"],
+      "R1": ["Single-Family Residential", "Low"],
+      "R6": ["Single-Family Residential", "Low"],
+      "R8": ["Townhouse / Med-Density Residential", "Medium"],
+      "R12": ["Multifamily Residential", "High"],
+      "RUT": ["Agricultural / Rural", "Low"],
+      "RR": ["Agricultural / Rural", "Low"],
+      "RP": ["Park / Recreation", "Low"],
+      "M1": ["Industrial / Business Park", "Low"],
+      "M2": ["Industrial / Business Park", "Low"],
+      "M3": ["Industrial / Business Park", "Low"],
+      "M-2D": ["Industrial / Business Park", "Low"],
+      "SP-01": ["Planned / Overlay", "Unknown"],
+      "SP-02": ["Planned / Overlay", "Unknown"]
+    }
+  },
+
+  "zone_plain": {
+    "R-1A": "Boise Single-Family (large lot)", "R-1B": "Boise Single-Family (std lot)",
+    "R-1C": "Boise Single-Family (compact)", "R-2": "Boise Two-Family/Low-Density",
+    "R-3": "Boise Multifamily", "MX-1": "Boise Mixed-Use Neighborhood",
+    "MX-2": "Boise Mixed-Use Community", "MX-3": "Boise Mixed-Use Regional",
+    "MX-U": "Boise Mixed-Use Urban", "MX-5": "Boise Mixed-Use (high intensity)", "C2": "Commercial", "I-1": "Boise Industrial (light)",
+    "I-2": "Boise Industrial (general)", "I-3": "Boise Industrial (heavy)",
+    "A-1": "Open Land / Airport-Ag", "A-2": "Open Land / Ag",
+    "R1": "County Residential R1", "R6": "County Residential R6",
+    "R8": "County Residential R8 (med)", "R12": "County Residential R12 (MF)",
+    "RUT": "County Rural-Urban Transition", "RR": "County Rural Residential",
+    "RP": "County Rural Preservation (foothills)", "M1": "County Manufacturing M1",
+    "M2": "County Manufacturing M2", "M3": "County Manufacturing M3",
+    "M-2D": "Industrial M-2D",
+    "SP-01": "Specific Plan SP-01", "SP-02": "Specific Plan SP-02"
+  },
+
+  "nondev_owner_regex": "(CITY OF|AIRPORT|STATE OF|UNITED STATES|COUNTY|HIGHWAY|CEMETERY|\\bHOA\\b|HOMEOWN|OWNERS ASS|ASSOCIATION|ASSOC|\\bASSN\\b|\\bPOA\\b|COMMON|CHURCH|\\bSCHOOL\\b|UTILITY|IRRIGATION|CANAL|DITCH)",
+  "company_owner_regex": "\\b(LLC|LP|LTD|INC|LLLP|LLP|TRUST|PARTNERS|HOLDINGS|DEVELOPMENT|PROPERTIES|GROUP|VENTURES?|REALTY|CAPITAL|HOMES|BUILDERS|MICRON|SIMPLOT)\\b",
+
+  "min_acres": 2.0,
+  "min_compactness": 0.16,
+  "data_gap_label": "No public zoning (data gap)",
+  "crs_local": null,
+
+  "branding": { "primary": "#0B5394", "accent": "#C49A2B" }
+}

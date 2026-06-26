@@ -1,0 +1,31 @@
+Category,Jurisdiction,Base Zone,MF Threat (if vacant),Color
+Agricultural / Rural,Ada County/Boise,A-1,Low,#9C8A57
+Agricultural / Rural,Ada County/Boise,A-2,Low,#9C8A57
+Agricultural / Rural,Ada County/Boise,RR,Low,#9C8A57
+Agricultural / Rural,Ada County/Boise,RUT,Low,#9C8A57
+Commercial,Ada County/Boise,C2,Low,#1F77B4
+Industrial / Business Park,Ada County/Boise,I-1,Low,#525252
+Industrial / Business Park,Ada County/Boise,I-2,Low,#525252
+Industrial / Business Park,Ada County/Boise,I-3,Low,#525252
+Industrial / Business Park,Ada County/Boise,M-2D,Low,#525252
+Industrial / Business Park,Ada County/Boise,M1,Low,#525252
+Industrial / Business Park,Ada County/Boise,M2,Low,#525252
+Industrial / Business Park,Ada County/Boise,M3,Low,#525252
+Mixed Use,Ada County/Boise,MX-1,Medium,#FF8C42
+Mixed Use,Ada County/Boise,MX-2,High,#FF8C42
+Mixed Use,Ada County/Boise,MX-3,High,#FF8C42
+Mixed Use,Ada County/Boise,MX-5,High,#FF8C42
+Mixed Use,Ada County/Boise,MX-U,High,#FF8C42
+Multifamily Residential,Ada County/Boise,R-3,High,#D62728
+Multifamily Residential,Ada County/Boise,R12,High,#D62728
+Park / Recreation,Ada County/Boise,RP,Low,#2CA02C
+Planned / Overlay,Ada County/Boise,SP-01,Unknown,#B399D4
+Planned / Overlay,Ada County/Boise,SP-02,Unknown,#B399D4
+Single-Family Residential,Ada County/Boise,R-1A,Low,#FFF6B3
+Single-Family Residential,Ada County/Boise,R-1B,Low,#FFF6B3
+Single-Family Residential,Ada County/Boise,R-1C,Low,#FFF6B3
+Single-Family Residential,Ada County/Boise,R1,Low,#FFF6B3
+Single-Family Residential,Ada County/Boise,R6,Low,#FFF6B3
+Townhouse / Med-Density Residential,Ada County/Boise,R8,Medium,#FDBF6F
+Two-Family / Low-Density Residential,Ada County/Boise,R-2,Medium,#FCDE9C
+No public zoning (data gap),(unzoned / no public GIS),(none),n/a - not assessable,#E3E3E3

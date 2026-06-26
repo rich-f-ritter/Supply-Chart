@@ -1,0 +1,25 @@
+{
+  "subject_aia_zone": "B",
+  "circle_acres": 50184.8,
+  "aia_zone_acres": {
+    "A": 9218.6,
+    "B": 4459.6,
+    "C": 4961.4,
+    "B-1": 63.4
+  },
+  "vacant_threat_acres": {
+    "High": 247.8,
+    "Medium": 330.5,
+    "Low": 33958.7,
+    "Unknown": 1081.3
+  },
+  "bucket_acres": {
+    "Vacant Land": 15274.5,
+    "Single Family Residential": 5043.2,
+    "Commercial": 4607.9,
+    "Agricultural / Rural": 20343.7
+  },
+  "micron_area_tract_count": 90,
+  "micron_area_tract_acres": 7472.2,
+  "dev_tracker_count_5mi": 259
+}

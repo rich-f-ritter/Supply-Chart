@@ -1,0 +1,260 @@
+mi_from_subject,record_type,status,name,planning_area,review_authority,zoning,aia_zone,record_id
+0.01,Conditional Use,Awaiting Applications,2774 E GOWEN RD,Southeast,Planning & Zoning Commission,MZC 2023,B,CUP25-00007
+0.01,Project,Project Entitled,2774 E GOWEN RD,Southeast,Planning & Zoning Commission,MZC 2023,B,PLN24-00745
+0.07,Design Review-Historic,Awaiting Applications,2422 E GOWEN RD - DR Minor,Southeast,Administrative,MZC 2023,B,DRH25-00256
+0.07,Project,Expired,2422 E GOWEN RD - DR Minor,Southeast,Administrative,MZC 2023,B,PLN25-00546
+0.08,Design Review-Historic,In Review,2350 E GOWEN RD,Southeast,Design Review Commission,MZC 2023,B,DRH26-00092
+0.08,Project,Applications in Review,2350 E GOWEN RD,Southeast,Design Review Commission,MZC 2023,B,PLN26-00066
+0.61,Project,Project Entitled,6880 S EISENMAN RD,Airport,Planning & Zoning Commission,MZC 2023,B,PLN25-00837
+0.61,Record of Survey,Awaiting Applications,DRH MOD of DRH23-00402,Airport,Administrative,MZC 2023,B,ROS25-00088
+0.66,Project,Applications in Review,6490 S EISENMAN RD - SUB,Airport,City Council,MZC 2023,B,PLN26-00074
+0.66,Subdivision,In Review,6490 S EISENMAN RD - SUB,Airport,City Council,MZC 2023,B,SUB26-00027
+0.74,Project,Neighborhood Meeting,6651 S EISENMAN RD,Airport,Design Review Commission,MZC 2023,B,PLN26-00476
+0.77,Conditional Use,Awaiting Applications,1400 W EXCHANGE ST  CUP/DRH,Airport,Planning & Zoning Commission,MZC 2023,C,CUP26-00022
+0.77,Design Review-Historic,Awaiting Applications,1400 W EXCHANGE ST  CUP/DRH,Airport,Planning & Zoning Commission,MZC 2023,C,DRH26-00206
+0.77,Project,Awaiting Applications,1400 W EXCHANGE ST  CUP/DRH,Airport,Planning & Zoning Commission,MZC 2023,C,PLN26-00176
+0.94,Project,Neighborhood Meeting,8000 S FEDERAL WAY,Southeast,Hearing Examiner,MZC 2023,B,PLN25-01031
+1.12,Annexation-Rezone,In Review,S1605336000,Southeast,City Council,MZC 2023,A,CAR26-00010
+1.12,Comprehensive Plan Amendment,In Review,S1605336000,Southeast,City Council,MZC 2023,A,CPA26-00001
+1.12,Project,Applications in Review,S1605336000,Southeast,City Council,MZC 2023,A,PLN26-00336
+1.17,Design Review-Historic,Awaiting Applications,6752 S BUSINESS WAY,Airport,Administrative,MZC 2023,C,DRH25-00333
+1.17,Project,Awaiting Applications,6752 S BUSINESS WAY,Airport,Administrative,MZC 2023,C,PLN25-00788
+1.39,Project,Applications in Review,2392 E WINCO CT,Airport,City Council,MZC 2023,B,PLN25-00331
+1.48,Project,Applications in Review,6411 Business Way,Airport,Administrative,MZC 2023,C,PLN26-00587
+1.55,Design Review-Historic,Awaiting Applications,6843 S SUPPLY WAY - DRH (minor),Airport,Administrative,MZC 2023,C,DRH26-00213
+1.55,Design Review-Historic,In Review,9035 S FEDERAL WAY,Southeast,City Council,MZC 2023,B,DRH25-00382
+1.55,Project,Applications in Review,9035 S FEDERAL WAY,Southeast,City Council,MZC 2023,B,PLN25-00701
+1.55,Project,Awaiting Applications,6843 S SUPPLY WAY - DRH (minor),Airport,Administrative,MZC 2023,C,PLN26-00450
+1.55,Record of Survey,In Review,9035 S FEDERAL WAY,Southeast,City Council,MZC 2023,B,ROS25-00075
+1.58,Conditional Use,In Review,1221 E ECHELON RIDGE LN,Southeast,Administrative,MZC 2023,Outside AIA,CUP25-00048
+1.58,Project,Applications in Review,1221 E ECHELON RIDGE LN,Southeast,Administrative,MZC 2023,Outside AIA,PLN25-01149
+1.66,Project,Awaiting Applications,5263 E TRAIL WIND DR - ADU,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00475
+1.66,Project,Awaiting Applications,5263 E Trail Wind Dr,Southeast,Administrative,MZC 2023,Outside AIA,PLN25-00378
+1.67,Project,Applications in Review,2500 E FREIGHT ST,Airport,Administrative,MZC 2023,B,PLN25-00886
+1.7,Conditional Use,Appealed,4750 S SURPRISE WAY,Southeast,Planning & Zoning Commission,MZC 2023,Outside AIA,CUP26-00003
+1.7,Design Review-Historic,Awaiting Applications,4750 S SURPRISE WAY,Southeast,Planning & Zoning Commission,MZC 2023,Outside AIA,DRH26-00107
+1.7,Project,Appealed,4750 S SURPRISE WAY,Southeast,Planning & Zoning Commission,MZC 2023,Outside AIA,PLN25-00683
+1.76,Project,Applications in Review,8000 S Federal Way,Southeast,Administrative,MZC 2023,B,PLN26-00597
+1.84,Floodplain-Hillside,Applicant Upload,3960 S ECKERT RD - CFH,Southeast,Administrative,MZC 2023,Outside AIA,CFH25-00084
+1.84,Project,Planning Application Submittal,3960 S ECKERT RD - CFH,Southeast,Administrative,MZC 2023,Outside AIA,PLN25-00141
+1.89,Floodplain-Hillside,In Review,4010 S ECKERT RD  CFH(2),Barber Valley,Planning & Zoning Commission,MZC 2023,Outside AIA,CFH26-00021
+1.89,Floodplain-Hillside,In Review,4010 S ECKERT RD  CFH(2),Barber Valley,Planning & Zoning Commission,MZC 2023,Outside AIA,CFH26-00022
+1.89,Project,Applications in Review,4010 S ECKERT RD  CFH(2),Barber Valley,Planning & Zoning Commission,MZC 2023,Outside AIA,PLN26-00231
+1.91,Project,Applications in Review,3753 S WILLIAMSBURG WAY - ADU,Southeast,Administrative,MZC 2023,Outside AIA,PLN25-00489
+1.91,Project,Neighborhood Meeting,2649 E FREIGHT ST,Airport,Design Review Commission,MZC 2023,A,PLN26-00160
+2.0,Project,Planning Application Submittal,601 W GOWEN RD,Airport,Administrative,MZC 2023,C,PLN25-00791
+2.0,Project,Project Entitled,601 W GOWEN RD,Airport,City Council,MZC 2023,C,PLN24-00561
+2.0,Subdivision,Awaiting Applications,601 W GOWEN RD,Airport,Administrative,MZC 2023,C,SUB26-00013
+2.08,Project,Applications in Review,3845 S MILLBROOK WAY - SOS,Barber Valley,City Council,MZC 2023,Outside AIA,PLN25-00728
+2.21,Design Review-Historic,Awaiting Applications,4247 E BRIGHTSIDE ST,Barber Valley,Administrative,MZC 2023,Outside AIA,DRH26-00151
+2.21,Project,Awaiting Applications,4247 E BRIGHTSIDE ST,Barber Valley,Administrative,MZC 2023,Outside AIA,PLN26-00311
+2.29,Project,Applications in Review,3450 S HOPES WELL WAY,Barber Valley,Administrative,MZC 2023,Outside AIA,PLN25-00184
+2.31,Project,Project Entitled,3430 S Hopes Well Way,Barber Valley,Administrative,MZC 2023,Outside AIA,PLN24-00599
+2.34,Project,Neighborhood Meeting,Parcel # R5350490040,Southeast,City Council,MZC 2023,Outside AIA,PLN26-00356
+2.39,Annexation-Rezone,In Review,S1608417250,Southeast,City Council,MZC 2023,Outside AIA,CAR26-00006
+2.39,Conditional Use,In Review,S1608417250,Southeast,City Council,MZC 2023,Outside AIA,CUP26-00012
+2.39,Design Review-Historic,Awaiting Applications,5301 Warm Springs Ave,Barber Valley,Administrative,MZC 2023,Outside AIA,DRH26-00172
+2.39,Project,Applications in Review,S1608417250,Southeast,City Council,MZC 2023,Outside AIA,PLN26-00227
+2.39,Project,Awaiting Applications,5301 Warm Springs Ave,Barber Valley,Administrative,MZC 2023,Outside AIA,PLN26-00435
+2.41,Design Review-Historic,In Review,2936 S PERRAULT WAY,Barber Valley,City Council,MZC 2023,Outside AIA,DRH26-00176
+2.41,Project,Applications in Review,2936 S PERRAULT WAY,Barber Valley,City Council,MZC 2023,Outside AIA,PLN24-00299
+2.44,Design Review-Historic,In Review,3140 E BARBER VALLEY DR,Barber Valley,Design Review Commission,MZC 2023,Outside AIA,DRH26-00116
+2.44,Project,Applications in Review,3140 E BARBER VALLEY DR,Barber Valley,Design Review Commission,MZC 2023,Outside AIA,PLN26-00116
+2.45,Design Review-Historic,Awaiting Applications,3218 E BARBER VALLEY DR,Barber Valley,Design Review Commission,MZC 2023,Outside AIA,DRH25-00393
+2.45,Design Review-Historic,Awaiting Applications,3218 E BARBER VALLEY DR,Barber Valley,Design Review Commission,MZC 2023,Outside AIA,DRH26-00136
+2.45,Project,Project Entitled,3218 E BARBER VALLEY DR,Barber Valley,Design Review Commission,MZC 2023,Outside AIA,PLN25-00092
+2.46,Project,Applications in Review,1155 E VICTORY RD,Southeast,Administrative,MZC 2023,Outside AIA,PLN25-00139
+2.48,Project,Awaiting Applications,3122 S OLD HICKORY WAY,Barber Valley,City Council,MZC 2023,Outside AIA,PLN25-00809
+2.49,Project,Expired,3122 S OLD HICKORY WAY,Barber Valley,Administrative,MZC 2023,Outside AIA,PLN25-00329
+2.49,Record of Survey,Awaiting Applications,3122 S OLD HICKORY WAY,Barber Valley,Administrative,MZC 2023,Outside AIA,ROS25-00033
+2.58,Floodplain-Hillside,Awaiting Applications,2190 E GOSSAMER LN - ADU,Southeast,Administrative,MZC 2023,Outside AIA,CFH26-00047
+2.58,Project,Planning Application Submittal,2190 E GOSSAMER LN - ADU,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00437
+2.6,Floodplain-Hillside,Returned to Applicant,3573 E PROVISION LN,Barber Valley,Administrative,MZC 2023,Outside AIA,CFH25-00011
+2.6,Project,Applications in Review,3573 E PROVISION LN,Barber Valley,Administrative,MZC 2023,Outside AIA,PLN24-01092
+2.63,Floodplain-Hillside,Awaiting Applications,3069 E STARVIEW DR,Foothills,City Council,MZC 2023,Outside AIA,CFH25-00006
+2.63,Project,Awaiting Applications,3069 E STARVIEW DR,Foothills,City Council,MZC 2023,Outside AIA,PLN24-00813
+2.63,Subdivision,Awaiting Applications,3069 E STARVIEW DR,Foothills,City Council,MZC 2023,Outside AIA,SUB25-00004
+2.65,Project,Applications in Review,3501 E ETERNAL LN,Barber Valley,Administrative,MZC 2023,Outside AIA,PLN25-00773
+2.73,Floodplain-Hillside,Applicant Upload,2971 STARVIEW DR,Foothills,Administrative,MZC 2023,Outside AIA,CFH25-00065
+2.73,Floodplain-Hillside,Awaiting Applications,5759 S BRIAN WAY,Barber Valley,Administrative,MZC 2023,Outside AIA,CFH26-00050
+2.73,Project,Awaiting Applications,5759 S BRIAN WAY,Barber Valley,Administrative,MZC 2023,Outside AIA,PLN26-00454
+2.73,Project,Planning Application Submittal,2971 STARVIEW DR,Foothills,Administrative,MZC 2023,Outside AIA,PLN25-00656
+2.77,Project,Awaiting Applications,3522 E VIA ESTANCIA LN,Barber Valley,Administrative,MZC 2023,Outside AIA,PLN25-00661
+2.93,Project,Applications in Review,5841 E PROMINENCE CT,Foothills,City Council,MZC 2023,Outside AIA,PLN26-00312
+2.93,Zoning Ordinance Amendment,Accepted,5841 E PROMINENCE CT,Foothills,City Council,MZC 2023,Outside AIA,ZOA26-00001
+2.95,Project,Neighborhood Meeting,501 E BOISE AVE,Southeast,City Council,MZC 2023,Outside AIA,PLN26-00091
+3.02,Project,Applications in Review,1332 W GOWEN RD - DRH,Airport,Design Review Commission,MZC 2023,C,PLN26-00162
+3.05,Project,Expired,Barber Dr and Shady Ln (S0920230000 & S0920243500),Foothills,Administrative,MZC 2023,Outside AIA,PLN25-00038
+3.05,Record of Survey,Awaiting Applications,Barber Dr and Shady Ln (S0920230000 & S0920243500),Foothills,Administrative,MZC 2023,Outside AIA,ROS25-00013
+3.06,Floodplain-Hillside,Awaiting Applications,3623 E ASTEROID CT,Foothills,Administrative,MZC 2023,Outside AIA,CFH26-00024
+3.06,Project,Awaiting Applications,3623 E ASTEROID CT,Foothills,Administrative,MZC 2023,Outside AIA,PLN26-00285
+3.07,Floodplain-Hillside,Awaiting Applications,3615 E ASTEROID CT,Foothills,Administrative,MZC 2023,Outside AIA,CFH26-00034
+3.07,Floodplain-Hillside,Returned to Applicant,3603 E ASTEROID CT,Foothills,Administrative,MZC 2023,Outside AIA,CFH26-00027
+3.07,Project,Applications in Review,3603 E ASTEROID CT,Foothills,Administrative,MZC 2023,Outside AIA,PLN26-00296
+3.07,Project,Awaiting Applications,3615 E ASTEROID CT,Foothills,Administrative,MZC 2023,Outside AIA,PLN26-00352
+3.1,Floodplain-Hillside,Awaiting Applications,1936 S WINDSTAR PL,Foothills,Administrative,MZC 2023,Outside AIA,CFH25-00095
+3.1,Project,Awaiting Applications,1936 S WINDSTAR PL,Foothills,Administrative,MZC 2023,Outside AIA,PLN25-01021
+3.11,Project,Applications in Review,3596 E ASTEROID DR,Foothills,Administrative,MZC 2023,Outside AIA,PLN25-00945
+3.13,Floodplain-Hillside,Returned to Applicant,3572 E ASTEROID DR,Foothills,Administrative,MZC 2023,Outside AIA,CFH26-00029
+3.13,Project,Applications in Review,3572 E ASTEROID DR,Foothills,Administrative,MZC 2023,Outside AIA,PLN26-00297
+3.14,Floodplain-Hillside,Awaiting Applications,1292 E CROSSCREEK LN - CFH,Southeast,Administrative,MZC 2023,Outside AIA,CFH25-00035
+3.14,Floodplain-Hillside,Awaiting Applications,1292 E CROSSCREEK LN - CFH,Southeast,Administrative,MZC 2023,Outside AIA,CFH25-00036
+3.14,Project,Project Entitled,1292 E CROSSCREEK LN - CFH,Southeast,Administrative,MZC 2023,Outside AIA,PLN25-00149
+3.15,Project,Applications in Review,3412 S LINDSAY AVE,Central Bench,City Council,MZC 2023,Outside AIA,PLN25-00164
+3.15,Project,Neighborhood Meeting,3412 S LINDSAY AVE,Central Bench,Design Review Commission,MZC 2023,Outside AIA,PLN26-00457
+3.21,Project,Applications in Review,2623 S LEADVILLE AVE,Southeast,Administrative,MZC 2023,Outside AIA,PLN25-00185
+3.26,Project,Awaiting Applications,716 W LINDEN ST,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00228
+3.27,Design Review-Historic,Awaiting Applications,607 E PENNSYLVANIA ST,Southeast,Administrative,MZC 2023,Outside AIA,DRH25-00357
+3.27,Project,Awaiting Applications,607 E PENNSYLVANIA ST,Southeast,Administrative,MZC 2023,Outside AIA,PLN25-00713
+3.29,Project,Applications in Review,1621 S STONE RIDGE WAY - CFH,Foothills,Administrative,MZC 2023,Outside AIA,PLN25-00753
+3.34,Project,Applications in Review,1535 S GALAXY WAY,Foothills,Hearing Examiner,MZC 2023,Outside AIA,PLN26-00308
+3.35,Project,Applications in Review,2530 S BROADWAY AVE,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00282
+3.38,Project,Applications in Review,3262 E BIRDSONG CT,Foothills,Administrative,MZC 2023,Outside AIA,PLN26-00545
+3.42,Project,Applications in Review,2233 S DIVISION AVE,Southeast,City Council,MZC 2023,Outside AIA,PLN25-00401
+3.48,Project,Expired,524 E PARKWAY CT,Southeast,Administrative,MZC 2023,Outside AIA,PLN25-00352
+3.48,Record of Survey,Awaiting Applications,524 E PARKWAY CT,Southeast,Administrative,MZC 2023,Outside AIA,ROS25-00036
+3.5,Conditional Use,In Review,2017 W VICTORY RD,Central Bench,City Council,MZC 2023,Outside AIA,CUP26-00017
+3.5,Floodplain-Hillside,Returned to Applicant,2017 W VICTORY RD,Central Bench,City Council,MZC 2023,Outside AIA,CFH26-00040
+3.5,Project,Applications in Review,2017 W VICTORY RD,Central Bench,City Council,MZC 2023,Outside AIA,PLN25-01116
+3.5,Project,Applications in Review,2312 S BROADWAY AVE,Southeast,City Council,MZC 2023,Outside AIA,PLN25-00965
+3.5,Subdivision,In Review,2017 W VICTORY RD,Central Bench,Planning & Zoning Commission,MZC 2023,Outside AIA,SUB26-00025
+3.52,Project,Awaiting Applications,2315 S BROADWAY AVE,Southeast,City Council,MZC 2023,Outside AIA,PLN25-00357
+3.58,Project,Applications in Review,1020 W TARGEE ST,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00089
+3.58,Project,Applications in Review,1022 W TARGEE ST,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00094
+3.6,Project,Expired,2140 S Longmont,Southeast,Administrative,MZC 2023,Outside AIA,PLN24-00822
+3.7,Project,Awaiting Applications,1303 W HOWARD ST,Southeast,City Council,MZC 2023,Outside AIA,PLN26-00096
+3.7,Subdivision,Awaiting Applications,1303 W HOWARD ST,Southeast,City Council,MZC 2023,Outside AIA,SUB26-00033
+3.71,Project,Applications in Review,1853 W MALAD LN,Central Bench,Administrative,MZC 2023,Outside AIA,PLN24-00982
+3.71,Project,Applications in Review,2420 E WARM SPRINGS AVE,Foothills,Administrative,MZC 2023,Outside AIA,PLN25-00964
+3.71,Record of Survey,Returned to Applicant,1853 W MALAD LN,Central Bench,Administrative,MZC 2023,Outside AIA,ROS25-00005
+3.72,Project,Applications in Review,2130 S GRANT AVE,Southeast,Administrative,MZC 2023,Outside AIA,PLN25-00270
+3.73,Project,Applications in Review,2521 W VICTORY RD,Central Bench,Design Review Commission,MZC 2023,Outside AIA,PLN25-00220
+3.74,Design Review-Historic,Awaiting Applications,3300 S VISTA AVE,Central Bench,Administrative,MZC 2023,A,DRH25-00192
+3.74,Project,Awaiting Applications,3300 S VISTA AVE,Central Bench,Administrative,MZC 2023,A,PLN25-00452
+3.84,Conditional Use,Applicant Upload,3200 S VISTA AVE,Central Bench,Hearing Examiner,MZC 2023,A,CUP26-00016
+3.84,Design Review-Historic,Applicant Upload,3200 S VISTA AVE,Central Bench,Hearing Examiner,MZC 2023,A,DRH26-00157
+3.84,Project,Applications in Review,1910 S LEADVILLE AVE,Southeast,City Council,MZC 2023,Outside AIA,PLN25-00739
+3.84,Project,Applications in Review,3200 S VISTA AVE,Central Bench,Hearing Examiner,MZC 2023,A,PLN25-00564
+3.87,Project,Awaiting Applications,Parcel S1028111050,Central Bench,Administrative,MZC 2023,Outside AIA,PLN25-01059
+3.87,Record of Survey,Awaiting Applications,Parcel S1028111050,Central Bench,Administrative,MZC 2023,Outside AIA,ROS26-00006
+3.94,Project,Awaiting Applications,315 W HOWE ST - ADU,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00310
+3.96,Project,Awaiting Applications,1723 S LEADVILLE AVE - ADU,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00439
+3.98,Design Review-Historic,Applicant Upload,1715 S LEADVILLE AVE,Southeast,Administrative,MZC 2023,Outside AIA,DRH25-00421
+3.98,Project,Applications in Review,1715 S LEADVILLE AVE,Southeast,Administrative,MZC 2023,Outside AIA,PLN25-01024
+4.0,Project,Applications in Review,517 W HIGHLAND ST,Southeast,City Council,MZC 2023,Outside AIA,PLN24-00077
+4.01,Project,Applications in Review,3201 W Airport Wy,Airport,Administrative,MZC 2023,C,PLN26-00423
+4.04,Project,Applications in Review,1628 S LONGMONT - ADU,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00068
+4.06,Design Review-Historic,Awaiting Applications,517 W HIGHLAND ST,Southeast,City Council,MZC 2023,Outside AIA,DRH24-00212
+4.07,Design Review-Historic,In Review,1808 S EUCLID AVE,Other,Administrative,MZC 2023,Outside AIA,DRH26-00192
+4.07,Project,Applications in Review,1808 S EUCLID AVE,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00474
+4.09,Conditional Use,Awaiting Applications,506 W HIGHLAND ST - Minor Mod,Southeast,Administrative,MZC 2023,Outside AIA,CUP26-00021
+4.09,Project,Planning Application Submittal,506 W HIGHLAND ST - Minor Mod,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00563
+4.11,Project,Applications in Review,1732 S EUCLID AVE,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00347
+4.16,Design Review-Historic,Returned to Applicant,1427 S COLORADO AVE,Southeast,Administrative,MZC 2023,Outside AIA,DRH26-00173
+4.16,Project,Applications in Review,1427 S COLORADO AVE,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00425
+4.22,Project,Awaiting Applications,711 W HALE ST,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00080
+4.22,Record of Survey,Awaiting Applications,711 W HALE ST,Southeast,Administrative,MZC 2023,Outside AIA,ROS26-00008
+4.23,Project,Applications in Review,1712 S MICHIGAN AVE,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00482
+4.23,Project,Awaiting Applications,1805 W OVERLAND RD - SUB,Central Bench,City Council,MZC 2023,Outside AIA,PLN25-01095
+4.23,Subdivision,Awaiting Applications,1805 W OVERLAND RD - SUB,Central Bench,City Council,MZC 2023,Outside AIA,SUB25-00103
+4.24,Project,Expired,2509 W LEMHI ST - SUB,Central Bench,City Council,MZC 2023,Outside AIA,PLN25-00389
+4.24,Project,Planning Application Submittal,1404 S LONGMONT AVE - ADU,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00436
+4.24,Subdivision,Awaiting Applications,2509 W LEMHI ST - SUB,Central Bench,City Council,MZC 2023,Outside AIA,SUB25-00043
+4.26,Project,Applications in Review,111 N BACON DR,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN25-00550
+4.26,Record of Survey,Returned to Applicant,111 N BACON DR,North-East Ends,Administrative,MZC 2023,Outside AIA,ROS25-00050
+4.27,Design Review-Historic,Awaiting Applications,1607 S MANITOU AVE,Southeast,Administrative,MZC 2023,Outside AIA,DRH26-00200
+4.27,Design Review-Historic,In Review,1422 S DENVER AVE,Southeast,Administrative,MZC 2023,Outside AIA,DRH26-00169
+4.27,Project,Applications in Review,1422 S DENVER AVE,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00429
+4.27,Project,Planning Application Submittal,1607 S MANITOU AVE - ADU,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00481
+4.28,Project,Awaiting Applications,125 N BACON DR,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN26-00528
+4.34,Design Review-Historic,Awaiting Applications,1504 S MANITOU AVE,Southeast,City Council,MZC 2023,Outside AIA,DRH25-00364
+4.34,Project,Applications in Review,1504 S MANITOU AVE,Southeast,City Council,MZC 2023,Outside AIA,PLN25-00572
+4.34,Project,Neighborhood Meeting,1529 S VERMONT AVE,Southeast,Hearing Examiner,MZC 2023,Outside AIA,PLN26-00344
+4.36,Project,Neighborhood Meeting,"3635 W ELDER ST - CAR, DRH",Central Bench,City Council,MZC 2023,B-1,PLN26-00304
+4.38,Project,Awaiting Applications,2949 W ONA ST,Central Bench,Administrative,MZC 2023,Outside AIA,PLN26-00483
+4.4,Floodplain-Hillside,In Review,118 N CASTELLO PL,Foothills,Planning & Zoning Commission,MZC 2023,Outside AIA,CFH24-00049
+4.4,Project,Applications in Review,118 N CASTELLO PL,Foothills,Administrative,MZC 2023,Outside AIA,PLN24-00694
+4.42,Project,Applications in Review,3502 W CATALINA RD - ADU,Central Bench,Administrative,MZC 2023,Outside AIA,PLN25-01089
+4.43,Project,Applications in Review,1501 S MICHIGAN AVE - ADU,Southeast,Administrative,MZC 2023,Outside AIA,PLN25-00641
+4.45,Project,Applications in Review,3504 W GREENBRIER - LNC Structure,Central Bench,Administrative,MZC 2023,Outside AIA,PLN26-00048
+4.45,Project,Expired,1614 W HIGHLAND ST,Southeast,Hearing Examiner,MZC 2023,Outside AIA,PLN23-00039
+4.46,Project,Neighborhood Meeting,500 S WALNUT ST - CFH,North-East Ends,Planning & Zoning Commission,MZC 2023,Outside AIA,PLN26-00127
+4.47,Project,Applications in Review,1129 S BROADWAY AVE,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00132
+4.48,Project,Awaiting Applications,1106 S LONGMONT AVE,Southeast,Administrative,MZC 2023,Outside AIA,PLN26-00557
+4.5,Project,Applications in Review,2201 S. Hervey St. - DRH,Central Bench,Hearing Examiner,MZC 2023,Outside AIA,PLN25-00740
+4.52,Project,Applications in Review,2316 W FREDERIC ST,Central Bench,Administrative,MZC 2023,Outside AIA,PLN26-00469
+4.53,Floodplain-Hillside,Awaiting Applications,363 & 403 N ALTO VIA CT,Foothills,City Council,MZC 2023,Outside AIA,CFH26-00056
+4.53,Project,Awaiting Applications,363 & 403 N ALTO VIA CT,Foothills,City Council,MZC 2023,Outside AIA,PLN26-00318
+4.53,Subdivision,Awaiting Applications,363 & 403 N ALTO VIA CT,Foothills,City Council,MZC 2023,Outside AIA,SUB26-00032
+4.57,Floodplain-Hillside,Awaiting Applications,403 N ALTO VIA CT,Foothills,City Council,MZC 2023,Outside AIA,CFH24-00065
+4.57,Project,Expired,403 N ALTO VIA CT,Foothills,City Council,MZC 2023,Outside AIA,PLN24-00375
+4.57,Subdivision,Awaiting Applications,403 N ALTO VIA CT,Foothills,City Council,MZC 2023,Outside AIA,SUB24-00043
+4.58,Project,Applications in Review,1810 S SHOSHONE ST,Central Bench,Administrative,MZC 2023,Outside AIA,PLN25-00368
+4.58,Project,Awaiting Applications,606 N BROOKDALE DR - ADU,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN26-00322
+4.59,Annexation-Rezone,Awaiting Applications,Lewis St Historic District Removal,North-East Ends,City Council,MZC 2023,Outside AIA,CAR26-00005
+4.59,Design Review-Historic,Awaiting Applications,R8048011910,Downtown,Design Review Commission,MZC 2023,Outside AIA,DRH25-00253
+4.59,Design Review-Historic,In Review,5835 S VISIONARY AVE,Airport,Design Review Commission,MZC 2023,B,DRH26-00201
+4.59,Floodplain-Hillside,Awaiting Applications,Lewis St Historic District Removal,North-East Ends,City Council,MZC 2023,Outside AIA,CFH26-00012
+4.59,Project,Applications in Review,5835 S VISIONARY AVE,Airport,Design Review Commission,MZC 2023,B,PLN26-00301
+4.59,Project,Awaiting Applications,Lewis St Historic District Removal,North-East Ends,City Council,MZC 2023,Outside AIA,PLN25-00284
+4.59,Project,Awaiting Applications,R8048011910,Downtown,Design Review Commission,MZC 2023,Outside AIA,PLN25-00473
+4.59,Project,Project Entitled,1095 S FEDERAL WAY,Central Bench,Design Review Committee,MZC 2023,Outside AIA,PLN24-00207
+4.59,Record of Survey,Awaiting Applications,1095 S FEDERAL WAY,Central Bench,Design Review Committee,MZC 2023,Outside AIA,ROS25-00079
+4.6,Floodplain-Hillside,In Review,1312 E LEWIS ST - CFH,North-East Ends,Administrative,MZC 2023,Outside AIA,CFH26-00023
+4.6,Project,Applications in Review,1312 E LEWIS ST - CFH,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN26-00257
+4.62,Design Review-Historic,Applicant Upload,1420 E BANNOCK ST,North-East Ends,Administrative,MZC 2023,Outside AIA,DRH26-00125
+4.62,Design Review-Historic,In Review,1311 E WARM SPRINGS AVE,North-East Ends,Administrative,MZC 2023,Outside AIA,DRH25-00111
+4.62,Project,Applications in Review,1019 S PICO ST - ADU,Central Bench,Administrative,MZC 2023,Outside AIA,PLN25-00946
+4.62,Project,Applications in Review,1420 E BANNOCK ST,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN26-00333
+4.62,Project,Project Entitled,1311 E WARM SPRINGS AVE,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN25-00079
+4.63,Project,Applications in Review,1229 S LINCOLN AVE - DRH/SUB,Southeast,City Council,MZC 2023,Outside AIA,PLN24-01024
+4.63,Subdivision,In Review,1229 S LINCOLN AVE - Final plat,Southeast,City Council,MZC 2023,Outside AIA,SUB26-00012
+4.64,Project,Awaiting Applications,1225 E WARM SPRINGS AVE,North-East Ends,City Council,MZC 2023,Outside AIA,PLN25-00835
+4.64,Project,Expired,3410 W TARGEE ST,Central Bench,Administrative,MZC 2023,Outside AIA,PLN25-00818
+4.64,Subdivision,Awaiting Applications,1225 E WARM SPRINGS AVE,North-East Ends,City Council,MZC 2023,Outside AIA,SUB25-00098
+4.65,Project,Awaiting Applications,2410 W PENDLETON ST  - ADU,Central Bench,Administrative,MZC 2023,Outside AIA,PLN25-01125
+4.67,Design Review-Historic,Received,1422 E JEFFERSON,North-East Ends,Administrative,MZC 2023,Outside AIA,DRH24-00079
+4.67,Floodplain-Hillside,Returned to Applicant,431 N MORNINGSIDE WAY,North-East Ends,Administrative,MZC 2023,Outside AIA,CFH25-00073
+4.67,Project,Applications in Review,1422 E JEFFERSON,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN24-00160
+4.67,Project,Applications in Review,431 N MORNINGSIDE WAY,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN25-00750
+4.69,Project,Neighborhood Meeting,Parcel S1505212450,Airport,Design Review Commission,MZC 2023,A,PLN26-00535
+4.73,Design Review-Historic,In Review,1109 E WARM SPRINGS,North-East Ends,Historic Preservation Commission,MZC 2023,Outside AIA,DRH26-00078
+4.73,Design Review-Historic,Returned to Applicant,1109 E WARM SPRINGS AVE,North-East Ends,Administrative,MZC 2023,Outside AIA,DRH26-00097
+4.73,Project,Applications in Review,1109 E WARM SPRINGS,North-East Ends,Historic Preservation Commission,MZC 2023,Outside AIA,PLN26-00067
+4.73,Project,Applications in Review,1109 E WARM SPRINGS AVE,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN26-00267
+4.74,Project,Awaiting Applications,2618 S HAYDEN WAY - ADU,Central Bench,Administrative,MZC 2023,A,PLN26-00505
+4.75,Design Review-Historic,In Review,1308 E JEFFERSON ST,North-East Ends,Administrative,MZC 2023,Outside AIA,DRH26-00037
+4.75,Project,Applications in Review,1308 E JEFFERSON ST,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN25-01105
+4.75,Project,Applications in Review,2814 S ROOSEVELT ST,Central Bench,Administrative,MZC 2023,A,PLN24-00749
+4.78,Floodplain-Hillside,Awaiting Applications,573 N MORNINGSIDE WAY,North-East Ends,Administrative,MZC 2023,Outside AIA,CFH25-00088
+4.78,Floodplain-Hillside,Returned to Applicant,573 N MORNINGSIDE WAY,North-East Ends,Administrative,MZC 2023,Outside AIA,CFH26-00049
+4.78,Project,Applications in Review,573 N MORNINGSIDE WAY,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN26-00406
+4.78,Project,Awaiting Applications,573 N MORNINGSIDE WAY,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN25-00670
+4.79,Project,Applications in Review,1100 S VISTA AVE,Central Bench,Hearing Examiner,MZC 2023,Outside AIA,PLN25-00727
+4.8,Conditional Use,Applicant Upload,3113 W OVERLAND RD - SUB,Central Bench,City Council,MZC 2023,Outside AIA,CUP25-00028
+4.8,Design Review-Historic,Received,3705 W LEMHI ST,Central Bench,Administrative,MZC 2023,Outside AIA,DRH24-00026
+4.8,Project,Denied,3113 W OVERLAND RD - SUB,Central Bench,City Council,MZC 2023,Outside AIA,PLN25-00195
+4.8,Project,Expired,3705 W LEMHI ST,Central Bench,Administrative,MZC 2023,Outside AIA,PLN24-00011
+4.81,Design Review-Historic,Received,1130 E BANNOCK ST,North-East Ends,Administrative,MZC 2023,Outside AIA,DRH24-00074
+4.81,Project,Expired,1130 E BANNOCK ST,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN24-00208
+4.82,Floodplain-Hillside,In Review,5121 W GOWEN RD CFH,Airport,Administrative,MZC 2023,C,CFH25-00098
+4.82,Project,Applications in Review,5121 W GOWEN RD CFH,Airport,Administrative,MZC 2023,C,PLN25-01066
+4.83,Floodplain-Hillside,Awaiting Applications,2710 E TABLE ROCK RD,Foothills,Administrative,MZC 2023,Outside AIA,CFH25-00091
+4.83,Project,Awaiting Applications,2710 E TABLE ROCK RD,Foothills,Administrative,MZC 2023,Outside AIA,PLN25-00940
+4.88,Annexation-Rezone,Awaiting Applications,5110 W LAKE HAZEL RD,Airport,City Council,MZC 2023,A,CAR26-00008
+4.88,Annexation-Rezone,Awaiting Applications,5110 W LAKE HAZEL RD,Airport,City Council,MZC 2023,A,CAR26-00009
+4.88,Design Review-Historic,Awaiting Applications,919 E BANNOCK ST,North-East Ends,Administrative,MZC 2023,Outside AIA,DRH25-00223
+4.88,Project,Awaiting Applications,5110 W LAKE HAZEL RD,Airport,City Council,MZC 2023,A,PLN26-00465
+4.88,Project,Awaiting Applications,919 E BANNOCK ST,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN25-00521
+4.89,Project,Applications in Review,2612 E PLATEAU DR,Foothills,Administrative,MZC 2023,Outside AIA,PLN26-00103
+4.92,Floodplain-Hillside,Awaiting Applications,2020 E MORTIMER CT,North-East Ends,Administrative,MZC 2023,Outside AIA,CFH26-00014
+4.92,Project,Cancelled,2020 E MORTIMER CT,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN26-00052
+4.95,Project,Neighborhood Meeting,2705 W LAMPERT DR,Central Bench,Planning & Zoning Commission,MZC 2023,Outside AIA,PLN25-00851
+4.99,Design Review-Historic,Awaiting Applications,740 E WARM SPRINGS AVE,North-East Ends,Administrative,MZC 2023,Outside AIA,DRH26-00003
+4.99,Project,Applications in Review,604 N WALNUT ST,North-East Ends,Hearing Examiner,MZC 2023,Outside AIA,PLN25-01047
+4.99,Project,Awaiting Applications,740 E WARM SPRINGS AVE,North-East Ends,Administrative,MZC 2023,Outside AIA,PLN25-01131
+5.0,Annexation-Rezone,Awaiting Applications,3676 W DORIAN ST,Central Bench,City Council,MZC 2023,Outside AIA,CAR26-00007
+5.0,Conditional Use,Awaiting Applications,3676 W DORIAN ST,Central Bench,City Council,MZC 2023,Outside AIA,CUP26-00019
+5.0,Design Review-Historic,Awaiting Applications,3676 W DORIAN ST,Central Bench,City Council,MZC 2023,Outside AIA,DRH26-00193
+5.0,Project,Awaiting Applications,3676 W DORIAN ST,Central Bench,City Council,MZC 2023,Outside AIA,PLN26-00059
+5.0,Record of Survey,Awaiting Applications,3676 W DORIAN ST,Central Bench,City Council,MZC 2023,Outside AIA,ROS26-00024

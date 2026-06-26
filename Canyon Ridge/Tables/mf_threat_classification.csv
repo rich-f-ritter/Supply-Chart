@@ -1,0 +1,30 @@
+Threat Level,Jurisdiction,Base Zone,Zone Category,Definition
+High,Ada County/Boise,MX-2,Mixed Use,Multifamily can be built BY-RIGHT - no special approval needed.
+High,Ada County/Boise,MX-3,Mixed Use,Multifamily can be built BY-RIGHT - no special approval needed.
+High,Ada County/Boise,MX-5,Mixed Use,Multifamily can be built BY-RIGHT - no special approval needed.
+High,Ada County/Boise,MX-U,Mixed Use,Multifamily can be built BY-RIGHT - no special approval needed.
+High,Ada County/Boise,R-3,Multifamily Residential,Multifamily can be built BY-RIGHT - no special approval needed.
+High,Ada County/Boise,R12,Multifamily Residential,Multifamily can be built BY-RIGHT - no special approval needed.
+Medium,Ada County/Boise,MX-1,Mixed Use,Multifamily possible but CONDITIONAL - townhouse / 3-4-family / mixed-use / TOD / corridor; limited density or special permitting.
+Medium,Ada County/Boise,R-2,Two-Family / Low-Density Residential,Multifamily possible but CONDITIONAL - townhouse / 3-4-family / mixed-use / TOD / corridor; limited density or special permitting.
+Medium,Ada County/Boise,R8,Townhouse / Med-Density Residential,Multifamily possible but CONDITIONAL - townhouse / 3-4-family / mixed-use / TOD / corridor; limited density or special permitting.
+Low,Ada County/Boise,A-1,Agricultural / Rural,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,A-2,Agricultural / Rural,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,C2,Commercial,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,I-1,Industrial / Business Park,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,I-2,Industrial / Business Park,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,I-3,Industrial / Business Park,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,M-2D,Industrial / Business Park,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,M1,Industrial / Business Park,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,M2,Industrial / Business Park,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,M3,Industrial / Business Park,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,R-1A,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,R-1B,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,R-1C,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,R1,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,R6,Single-Family Residential,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,RP,Park / Recreation,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,RR,Agricultural / Rural,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Low,Ada County/Boise,RUT,Agricultural / Rural,"Multifamily NOT permitted by base zoning (single-family, duplex, commercial, industrial, civic, or agricultural)."
+Unknown,Ada County/Boise,SP-01,Planned / Overlay,Planned-development / overlay / older unit-development district - allowed use depends on the negotiated plan; must read it to determine MF potential.
+Unknown,Ada County/Boise,SP-02,Planned / Overlay,Planned-development / overlay / older unit-development district - allowed use depends on the negotiated plan; must read it to determine MF potential.

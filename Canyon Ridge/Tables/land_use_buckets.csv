@@ -1,0 +1,8 @@
+Bucket,Source,Code,Description,Color,Parcels_in_area
+Agricultural / Rural,Ada County Assessor Property Code (PROPCODE: R/C/F/L/M),F,Farm / agricultural land (ag-exempt acreage) - Ada PROPCODE F,#9C8A57,235
+Commercial,Ada County Assessor Property Code (PROPCODE: R/C/F/L/M),C,Commercial property (retail/office/commercial condo) - Ada PROPCODE C,#1F77B4,1607
+Other / Unclassified,Ada County Assessor Property Code (PROPCODE: R/C/F/L/M),(blank),No property code on record,#D9D9D9,0
+Single Family Residential,Ada County Assessor Property Code (PROPCODE: R/C/F/L/M),M,Manufactured / mobile home - Ada PROPCODE M,#FFF6B3,894
+Single Family Residential,Ada County Assessor Property Code (PROPCODE: R/C/F/L/M),R,"Residential (improved homes, condos, townhomes) - Ada PROPCODE R",#FFF6B3,22203
+Vacant Land,Ada County Assessor Property Code (PROPCODE: R/C/F/L/M),L,Land (vacant lots + HOA/condo common-area land) - Ada PROPCODE L,#2E8B57,3082
+Public / Airport / Institutional,OWNER_RULE,(public owner),Government / airport / school / church-owned (overrides use code),#6BAED6,0
