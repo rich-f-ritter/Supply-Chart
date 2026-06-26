@@ -630,13 +630,26 @@ def load_diligence(path):
 
 
 def apply_diligence(props: list[Prop], rows):
-    """Fold researched delivery/unit corrections back into the pipeline props."""
+    """Fold researched delivery/unit corrections back into the pipeline props.
+
+    A researched status confirming a deal is dead or ineligible (cancelled,
+    withdrawn, dead, or "not multifamily") removes it from the competitive set
+    entirely — a church conversion or a for-sale single-family project is not
+    competitive apartment supply."""
     by = {name_key(p.name): p for p in props}
+    drop = []
     for r in rows:
         if r.get("type", "pipeline") != "pipeline":
             continue
         p = by.get(name_key(r["property"]))
         if not p:
+            continue
+        st = (r.get("status") or "").lower()
+        notes = (r.get("notes") or "").lower()
+        if any(k in st for k in ("cancel", "withdrawn", "dead", "not multifamily",
+                                 "not multi-family")) or "not multifamily" in notes:
+            p.note(f"Diligence: {r.get('status') or 'removed'} — dropped from competitive set")
+            drop.append(p)
             continue
         yq = parse_quarter_label(r.get("est_delivery", ""))
         if yq:
@@ -644,7 +657,6 @@ def apply_diligence(props: list[Prop], rows):
             p.est_delivery = fmt_quarter(*yq)
         if _int(r.get("units")):
             p.units = _int(r["units"])
-        st = (r.get("status") or "").lower()
         if st:
             p.note(f"Diligence: {r['status']}")
             # researched status corrects the auto-classification
@@ -652,9 +664,12 @@ def apply_diligence(props: list[Prop], rows):
                     and p.bucket == "PROPOSED":
                 p.bucket = "UNDER CONSTRUCTION"
             elif any(k in st for k in ("proposed", "permitted", "planned",
-                                       "stall", "cancel", "entitle")) \
+                                       "stall", "entitle")) \
                     and p.bucket == "UNDER CONSTRUCTION":
                 p.bucket = "PROPOSED"
+    if drop:
+        dropped = {id(p) for p in drop}
+        props[:] = [p for p in props if id(p) not in dropped]
 
 
 
