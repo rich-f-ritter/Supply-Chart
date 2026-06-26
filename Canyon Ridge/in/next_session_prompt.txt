@@ -1,0 +1,9 @@
+/land-use-analysis for Canyon Ridge, 2552 E Gowen Rd, Boise, ID 83716
+
+Network: egress is already ON with these domains allowlisted — *.arcgis.com, *.arcgisonline.com, *.census.gov, unpkg.com.
+(Allowlist changes only apply to a NEW session, which this is.)
+
+Before pulling, run the reachability pre-flight on every parcel/zoning endpoint. Any host
+that returns 503/upstream-timeout (NOT host_not_allowed) is allowed-but-unreachable —
+substitute a reachable county/state layer (prefer *.arcgis.com / county GIS over a city's
+self-hosted ArcGIS box), log the swap, then proceed pull -> classify -> reason -> deliver.
