@@ -5,3 +5,6 @@ __pycache__/
 .~lock.*#
 /tmp/
 .geocode_cache.json
+
+# deal-specific run dirs
+_*_run/
