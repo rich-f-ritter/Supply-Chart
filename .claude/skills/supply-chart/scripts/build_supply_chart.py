@@ -655,6 +655,16 @@ def apply_diligence(props: list[Prop], rows):
             p.note(f"Diligence: {r.get('status') or 'removed'} — dropped from competitive set")
             drop.append(p)
             continue
+        # A researched address (e.g. for a RealPage pipeline deal that carries no
+        # street address) drives the Proximity geocode and the map marker.
+        if r.get("address"):
+            p.address = r["address"].strip()
+            if r.get("city"):
+                p.city = r["city"].strip()
+            if r.get("state"):
+                p.state = r["state"].strip()
+            if r.get("zip"):
+                p.zipcode = str(r["zip"]).strip()[:5]
         yq = parse_quarter_label(r.get("est_delivery", ""))
         if yq:
             p.deliv_year, p.deliv_q = yq
