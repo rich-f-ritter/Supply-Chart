@@ -632,10 +632,15 @@ def load_diligence(path):
 def apply_diligence(props: list[Prop], rows):
     """Fold researched delivery/unit corrections back into the pipeline props.
 
-    A researched status confirming a deal is dead or ineligible (cancelled,
-    withdrawn, dead, or "not multifamily") removes it from the competitive set
-    entirely — a church conversion or a for-sale single-family project is not
-    competitive apartment supply."""
+    A researched status that disqualifies a deal removes it from the competitive
+    set entirely — whether it's dead (cancelled / withdrawn), not competitive
+    rental product ("not multifamily": a church conversion or for-sale homes), or
+    deliberately excluded by the analyst (e.g. "exclude — different submarket").
+    The deal still appears on the Diligence sheet, so the exclusion is documented,
+    not silent."""
+    DROP_KEYS = ("cancel", "withdrawn", "dead", "not multifamily", "not multi-family",
+                 "exclude", "different submarket", "out of submarket", "out-of-submarket",
+                 "wrong submarket")
     by = {name_key(p.name): p for p in props}
     drop = []
     for r in rows:
@@ -646,8 +651,7 @@ def apply_diligence(props: list[Prop], rows):
             continue
         st = (r.get("status") or "").lower()
         notes = (r.get("notes") or "").lower()
-        if any(k in st for k in ("cancel", "withdrawn", "dead", "not multifamily",
-                                 "not multi-family")) or "not multifamily" in notes:
+        if any(k in st or k in notes for k in DROP_KEYS):
             p.note(f"Diligence: {r.get('status') or 'removed'} — dropped from competitive set")
             drop.append(p)
             continue
