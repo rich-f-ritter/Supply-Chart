@@ -43,7 +43,13 @@ def geocode_nominatim(query):
             data = json.load(r)
     finally:
         _last_call[0] = time.time()
-    return (float(data[0]["lat"]), float(data[0]["lon"])) if data else None
+    if not data:
+        return None
+    # include the OSM class: "highway" means the hit is a ROAD centroid (a
+    # house-number that couldn't be resolved on a long road), which gives a wrong
+    # — often inflated — distance; the Locator treats it as a last-resort fallback.
+    d = data[0]
+    return (float(d["lat"]), float(d["lon"]), d.get("class"))
 
 
 def zip_centroid(zipcode):
@@ -129,21 +135,36 @@ class Locator:
 
     def locate(self, name, address, city, state, zipcode):
         """Return ((lat, lng), approximate_bool) or (None, True)."""
-        if self.use_geocoder and address:
-            for q in self._queries(address, city, state, zipcode):
+        if self.use_geocoder:
+            queries = self._queries(address, city, state, zipcode) if address else []
+            # Apartment complexes geocode reliably by NAME; a suburban house-number
+            # on a long road often resolves only to the road centroid, so also try
+            # the name and prefer a real point over a road hit.
+            if name and city and state:
+                queries = list(queries) + [f"{name}, {city}, {state}"]
+            road = None                            # plausible road-centroid fallback
+            for q in queries:
                 if q in self.cache:
                     v = self.cache[q]
-                    if v and self._plausible((v[0], v[1])):
-                        return (v[0], v[1]), False
-                    continue                       # miss / implausible — next variant
-                try:
-                    ll = geocode_nominatim(q)
-                except Exception:
-                    ll = None
-                self.cache[q] = list(ll) if ll else None
-                self.dirty = True
-                if ll and self._plausible(ll):
-                    return ll, False
+                else:
+                    try:
+                        g = geocode_nominatim(q)
+                    except Exception:
+                        g = None
+                    v = list(g) if g else None
+                    self.cache[q] = v
+                    self.dirty = True
+                if not v:
+                    continue
+                ll = (v[0], v[1])
+                if not self._plausible(ll):
+                    continue
+                if len(v) > 2 and v[2] == "highway":
+                    road = road or ll              # imprecise — keep as last resort
+                    continue
+                return ll, False
+            if road:
+                return road, False
         c = zip_centroid(zipcode)
         if c:
             dy, dx = jitter(name or address or str(zipcode))
