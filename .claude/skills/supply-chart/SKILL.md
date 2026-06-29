@@ -360,6 +360,12 @@ column you can add). The research workflow:
    not in the vendor data**: multifamily **rezonings**, **entitled / under-contract**
    apartment land, large vacant MF-zoned tracts, master-planned MF phases, and
    newly announced developments. Add each as a `type=shadow` row with a source.
+   *Optional companion:* if the separate **`land-use-analysis`** skill is available,
+   it automates the data-driven half of this scan — it pulls county parcels +
+   municipal zoning and ranks genuinely-developable vacant MF-zoned land near the
+   subject, which feeds straight into these `type=shadow` rows. It is **entirely
+   optional**; this skill is self-contained and never depends on it — Part B can be
+   done by hand exactly as above.
 3. Be skeptical — if a project can't be verified, say so in `notes` rather than
    guessing. Then re-run with `--diligence filled.csv`: the workbook gains a
    **Diligence** sheet (pipeline diligence + shadow-supply watch list) and the

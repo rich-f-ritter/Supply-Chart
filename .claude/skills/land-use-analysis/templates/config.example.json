@@ -1,0 +1,96 @@
+{
+  "subject": {
+    "name": "EXAMPLE Apartments",
+    "address": "123 Main St, Somewhere, ST 00000",
+    "lat": 32.88324,
+    "lon": -97.07525,
+    "location_note": "Verified point from OSM POI + parcel footprint; mailing address mis-geocodes ~700 ft south.",
+    "mailing_geocode": null
+  },
+
+  "analysis_area": {
+    "mode": "radius",
+    "radius_mi": 2.0,
+    "note": "2-mile radius. For a hand-drawn area set mode='polygon' and supply 'polygon': [[lon,lat], ...]."
+  },
+
+  "parcel_sources": [
+    {
+      "name": "Tarrant CAD (TAD) OD_ParcelView",
+      "county": "Tarrant",
+      "url": "https://tad.newedgeservices.com/arcgis/rest/services/OD_TAD/OD_ParcelView/MapServer/0/query",
+      "fields": {
+        "account": "Account_Nu",
+        "owner": "Owner_Name",
+        "situs": "Situs_Addr",
+        "landuse_code": "State_Use_",
+        "legal": "LegalDescr",
+        "impr_value": "Improvemen",
+        "total_value": "Total_Valu",
+        "year_built": "Year_Built"
+      },
+      "dedupe_field": "TAXPIN",
+      "data_confidence": "full",
+      "verify_ssl": true
+    }
+  ],
+
+  "zoning_sources": [
+    {
+      "jurisdiction": "Grapevine",
+      "url": "https://services.arcgis.com/xSPs49inzz3yMpnd/arcgis/rest/services/Zoning/FeatureServer/0/query",
+      "code_field": "ZONECODE",
+      "desc_field": "ZONEDESCRIPTION",
+      "verify_ssl": true
+    }
+  ],
+
+  "landuse_scheme": {
+    "name": "Texas State Use (SPTB letter codes)",
+    "vacant_buckets": ["Vacant Land"],
+    "vacant_note": "Texas State Use C1/C2/O/RO (vacant platted lots/tracts + builder inventory).",
+    "default_bucket": "Other / Unclassified",
+    "public_owner_regex": "\\b(CITY OF|AIRPORT|DFW|ISD|STATE OF|UNITED STATES|TXDOT|COUNTY OF|DEPT OF|DEPARTMENT OF|HIGHWAY|CEMETERY)\\b",
+    "codes": {
+      "A":  ["Single Family Residential", "Real, Residential, Single-Family"],
+      "B":  ["Apartments / Multifamily", "Real, Residential, Multifamily (apartments)"],
+      "C1": ["Vacant Land", "Real, Vacant platted residential lot/tract"],
+      "C2": ["Vacant Land", "Real, Vacant platted commercial lot/tract"],
+      "O":  ["Vacant Land", "Real, Residential inventory (builder-held vacant lot)"],
+      "D1": ["Agricultural / Rural", "Real, Qualified ag/open-space acreage"],
+      "F1": ["Commercial", "Real, Commercial (retail/office/hotel - not split in CAD)"],
+      "F2": ["Industrial / Service / Auto", "Real, Industrial / manufacturing"],
+      "J3": ["Utilities / Infrastructure", "Utility (electric)"],
+      "X":  ["Public / Airport / Institutional", "Totally exempt (gov/church/school/charity)"],
+      "":   ["Other / Unclassified", "No use code on record"]
+    }
+  },
+
+  "zoning_crosswalk": {
+    "Grapevine": {
+      "R-MF": ["Multifamily Residential", "High"],
+      "MXU":  ["Mixed Use", "High"],
+      "R-TH": ["Townhouse / Med-Density Residential", "Medium"],
+      "R-7.5": ["Single-Family Residential", "Low"],
+      "CC":   ["Commercial", "Low"],
+      "BP":   ["Industrial / Business Park", "Low"],
+      "PUD":  ["Planned / Overlay", "Unknown"]
+    }
+  },
+
+  "zone_plain": {
+    "R-MF": "Multifamily", "MXU": "Mixed-Use", "R-TH": "Townhouse",
+    "R-7.5": "Single-Family", "CC": "Community Commercial", "BP": "Business Park",
+    "PUD": "Planned Unit Dev"
+  },
+
+  "nondev_owner_regex": "(CITY OF|AIRPORT|\\bDFW\\b|\\bISD\\b|STATE OF|UNITED STATES|TXDOT|COUNTY|HIGHWAY|CEMETERY|\\bHOA\\b|HOMEOWN|OWNERS ASS|ASSOCIATION|ASSOC|\\bASSN\\b|\\bPOA\\b|PROPERTY OWNER|CONDO|TOWNH|VILLA|MAINTENANCE|CHURCH|BAPTIST|METHODIST|CATHOLIC|\\bSCHOOL\\b|ACADEMY|UTILITY|PIPELINE|RAILROAD|RAILWAY)",
+  "company_owner_regex": "\\b(LLC|LP|LTD|INC|LLLP|LLP|TRUST|PARTNERS|HOLDINGS|DEVELOPMENT|PROPERTIES|GROUP|VENTURES?|REALTY|CAPITAL|HOMES|BUILDERS)\\b",
+
+  "min_acres": 1.0,
+  "min_compactness": 0.16,
+  "data_gap_label": "No public zoning (data gap)",
+  "crs_local": null,
+
+  "branding": { "primary": "#074070", "accent": "#B49955" }
+}
