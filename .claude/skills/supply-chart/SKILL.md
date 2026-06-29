@@ -331,16 +331,27 @@ The mechanical build trusts whatever CoStar/RealPage report. When the user asks 
 `--diligence`), perform this phase — it is not run by default.
 
 Every build emits `…__diligence_TEMPLATE.csv` (cols: `type,property,units,
-est_delivery,status,leasing_pace,notes,source`) pre-listing the lease-up /
-under-construction / proposed deals. The research workflow:
+est_delivery,status,leasing_pace,notes,source` — plus an optional `address`
+column you can add). The research workflow:
 
 1. **Per-project diligence (Part A).** For each lease-up / UC / proposed deal,
-   web-research and confirm: actual construction status (proposed / permitted /
-   under construction / leasing / delivered / **stalled or cancelled**), expected
-   delivery quarter, developer/owner, unit count, any **affordable or
-   age-restricted** component, and leasing pace. **Cite a source URL.** Correct
-   the `status`, `est_delivery`, and `units` — these fold back into the buckets
-   and the absorption forecast (`type=pipeline`).
+   web-research the **actual site / development plans** (city planning portal,
+   Community Impact / local press, developer pages) and confirm: construction
+   status, expected delivery quarter, developer/owner, unit count, any
+   **affordable or age-restricted** component, leasing pace, and the **street
+   address**. **Cite a source URL.** What each filled field does on re-run
+   (`type=pipeline`, matched by name):
+   - **`est_delivery` / `units`** — re-pin the quarter and unit count; flow into
+     the buckets and absorption forecast.
+   - **`status`** — reclassifies (`under construction`/`leasing` → UC). Statuses
+     that **remove a deal from the competitive set** (still shown on the Diligence
+     sheet, so it's documented, not silent): *cancelled / withdrawn / dead*, *not
+     multifamily* (a church conversion or for-sale homes), or an explicit analyst
+     *exclude* / *different / out-of submarket*. Use these — a dead deal or an
+     out-of-submarket comp that doesn't belong wrecks the count and the tie-out.
+   - **`address`** (optional column) — a researched street address (RealPage
+     pipeline rows often carry none, so they otherwise geocode from the name and
+     land miles off). Drives both the **Proximity** value and the **map marker**.
 2. **Shadow-supply scan (Part B).** Research the 5-mile radius for **latent supply
    not in the vendor data**: multifamily **rezonings**, **entitled / under-contract**
    apartment land, large vacant MF-zoned tracts, master-planned MF phases, and
@@ -348,8 +359,13 @@ under-construction / proposed deals. The research workflow:
 3. Be skeptical — if a project can't be verified, say so in `notes` rather than
    guessing. Then re-run with `--diligence filled.csv`: the workbook gains a
    **Diligence** sheet (pipeline diligence + shadow-supply watch list) and the
-   researched delivery dates flow into the forecast. Pass the same CSV's
-   `type=shadow` rows to `build_map.py --shadow-supply` to plot them.
+   researched delivery dates flow into the forecast. The `type=shadow` rows are
+   also plotted on the map.
+
+**Tie-out tip:** if the bundle includes a CoStar **per-property** analytics file
+(per-building `Deliveries` by quarter), it gives the *authoritative* delivery
+quarter for each comp — pin to that (via `est_delivery`) and the historical TTM
+windows reconcile to CoStar's overall series exactly (subject added back; see §3a).
 
 ## Proximity
 The **Proximity (mi)** column is filled automatically: the script geocodes the
@@ -357,11 +373,27 @@ subject and each comp (OpenStreetMap Nominatim, cached in
 `output/.geocode_cache.json`) and writes the straight-line distance. Comps that
 only resolve to a ZIP centroid — or that sit just past the 5-mile road radius —
 can read slightly over 5 mi; the export defines membership, the column is an
-approximate as-the-crow-flies distance. Geocoding tries the full address, then
-relaxes (drops the city, which roster exports often get wrong) and **rejects any
-hit more than 8 mi from the subject** before falling back to the ZIP centroid, so
-a mis-geocoded street name can't produce a wild distance. Pass `--no-geocode` to
-skip the network call and use offline ZIP centroids only.
+approximate as-the-crow-flies distance.
+
+Geocoding strategy (each step guards against a real failure seen in the field):
+- **Full address first**, then relaxed variants that drop the city (roster
+  exports frequently carry the wrong city, which makes Nominatim miss entirely).
+- **Property name as a query** (`name, city, state`) is also tried — apartment
+  complexes resolve reliably by name, whereas a suburban house-number on a long
+  road often only resolves to the road's center.
+- **Road-centroid hits are rejected** (`class=highway`): when Nominatim can't
+  place the house number it falls back to the middle of the street, which can be
+  miles off and inflate the distance. Such a hit is held only as a last resort
+  behind every real point-class match.
+- **Anchor sanity check**: any hit more than 8 mi from the subject is rejected
+  before falling back to the ZIP centroid, so a mis-geocoded same-named street in
+  another city can't produce a wild distance.
+
+When a roster address geocodes wrong (an inflated distance for a comp you know is
+close), the fix is the diligence `address` column — research the real site
+address / development plan and supply it there; both the Proximity column and the
+map marker then use it. Pass `--no-geocode` to skip the network call and use
+offline ZIP centroids only.
 
 ## Analyst follow-ups the script intentionally leaves open
 - **Lease-up rent & occupancy** — verify the flagged lease-ups with a HelloData pull.
