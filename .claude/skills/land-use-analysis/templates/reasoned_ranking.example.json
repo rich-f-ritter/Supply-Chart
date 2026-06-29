@@ -1,0 +1,15 @@
+{
+  "headline": "No meaningful vacant MF-by-right land near the subject — the as-of-right apartment-supply threat is limited. Risk concentrates in PD / corridor parcels held by development entities (entitlement-dependent), one nearby townhouse-zoned tract, and a few large commercial tracts with rezoning optionality.",
+  "ranking": [
+    {
+      "match": { "owner_prefix": "PATEL, RAKESH", "location_prefix": "4300 STATE HWY 360" },
+      "reasoned_threat": "Medium",
+      "rationale": "Closest sizable PD tract (PCD) with SH-360 frontage in an actively-developing apartment corridor (Trailwinds 324 u adjacent). Residential/mixed plausible under a PCD plan; ~0.6 mi from the subject. Verify the concept plan."
+    },
+    {
+      "match": { "account": "41234567" },
+      "reasoned_threat": "Low-Watch",
+      "rationale": "Large private commercial (C-2) tract on the corridor, ~1.0 mi; MF not by-right but a rezoning to MF is a realistic risk given corridor momentum."
+    }
+  ]
+}
