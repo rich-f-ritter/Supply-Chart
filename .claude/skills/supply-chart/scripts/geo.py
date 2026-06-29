@@ -72,6 +72,20 @@ def subject_zip(address):
     return m.group(1) if m else None
 
 
+def parse_city_state(address):
+    """Pull (city, state) out of a '..., City, ST ZIP' mailing address.
+
+    The subject is usually given as a full mailing address; without the city/
+    state the name-query geocode path is skipped and an apartment on a long road
+    can fall to the road centroid. Returns (None, None) if not parseable."""
+    if not address:
+        return None, None
+    m = re.search(r",\s*([A-Za-z .'-]+?),\s*([A-Z]{2})\b", address)
+    if m:
+        return m.group(1).strip(), m.group(2)
+    return None, None
+
+
 class Locator:
     """Geocode addresses with a JSON cache and ZIP-centroid fallback."""
 

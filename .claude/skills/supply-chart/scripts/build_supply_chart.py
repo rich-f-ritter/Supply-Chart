@@ -649,9 +649,12 @@ def apply_diligence(props: list[Prop], rows):
         p = by.get(name_key(r["property"]))
         if not p:
             continue
+        # Only the explicit `status` field drives a drop — NOT the free-text
+        # `notes`, which legitimately mentions other deals ("…excluded below",
+        # "distinct from the out-of-submarket comp") and would otherwise drop a
+        # valid pin by accident. Put the drop reason in status ("exclude - …").
         st = (r.get("status") or "").lower()
-        notes = (r.get("notes") or "").lower()
-        if any(k in st or k in notes for k in DROP_KEYS):
+        if any(k in st for k in DROP_KEYS):
             p.note(f"Diligence: {r.get('status') or 'removed'} — dropped from competitive set")
             drop.append(p)
             continue
@@ -1802,15 +1805,23 @@ def reconcile_deliveries(props, series, as_of, lookback=4):
 
 
 def compute_proximity(props, subject_name, subject_address, cache_path,
-                      use_geocoder=True):
+                      use_geocoder=True, subject_latlng=None):
     """Set p.proximity_mi = straight-line miles from the subject to each comp.
 
     Uses the shared geo.Locator (Nominatim, cached) with an offline ZIP-centroid
     fallback. The subject must geocode to a real point; if it can't (no address /
-    geocoding off and no ZIP), proximity is left as None for the analyst."""
+    geocoding off and no ZIP), proximity is left as None for the analyst. Pass
+    subject_latlng ("lat,lng") to pin the anchor exactly when a roster address
+    geocodes wrong (the subject anchor drives every comp's distance)."""
     loc = geo.Locator(use_geocoder, cache_path)
-    subj_ll, subj_approx = loc.locate(subject_name, subject_address, None, None,
-                                      geo.subject_zip(subject_address))
+    if subject_latlng:
+        subj_ll = tuple(float(x) for x in subject_latlng.split(","))
+    else:
+        # Parse city/state from the mailing address so the name-query path runs —
+        # apartments resolve by name, where a long-road house number would not.
+        city, state = geo.parse_city_state(subject_address)
+        subj_ll, _ = loc.locate(subject_name, subject_address, city, state,
+                                geo.subject_zip(subject_address))
     if not subj_ll:
         loc.save()
         return
@@ -1879,6 +1890,10 @@ def main(argv=None):
                          "<subject>__Map.html + .png alongside the chart.")
     ap.add_argument("--map-base", choices=("satellite", "terrain", "streets"),
                     default="satellite", help="Companion-map base layer (default: satellite).")
+    ap.add_argument("--subject-latlng", default=None,
+                    help="Pin the subject anchor exactly as 'lat,lng' (overrides "
+                         "geocoding for both the Proximity column and the map). Use when "
+                         "the mailing address geocodes to a road centroid / wrong spot.")
     args = ap.parse_args(argv)
 
     latest_inv, deliveries, latest_label, series, latest_uc = parse_costar_analytics(args.costar_analytics)
@@ -1904,7 +1919,8 @@ def main(argv=None):
     import os
     compute_proximity(props, args.subject_name, args.subject_address,
                       os.path.join(os.path.dirname(args.out) or ".", ".geocode_cache.json"),
-                      use_geocoder=not args.no_geocode)
+                      use_geocoder=not args.no_geocode,
+                      subject_latlng=args.subject_latlng)
 
     subj_monthly = parse_intake_subject(args.intake) if args.intake else {}
     subj_costar = (parse_costar_subject_rents(args.costar_subject_rents, args.subject_name)
@@ -1956,7 +1972,7 @@ def main(argv=None):
             import build_map
             shadow = [r for r in (diligence_rows or []) if r.get("type") == "shadow"]
             placed, approx = build_map.build_map(
-                props, args.subject_name, args.subject_address, None,
+                props, args.subject_name, args.subject_address, args.subject_latlng,
                 not args.no_geocode, args.map_base, map_out, shadow or None)
             print(f"Companion map written: {map_out} (+ .png)  "
                   f"({placed} properties{', some ZIP-approximate' if approx else ''})")
