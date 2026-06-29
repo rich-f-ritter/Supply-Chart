@@ -94,6 +94,7 @@ Optional flags:
 - `--intake path.xlsx` — RR-T12 underwriting intake; adds **subject rows** (market/effective rent from HelloData mix-weighted, occupancy from the T12 financials) to the Supply & Absorption tab
 - `--costar-subject-rents path.xlsx` and/or `--realpage-subject-rents path.xlsx` — per-property rent histories used to extend the subject rents before HelloData coverage; whichever tracks HelloData more closely in the overlap is auto-selected (varies by market)
 - `--no-geocode` — skip Nominatim and fill the **Proximity (mi)** column from offline ZIP centroids only (no network)
+- `--subject-latlng "lat,lng"` — pin the subject anchor exactly, overriding geocoding for **both** the Proximity column and the map. The subject anchor drives every comp's distance, so a road-centroid mis-geocode shifts all of them; use this when you've verified the true footprint (e.g. from a parcel/GIS lookup). The subject otherwise geocodes by **name** (city/state parsed from the address), which resolves apartment complexes reliably
 - `--no-model-link` — by **default** the subject rows are wired to the underwriting model (see **Incorporating into the underwriting model** below) so the tab is carry-over-ready; pass this for a pure standalone chart with no model references. `--model-sheet "…"` overrides the target tab (default `Cash Flow (Annual)`)
 - `--no-map` — skip the companion map (it is produced by **default**). `--map-base satellite|terrain|streets` sets the base layer (default satellite)
 
@@ -349,6 +350,9 @@ column you can add). The research workflow:
      multifamily* (a church conversion or for-sale homes), or an explicit analyst
      *exclude* / *different / out-of submarket*. Use these — a dead deal or an
      out-of-submarket comp that doesn't belong wrecks the count and the tie-out.
+     The drop is keyed **only off the `status` field**, never the free-text
+     `notes` — so a note can safely say "…excluded below" or "distinct from the
+     out-of-submarket comp" without accidentally dropping a valid pin.
    - **`address`** (optional column) — a researched street address (RealPage
      pipeline rows often carry none, so they otherwise geocode from the name and
      land miles off). Drives both the **Proximity** value and the **map marker**.
