@@ -1779,7 +1779,7 @@ def reconcile_deliveries(props, series, as_of, lookback=4):
         end, start = aq - 4 * k, aq - 4 * k - 3
         costar = sum((v.get("deliveries") or 0) for (y, q), v in series.items()
                      if start <= quarter_index(y, q) <= end)
-        members = [p for p in props if p.deliv_year
+        members = [p for p in props if p.deliv_year and p.deliv_q
                    and start <= quarter_index(p.deliv_year, p.deliv_q) <= end]
         roster = sum(p.units or 0 for p in members)
         rows.append((k, start, end, costar, roster, members))
