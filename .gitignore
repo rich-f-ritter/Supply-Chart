@@ -8,3 +8,7 @@ __pycache__/
 
 # deal-specific run dirs
 _*_run/
+
+# scratch working copy of the land-use skill + its run outputs
+# (the skill source lives under .claude/skills/land-use-analysis/)
+_landuse_skill/
